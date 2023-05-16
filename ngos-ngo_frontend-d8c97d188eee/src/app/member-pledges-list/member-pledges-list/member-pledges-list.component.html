@@ -1,0 +1,396 @@
+
+
+<!-- Member Block starts-->
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a>Pledges</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+
+    <div class="col-md-12 ">
+        <div class="card text-left">
+
+            <div class="card-body">
+
+                <h4 class="card-title mb-3"> My Pledges  <button class = "btn btn-primary" (click)="openMDModal(addPledges)"
+                    title="Add Pledges">
+                    + Add
+                </button></h4>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+
+                                <th scope="col">Pledge Info</th>
+                                <th scope="col">Donation Frequency</th>
+                                <th scope="col">Pledged Amount</th>
+                                <th scope="col">Remaining Amount</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor = "let list of pledges.pledges | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                <th scope="row">{{list.index}}</th>
+
+                                <td>{{list.projectName}}</td>
+                                <td><span class="badge badge-success">{{list.donationFrequency}}</span>  </td>
+                                <td *ngIf="list.pledgedCurrency=='INR'"> &#8377;{{list.pledgeAmount}}</td>
+                                <td  *ngIf="list.pledgedCurrency!='INR'"> &#36;{{list.pledgeAmount}}</td>
+                                <td><span *ngIf="list.pledgedCurrency=='INR'"> &#8377;{{list.remAmount}}</span>
+                                    <span *ngIf="list.pledgedCurrency!='INR'">&#36;{{list.remAmount}}</span>
+                                </td>
+                                <td> {{list.date | date:'MM-dd-yyyy' }}</td>
+                                <td>
+
+                                    <a  class="text-danger mr-2" (click)="openViewModal(viewPledge,list)">
+                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                    </a>
+                                    <button class = "btn btn-warning"  (click)="openDonationModal(donation,list.projectName,list.pledgeAmount,list.pledgedCurrency,list._id,list.remAmount,list._ids)" *ngIf="list.status==true"> Donate</button>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div *ngIf = "pledgesLength > pageSize ">
+                        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="pledgesLength" [boundaryLinks]="true">
+                        </ngb-pagination>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- Member Block Ends-->
+
+
+   <!-- add Pledge Modal -->
+<ng-template #addPledges let-modal>
+    <div class=" overflow-y-scroll">
+       <div class="modal-header">
+           <div class="row ">
+               <div class="col-md-12 align-items-center  d-flex">
+                   <div class="ml-2 ">
+                       <a href="dashboard/home">
+                           <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo ">
+                       </a>
+                       <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}}</span>
+                   </div>
+               </div>
+           </div>
+           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+               <span aria-hidden="true">&times;</span>
+           </button>
+
+       </div>
+
+
+       <div class="modal-body ">
+           <form [formGroup] = "addPledgesForm">
+               <div>
+                   <span class = "project-Title-donations pl-2">Add Pledge</span>
+               </div>
+
+                   <div class = "row justify-content-center align-items-center mt-2">
+                    <div class="col-md-6 form-group ">
+                        <label> Select Project </label>
+                       <!-- <input type="text" class= "form-control" placeholder="Enter Pledge Info" formControlName = "pledgeInfo"> -->
+                       <select class="form-control mb-10" formControlName="projectId" class="form-control form-control-rounded" id="addGender" >
+                        <option value="" disabled selected>Select Project</option>
+                        <option *ngFor="let x of projectsData.Projects" value="{{x._id}}">{{x.projectName}}</option>
+                       </select>
+                       <div class="error-block text-danger"
+                        *ngIf="addPledgesForm.get('projectId').errors && (addPledgesForm.get('projectId').touched || addPledgesForm.get('projectId').dirty)">
+                        <span *ngIf="addPledgesForm.get('projectId').errors.required">Project is required
+                        </span>
+                      </div>
+
+                    </div>
+                       <div class="col-md-6 form-group">
+                           <label *ngIf="currentUserCurrency=='INR'"> Amount(&#8377;)</label>
+                           <label *ngIf="currentUserCurrency!='INR'"> Amount(&#36;)</label>
+                           <input type="number" placeholder="Amount" class="form-control" style = "width:150px !important" formControlName = "pledgeAmount">
+                           <div class="error-block text-danger"
+                                *ngIf="addPledgesForm.get('pledgeAmount').errors && (addPledgesForm.get('pledgeAmount').touched || addPledgesForm.get('pledgeAmount').dirty)">
+                                <span *ngIf="addPledgesForm.get('pledgeAmount').errors.required">Amount is required
+                                </span>
+                                <span *ngIf="addPledgesForm.get('pledgeAmount').errors.pattern">
+                                    Enter a valid number, Only two digits after decimal is accepted.
+                                </span>
+                           </div>
+
+                       </div>
+                   </div>
+                   <h5>Donation frequency<sup> <span class = "bg-light badge text-white"  style = "cursor: alias;" title = "Recurring donations are the best way to give steady support" >i</span></sup></h5>
+
+                   <div class="row align-items-center mt-3" >
+
+                        <label class="pointer ml-3">
+                            <input type="radio" name="donationFrequency" value = "oneTime" formControlName = "donationFrequency">
+                            <span class="ml-2">One Time</span>
+
+                        </label>
+                        <label class="pointer ml-3">
+                            <input type="radio" name="donationFrequency" value = "monthly" formControlName = "donationFrequency">
+                            <span class="ml-2">Monthly</span>
+
+                        </label>
+                   </div>
+                    <div class="row justify-content-center align-items-center mt-2">
+                    Please specify a date you wish to have this procedure performed:
+
+                </div>
+                <div class="row justify-content-center align-items-center mt-2">
+
+                    <!-- <input type="date" name="" id="" class="form-control"style="width:150px !important" formControlName = "date"> -->
+                    <div class="input-group justify-content-center">
+                        <input class="" [owlDateTime]="date" placeholder="mm-dd-yyyy"
+                            formControlName="date" [owlDateTimeTrigger]="date" style="width:150px" [min]="todayDate">
+                        <div class="input-group-append datePicker"   >
+                            <button class="btn btn-secondary " [owlDateTimeTrigger]="date" type="button">
+                                <i class="icon-regular i-Calendar-4"></i>
+                            </button>
+                        </div>
+                        <owl-date-time #date [pickerType]="'calendar'"></owl-date-time>
+
+                    </div>
+                    <div class="error-block text-danger"
+                    *ngIf="addPledgesForm.get('date').errors && (addPledgesForm.get('date').touched || addPledgesForm.get('date').dirty)">
+                    <span *ngIf="addPledgesForm.get('date').errors.required">Date is required
+                </span>
+              </div>
+                </div>
+           </form>
+        </div>
+
+           <div class="modal-footer">
+                <button type= "submit" class = "btn btn-primary" (click) = "onAddPledgesSubmit(resultModal)" [disabled]="!addPledgesForm.valid"> Submit</button>
+               <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+           </div>
+                        <!-- Pre Loader Strat  -->
+                        <div class='loadscreen' *ngIf="loading">
+
+                          <div class="loader spinner-bubble spinner-bubble-primary">
+                          </div>
+                        </div>
+                        <!-- Pre Loader end  -->
+
+       <div class="container p-0">
+           <div class="flex-grow-1"></div>
+           <div class="app-footer p-2">
+
+               <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                   <span class="flex-grow-1"></span>
+                   <div class="d-flex align-items-center">
+                       <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                       <div>
+                           <p class="m-0">&copy; 2020 DNF</p>
+                           <p class="m-0">All rights reserved</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+ </ng-template>
+
+  <!-- result Modal -->
+  <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+
+    </div>
+    <div class="modal-body pt-0" *ngIf="addSuccess">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+      </p>
+    </div>
+    <div class="modal-body pt-0" *ngIf="addDanger">
+        <p class="text-error-message mb-0"><strong><span> Error! </span></strong> {{message}}
+        </p>
+      </div>
+    <div class="modal-footer p-2">
+       <!-- <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewMembers()">Next</button> -->
+     <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Close</button>
+    </div>
+ </ng-template>
+
+ <!-- Donation Pop-up -->
+
+ <ng-template #donation let-modal>
+    <div class="overflow-y-scroll">
+       <div class="modal-header">
+          <div class="row align-items-center">
+              <div class="modal-logo ml-2">
+                  <a href="dashboard/home">
+                      <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                  </a>
+              </div>
+              <div class= "ml-2">
+                  <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+              </div>
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+
+       <div class="modal-body ">
+           <form [formGroup] = "donationToPledgeForm">
+               <div>
+                   <span class = "project-Title-donations pl-2">Donate to a Pledge</span>
+               </div>
+
+                   <div class = "row justify-content-center align-items-center mt-2">
+                    <div class="col-md-8 form-group ">
+                        <label> Pledge Info </label>
+                        <input type="text" placeholder="$ Amount" class="ml-2 form-control" disabled formControlName = "pledgeinfo" value = "{{memberPledgeInfo}}">
+                    </div>
+                       <div class="col-md-4 form-group ">
+                           <label *ngIf="pledgedCurrency=='INR'"> Amount(&#8377;)</label>
+                           <label *ngIf="pledgedCurrency!='INR'"> Amount(&#36;)</label>
+                           <input type="number" placeholder="Amount" class="ml-2 amount-field form-control" formControlName = "donatedAmount" value = "{{memberPledgeAmount}}">
+                                <div class="error-block text-danger"
+                                *ngIf="donationToPledgeForm.get('donatedAmount').errors && (donationToPledgeForm.get('donatedAmount').touched || donationToPledgeForm.get('donatedAmount').dirty)">
+                                <span *ngIf="donationToPledgeForm.get('donatedAmount').errors.required">Amount is required
+                                </span>
+                                <span *ngIf="donationToPledgeForm.get('donatedAmount').errors.pattern">
+                                    Enter a valid number, Only two digits after decimal is accepted.
+                                </span>
+                                </div>
+
+                       </div>
+                   </div>
+                   <div  class="row justify-content-center align-items-center" >
+                    <button type="button" class="btn btn-primary" (click)="openPayement(addPayement)" [disabled] = "!donationToPledgeForm.valid" >Pay</button>
+                   </div>
+           </form>
+           <div class="modal-footer">
+               <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+           </div>
+       </div>
+       <div class="container p-0">
+           <div class="flex-grow-1"></div>
+           <div class="app-footer p-2">
+
+               <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                   <span class="flex-grow-1"></span>
+                   <div class="d-flex align-items-center">
+                       <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                       <div>
+                           <p class="m-0">&copy; 2020 DNF</p>
+                           <p class="m-0">All rights reserved</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+ </ng-template>
+ <ng-template #addPayement let-modal>
+    <div class=" overflow-y-scroll">
+      <div class="modal-header">
+         <div class="row align-items-center">
+             <div class="modal-logo ml-2">
+                 <a href="dashboard/home">
+                     <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                 </a>
+             </div>
+             <div class= "ml-2">
+                 <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+             </div>
+         </div>
+         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+ <div class="modal-body ">
+        <div>
+            <span class = "project-Title-donations pl-2">Donate - {{memberPledgeInfo}}</span>
+        </div>
+
+            <div class = "row justify-content-center align-items-center mt-2">
+                <div class="col-md-6 form-group ">
+                    <label><strong> Amount</strong></label>
+                    : <span *ngIf="pledgedCurrency=='INR'">&#8377;</span><span *ngIf="pledgedCurrency!='INR'">&#36;</span> {{donationToPledgeForm.value.donatedAmount}}
+
+                </div>
+            </div>
+             <div class = "row justify-content-center align-items-center">
+                <ngx-paypal [config]="payPalConfig" ></ngx-paypal>
+
+               </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">Cancel</button>
+    </div>
+ </div>
+ <div class="container p-0">
+    <div class="flex-grow-1"></div>
+    <div class="app-footer p-2">
+
+        <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+            <span class="flex-grow-1"></span>
+            <div class="d-flex align-items-center">
+                <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                <div>
+                    <p class="m-0">&copy; 2020 DNF</p>
+                    <p class="m-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ </div>
+ </ng-template>
+ <ng-template #viewPledge let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{viewPledgeData.projectName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+           <div class="col-md-6">
+             <strong>Pledged Amount : </strong><span *ngIf="viewPledgeData.pledgedCurrency=='INR'">  &#8377; {{viewPledgeData.pledgeAmount}}</span>
+             <span *ngIf="viewPledgeData.pledgedCurrency!='INR'">&#36; {{viewPledgeData.pledgeAmount}}</span>
+          </div>
+          <div class="col-md-6">
+            <strong>Remaining Amount: </strong><span *ngIf="viewPledgeData.pledgedCurrency=='INR'"> &#8377;{{viewPledgeData.remAmount}} </span>
+            <span *ngIf="viewPledgeData.pledgedCurrency!='INR'"> &#36; {{viewPledgeData.remAmount}} </span>
+        </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <strong>Donation Frequency: </strong><span class="badge badge-success">{{viewPledgeData.donationFrequency  }} </span>
+            </div>
+            <div class="col-md-6">
+                <strong>Date :</strong><span>{{viewPledgeData.date | date:'MM-dd-yyyy' }}</span>
+              </div>
+         </div>
+    </div>
+ </ng-template>

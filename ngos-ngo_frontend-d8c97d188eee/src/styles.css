@@ -1,0 +1,375 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900');
+@import './assets/styles/css/themes/lite-purple.css';
+@import '~ng-wizard/themes/ng_wizard.min.css';
+@import '~ng-wizard/themes/ng_wizard_theme_arrows.min.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import "~angular-vertical-timeline/dist/vertical-timeline.css";
+
+@import "https://www.w3schools.com/w3css/4/w3.css";
+
+
+ @media screen and (min-width: 420px) {
+  .menu {
+    display: block;
+  }
+  .menu-1{
+    display: none;
+  }
+
+  }
+ 
+  @media only screen and (min-width: 768px) {
+    .menu {
+      display: none;
+    }
+    .menu-1{
+      display: none;
+    }
+
+  }
+
+  .breadcrumb {
+    /* background: transparent;
+    align-items: center;
+    margin: 5.5rem 0 1.25rem;
+    padding: 0; */
+}
+
+/* tob bar styles start */
+.main-header .menu-toggle {
+	width:90px;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	cursor:pointer;
+	margin-right:12px
+}
+.main-header .menu-toggle div {
+	width:24px;
+	height:1px;
+	background:#47404f;
+	margin:3px 0
+}
+    
+.navbar-nav li:hover > ul.dropdown-menu {
+    display: block;
+}
+.dropdown-submenu {
+    position:relative;
+}
+.dropdown-submenu>.dropdown-menu {
+    top:0;
+    /*left:-100%;*/
+    right:-10rem; /* 10rem is the min-width of dropdown-menu */
+    margin-top:-6px;
+}
+
+/* rotate caret on hover */
+.dropdown-menu > li > a:hover:after {
+    text-decoration: underline;
+    transform: rotate(-90deg);
+} 
+
+
+
+.dropbtn {
+  background-color:#663399;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #663399;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #663399;}
+
+.step-wizard .nav-tabs .nav-item .nav-link {
+  padding: 10px 0 10px 45px!important;
+}
+.cdk-overlay-container {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  z-index: 9999999 !important;
+}
+.datePicker .btn-secondary {
+  color: #222b37!important;
+  background-color: #eee!important;
+  border-color: #293544!important;
+}
+.text-success-message {
+  color:#4caf50!important;
+  text-align: center;
+}
+
+.text-error-message {
+  color:#e90d0d!important;
+  text-align: center;
+}
+.plusBtn{
+  font-size: 2rem;
+  border-radius: 50%;
+  padding:0px 15px;
+  float: right;
+  margin-bottom: 10px;
+  margin-top:-5px !important;
+  
+}
+.mt-0{
+  margin-top:0px;
+}
+.mb-1{
+  margin-bottom: 1rem;
+}
+.modal-content-height {
+  height: 100vh;
+  border-radius: 0 !important;
+}
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.modal-xl .modal-content { height: 100vh; }
+
+/* .timeline .timeline-item:first-child {
+  float: right;
+  padding: 0 0 3rem 3rem;
+  margin-top: 3rem;
+} */
+
+
+/* tob bar styles end */
+/* Add Member styles starts*/
+.min-height{
+  min-height: 72vh;
+}
+.member-modal-content{
+  min-height: 99vh;
+}
+.textsize-2rem{
+  font-size: 1.5rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.border-1{
+  border:2px solid rgb(233, 230, 223);
+}
+
+/*Add Member styles end */
+
+
+
+/* Member home styles starts*/
+
+.height-100p{
+  height:100px !important;
+}
+/* member dashboard box designs */
+.dashboard-panes{
+  border-radius: 10px;
+  color:white;
+  display: flex;
+  align-items: center !important;
+  justify-content: center;
+  height: 100px;
+  margin: 10px;
+}
+
+/* text size for activities */
+.text-size-15{ 
+  font-size: 15px;
+}
+/* Member Dashboard styles ends*/
+.side-dropdown {
+  margin-left: 160px !important;
+  width:200px;
+}
+
+
+/* Donation Screen styles starts*/
+ .donations_subText{
+   font-size:13px;
+   /* margin-top:-10px; */
+ }
+
+.border-radius-30{
+  border-radius: 10px;
+}
+
+.DNF-title{
+  font-size:20px !important;
+  font-weight: bold;
+}
+
+.project-Title-donations{
+  font-size:16px !important;
+  border-left: 5px solid darkcyan;
+
+}
+/* Donation Screen styles Ends*/
+
+
+
+.modal-logo img{
+  height:75px;
+  width:75px;
+}
+
+
+/* user role styles */
+
+.roleCard {
+  margin: 15px !important;
+}
+.rolesubCard {
+  margin: 10px !important;
+}
+
+/* view project styles */
+
+.underlineOnHover:hover{
+  text-decoration: underline;
+;
+}
+
+/* modal styles */
+.modal-logo{
+  height:50px !important;
+  width:50px !important;
+}
+.modal-min-height{
+  min-height: 40vh;
+}
+
+.amount-field{
+  height:35px;
+  width: 100px;
+}
+
+/* magazine list  */
+.screen-min-height{
+  min-height: 78vh;
+}
+
+.btn-success:hover {
+  color: #fff !important;
+  background-color: #409444 !important;
+  border-color: #3d8b40 !important ; 
+}
+/* a:hover{
+  color: #402060 !important;
+} */
+/* a{
+  color: #663399 !important;
+} */
+
+
+.clr{
+  margin-left: 30px;
+  color: #663399 !important;
+}
+.main-header .main-navbar{
+  display: block;
+}
+
+@media (min-width: 576px) {
+  .main-header .menu-toggle {
+    display: block;     
+  }
+  .main-header .main-navbar{
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .main-header .menu-toggle {
+    display: block;     
+  }
+  .main-header .main-navbar{
+    display: none;
+  }
+}
+@media (min-width: 992px) {
+  .main-header .menu-toggle {
+    display: block;     
+  }
+  .main-header .main-navbar{
+    display: none;
+  }
+}
+@media (min-width: 1200px) {
+  .main-header .menu-toggle {
+    display: none;     
+  }
+  .main-header .main-navbar{
+    display: block;
+  }
+  .navigation-left{
+    display: none; 
+  }
+}
+.navigation-left {
+  list-style: none;
+  text-align: left !important;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 20px;
+  background-color: #935fc6;
+  color: #fff;
+  flex: auto;
+  float: left;
+}
+.navigation-left .nav-item {
+  position: relative;
+  display: block;
+  width: 100%;
+  color: #26222a;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(51, 46, 56, 0.05); 
+}
+.navigation-left .nav-item a.nav-link{
+  color: #fff !important;
+}

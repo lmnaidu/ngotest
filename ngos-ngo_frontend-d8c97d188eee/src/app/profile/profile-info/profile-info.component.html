@@ -1,0 +1,840 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class=" row breadcrumb justify-content-end">
+      
+        <ul>
+            <li><a> Profile</a></li>
+            <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+    </div>
+    
+    <div class="card user-profile o-hidden mb-4" >
+        <div class="row">
+            <div class="col-md-4" >
+                <div class="row" style="margin-left: 25%;">
+                    <div class="user-info" style="margin-top: 15px;">
+                        <div *ngIf="userDetails.profileImage">
+                            <img   src="{{userDetails.profileImage}}" class="profile-picture avatar-lg mb-2">
+                        </div>
+                        <div *ngIf="!userDetails.profileImage">
+                            <img  src="../../../assets/images/faces/avatar1.png"class="profile-picture avatar-lg mb-2">
+                        </div>
+            
+                        <p class="m-0 text-24">{{userDetails.firstName}} {{userDetails.lastName}} </p>
+                        <p class="text-muted m-0">{{userDetails.role.roleName | titlecase}}</p>
+                        <p class="text-muted m-0">{{userDetails.userId }}</p>
+                    </div>
+                </div><br/>
+                <div class="row" style="margin-left: 5%;">
+                    <div class="col-md-4">
+                        <h6>Donated amount</h6>
+                        <p>50/-</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Involved projects</h6>
+                        <p>5</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Involved Events</h6>
+                        <p>5</p>
+                    </div>
+                </div>
+               <div class="row" style="margin-left: 5%;">
+                    <div>
+                       <h5> <b>Self Description</b></h5>
+                    </div>
+                    <div>
+                        <p class="textSpace">{{userDetails.description}}</p>
+                    </div>
+               </div>
+               <div class="row text-center">
+                    <div class="col-md-12">
+                        <h4 >
+                            <!-- (click)="openModel(updateData)" -->
+                            <button type="button" class="btn btn-success "[routerLink]="['/member/editUser',userDetails._id]" >Update Personal Information</button>
+                        </h4>
+                    </div>       
+               </div>
+              
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <ul class="nav nav-tabs profile-nav mb-4" id="profileTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link " id="timeline-tab" data-toggle="tab" href="#timeline" role="tab" aria-controls="timeline" aria-selected="false">Timeline</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Certificates</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="photos-tab" data-toggle="tab" href="#photos" role="tab" aria-controls="photos" aria-selected="false">Photos</a>
+                        </li>
+                    </ul>
+        
+                    <div class="tab-content " id="profileTabContent" >
+                        <div class="tab-pane fade " id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+                            <ul class="timeline clearfix">
+                                <li class="timeline-line"></li>
+                                <li class="timeline-item">
+                                    <div class="timeline-badge">
+                                        <i class="badge-icon bg-primary text-white i-Cloud-Picture"></i>
+                                    </div>
+                                    <div class="timeline-card card">
+                                        <div class="card-body">
+                                            <div class="mb-1">
+                                                <strong class="mr-1">Babu</strong> added a new photo
+                                                <p class="text-muted">3 hours ago</p>
+                                            </div>
+                                            <img class="rounded mb-2" src="assets/images/projectimages/Youth empowerment/Yoga1.jpg" alt="">
+                                            <div class="mb-3">
+                                                <a href="#" class="mr-1">Like</a>
+                                                <a href="#">Comment</a>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="button-comment1">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <div class="timeline-badge">
+                                        <img class="badge-img" src="assets/images/faces/profilePic1.jpg" alt="">
+                                    </div>
+                                    <div class="timeline-card card">
+                                        <div class="card-body">
+                                            <div class="mb-1">
+                                                <strong class="mr-1">Babu</strong> updated his sattus
+                                                <p class="text-muted">3 hours ago</p>
+                                            </div>
+                                            <p> Yoga is not a work-out it is a  work-in and this is the point of spiritual practice to make us teachable to open our hearts and focus our awareness. So, that we can know what we already know and be who we already are.
+                                            </p>
+                                            <div class="mb-3">
+                                                <a href="#" class="mr-1">Like</a>
+                                                <a href="#">Comment</a>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="button-comment2">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="timeline clearfix">
+                                <li class="timeline-line"></li>
+                                <li class="timeline-group text-center">
+                                    <button class="btn btn-icon-text btn-primary"><i class="i-Calendar-4"></i> 2020</button>
+                                </li>
+                            </ul>
+                            <ul class="timeline clearfix">
+                                <li class="timeline-line"></li>
+                                <li class="timeline-item">
+                                    <div class="timeline-badge">
+                                        <i class="badge-icon bg-danger text-white i-Love-User"></i>
+                                    </div>
+                                    <div class="timeline-card card">
+                                        <div class="card-body">
+                                            <div class="mb-1">
+                                                <strong class="mr-1">New followers</strong>
+                                                <p class="text-muted">2 days ago</p>
+                                            </div>
+                                            <p><a href="#">Henry krick</a> and 16 others followed you</p>
+                                            <div class="mb-3">
+                                                <a href="#" class="mr-1">Like</a>
+                                                <a href="#">Comment</a>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="button-comment3">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <div class="timeline-badge">
+                                        <i class="badge-icon bg-primary text-white i-Cloud-Picture"></i>
+                                    </div>
+                                    <div class="timeline-card card">
+                                        <div class="card-body">
+                                            <div class="mb-1">
+                                                <strong class="mr-1">Babu</strong> added a new photo
+                                                <p class="text-muted">2 days ago</p>
+                                            </div>
+                                            <img class="rounded mb-2" src="../../../assets/images/projectimages/Youth empowerment/youth1.jpg" alt="">
+                                            <div class="mb-3">
+                                                <a href="#" class="mr-1">Like</a>
+                                                <a href="#">Comment</a>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" id="button-comment4">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="timeline clearfix">
+                                <li class="timeline-line"></li>
+                                <li class="timeline-group text-center">
+                                    <button class="btn btn-icon-text btn-warning"><i class="i-Calendar-4"></i> Joined
+                                        in 2013</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade active show" id="about" role="tabpanel" aria-labelledby="about-tab">
+                           <div class="row">
+                               <div class="col-md-6">
+                                  <h4 >Personal Information</h4>
+                               </div>
+                             
+                           </div>
+        
+                            <div class="row">
+                               
+                                <div class="col-md-4 col-6">
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-MaleFemale text-16 mr-1"></i> Gender</p>
+                                        <span>{{userDetails.gender | titlecase}}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-MaleFemale text-16 mr-1"></i> Email</p>
+                                        <span>{{userDetails.email}}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Cloud-Weather text-16 mr-1"></i> Company</p>
+                                        <span>Tech Soup</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Face-Style-4 text-16 mr-1"></i> Phone</p>
+                                        <span>{{userDetails.phone.phoneNumber}}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Professor text-16 mr-1"></i> Address</p>
+                                        <span>{{userDetails.street}}, {{userDetails.address}}</span>
+                                        
+                                    </div>
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> City</p>
+                                        <span>{{cityDetails.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="mb-4" *ngIf="userDetails.birthDay">
+                                        <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i> Birth Date</p>
+                                        <span>{{userDetails.birthDay | date:'MM-dd-yyyy'}}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Face-Style-4 text-16 mr-1"></i> State</p>
+                                        <span>{{stateDetails.name}}</span>
+                                    </div>
+                                 
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Country</p>
+                                        <span> {{countryDetails.name}}</span>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            <hr>
+                            <div *ngIf="userDetails.indiaAccountDetails.length != 0">
+                                <h4 >Account Details</h4>
+                                <h5 class="textSpace"><strong>Indian Account Details</strong></h5>
+                                <div class="row">
+                                 <div class="col-md-4 col-6">
+                                     <div class="mb-4" >
+                                         <p class="text-primary mb-1">
+                                             <i class="i-Face-Style-4 text-16 mr-1"></i>
+                                              Account holder Name</p>
+                                         <!-- <span>{{userDetails.accountHolderName | titlecase}}</span> -->
+                                         <span>{{indianAccounts.accountHolderName | titlecase}}</span>
+                                     </div>
+                                    
+                                 </div>
+                                 <div class="col-md-4 col-6">
+                                    
+                                     <div class="mb-4">
+                                         <p class="text-primary mb-1">
+                                             <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                              Account Number</p>
+                                         <span>{{indianAccounts.accountNumber }}</span>
+                                     </div>
+                                 
+                                    
+                                 </div>
+                                 <div class="col-md-4 col-6">
+     
+                                 
+                                     <div class="mb-4">
+                                         <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Bank Name</p>
+                                         <span>{{indianAccounts.bankName}}</span>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col-md-4 col-6">
+                                     <div class="mb-4" >
+                                         <p class="text-primary mb-1">
+                                             <i class="fa fa-university" aria-hidden="true"></i>
+                                              Branch Name</p>
+                                         <span>{{indianAccounts.branchName }}</span>
+                                     </div>
+                                    
+                                 </div>
+                                 <div class="col-md-4 col-6">
+                                    
+                                     <div class="mb-4">
+                                         <p class="text-primary mb-1">
+                                             <i class="fa fa-codepen" aria-hidden="true"></i>
+                                              IFSC Code</p>
+                                         <span>{{indianAccounts.ifscCode}}</span>
+                                     </div>
+                                 
+                                    
+                                 </div>
+                                 
+                             </div>
+                            </div>
+                        
+                        <div *ngIf="userDetails.usaAccountDetails.length != 0">
+                            <h5 class="textSpace"><strong>USA Account Details</strong></h5>
+                            <div class="row">
+                                <div class="col-md-4 col-6">
+                                    <div class="mb-4" >
+                                        <p class="text-primary mb-1">
+                                            <i class="i-Face-Style-4 text-16 mr-1"></i>
+                                             Account holder Name</p>
+                                        <span>{{usaAccounts.accountHolderName | titlecase}}</span>
+                                    </div>
+                                   
+                                </div>
+                                <div class="col-md-4 col-6">
+                                   
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1">
+                                            <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                             Account Number</p>
+                                        <span>{{usaAccounts.accountNumber }}</span>
+                                    </div>                               
+                                </div>
+                                <div class="col-md-4 col-6">                              
+                                    <div class="mb-4">
+                                        <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Routing Number</p>
+                                        <span>{{usaAccounts.routingNumber}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-6">
+                                    <div class="mb-4" >
+                                        <p class="text-primary mb-1">
+                                            <i class="fa fa-university" aria-hidden="true"></i>
+                                             Address</p>
+                                        <span>{{usaAccounts.address }}</span>
+                                    </div>                             
+                                </div>                              
+                            </div>
+                        </div>                   
+                        </div>
+        
+                        <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+                            <h4>Participation Certificates</h4>
+                            <div class="row overflow-y-scroll ParticipationHeight"  >
+                              
+                                <div class="col-md-3" *ngFor="let cer of participationCertificates">
+                                   
+                                    <div class="card card-profile-1 mb-4">
+                                        <div class="card-body text-center">
+                                            <div class="cardData">
+                                                <div>
+                                                    <p class="previewtext">{{cer.eventId.note}}</p>
+                                                </div>
+                                                <div>
+                                                    <img src="../../../assets/images/certificatePar.PNG" style="height: 100%;width: 100%;">
+                                                </div>                                             
+                                                <div class="overlay">
+                                                    <div class="text">
+                                                      <a (click)="openPreview(previewCertificate,cer._id)" title="view certificate" style="cursor: pointer;">
+                                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                      </a> 
+                                                      
+                                                      <!-- <a href="">
+                                                        <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+        
+                                                      </a> -->
+                                                    </div>
+                                                    
+                                                  </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- <div class="col-md-3">
+                                    <div class="card card-profile-1 mb-4">
+                                        <div class="card-body text-center">
+                                            <div class="cardData">
+                                                <img src="../../../assets//images/Certificates/5.jpg" style="height: 360px;width: 100%;">
+                                                <div class="overlay">
+                                                    <div class="text">
+                                                        <strong> certificate - 1</strong><br/>
+                                                      <a href="">
+                                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                      </a> 
+                                                      
+                                                      <a href="">
+                                                        <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+        
+                                                      </a>
+                                                    </div>
+                                                    
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-3">
+                                    <div class="card card-profile-1 mb-4">
+                                        <div class="card-body text-center">
+                                            <div class="cardData">
+                                                <img src="../../../assets//images/Certificates/7.jpeg" style="height: 360px;width: 100%;">
+                                                <div class="overlay">
+                                                    <div class="text">
+                                                        <strong> certificate - 1</strong><br/>
+                                                      <a href="">
+                                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                      </a> 
+                                                      
+                                                      <a href="">
+                                                        <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+        
+                                                      </a>
+                                                    </div>
+                                                    
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+        
+                                <div class="col-md-3">
+                                    <div class="card card-profile-1 mb-4">
+                                        <div class="card-body text-center">
+                                            <div class="cardData">
+                                                <img src="../../../assets//images/Certificates/4.jpg" style="height: 360px;width: 100%;">
+                                                <div class="overlay">
+                                                    <div class="text">
+                                                        <strong> certificate - 1</strong><br/>
+                                                      <a href="">
+                                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                      </a> 
+                                                      
+                                                      <a href="">
+                                                        <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+        
+                                                      </a>
+                                                    </div>
+                                                    
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div> -->
+                            </div>
+                            <h4>Donation Certificates</h4>
+                            <div class="row overflow-y-scroll DonationHeight" >
+                                <!--  -->
+                                <div class="col-md-3" *ngFor="let donation of donationCertificates.donation">
+                                   
+                                    <div class="card card-profile-1 mb-4">
+                                        <div class="card-body text-center">
+                                            <div class="cardData">
+                                                <div>
+                                                    <p >{{donation.projectId.projectName}}</p>
+                                                </div>
+                                                <div>
+                                                    <img src="../../../assets/images/DonaorCertificate.PNG" style="height: 100%;width: 100%;">
+                                                </div>                                             
+                                                <div class="overlay">
+                                                    <div class="text">
+                                                      <a (click)="openDonationPreview(previewDonaorCertificate,donation._id)" title="view certificate" style="cursor: pointer;">
+                                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                      </a> 
+                                                      
+                                                      <!-- <a href="">
+                                                        <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+        
+                                                      </a> -->
+                                                    </div>
+                                                    
+                                                  </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/youth1.jpg" alt="" >
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/women &Rural employment.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/youth2.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/DIGITAL.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/digital class room.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/5.IMG-20171201-WA0021.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img" src="assets/images/organic.jpg" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img" src="assets/images/physically_1(1).JPG" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white o-hidden mb-3">
+                                        <img class="card-img" src="assets/images/physically_1(2).JPG" alt="">
+                                        <div class="card-img-overlay">
+                                            <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                    12 </span>
+                                                <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+       
+        
+      
+    </div>
+   
+</div>
+<ng-template #updateData let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Update Personal Infermation</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12"> 
+                <form [formGroup]="profileForm" >        
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Salutation</label>
+                             
+                                <select class="form-control" formControlName="salutation" value="{{profileInfo.salutation}}">
+                                    <option value="" disabled selected>Select the Salutation </option>
+                                    <option value="Mr">Mr</option>
+                                    <option value="Ms">Ms</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Dr">Dr</option>
+                                    <option value="Prof">Prof</option>
+                                    <option value="Mx">Mx</option>
+                                 </select>
+                                
+                            </div>
+                            <div class="col-md-4">
+                                <label>First Name</label>
+                                <input type="text" formControlName="firstName" value="{{profileInfo.firstName}}" class="form-control form-control-rounded" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Last name</label>
+                                <input type="text" formControlName="lastName" class="form-control form-control-rounded"  value="{{profileInfo.lastName}}"/>
+                            </div>
+                        </div>              
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Company Name</label>
+                                <input type="text" formControlName="companyName" class="form-control form-control-rounded" value="{{profileInfo.companyName}}"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Birthday</label>
+                                <input type="date" formControlName="birthday" class="form-control form-control-rounded" value="{{profileInfo.birthday }}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Phone</label>
+                                <input type="text" formControlName="phone" class="form-control form-control-rounded" value="{{profileInfo.phone}}"/>
+                            </div>
+                        </div>              
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Email</label>
+                                <input type="text" formControlName="email" class="form-control form-control-rounded" value="{{profileInfo.email}}"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Address</label>
+                                <input type="text" formControlName="address" class="form-control form-control-rounded" value="{{profileInfo.address}}"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Street</label>
+                                <input type="text" formControlName="street" class="form-control form-control-rounded" value="{{profileInfo.street}}"/>
+                            </div>
+                        </div>              
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>City</label>
+                                <input type="text" formControlName="city" class="form-control form-control-rounded" value="{{profileInfo.city}}"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label>State</label>
+                                <input type="text" formControlName="state" class="form-control form-control-rounded" value="{{profileInfo.state}}"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Country</label>
+                                <input type="text" formControlName="country" class="form-control form-control-rounded" value="{{profileInfo.country}}"/>
+                            </div>
+                        </div>              
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Zipcode</label>
+                                <input type="text" formControlName="zipcode" class="form-control form-control-rounded" value="{{profileInfo.zipcode}}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label>About your self</label>
+                                <textarea type="text" formControlName="summary" class="form-control form-control-rounded" value="{{profileInfo.summary}}"></textarea>
+                            </div>
+                        </div>              
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      <button type="button" class="btn btn-success" (click)="updateProfile()">Save</button>
+    </div>
+  </ng-template>
+
+
+  <ng-template #previewCertificate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Preview 
+           <!-- <input class="btn btn-primary" id="saveResume" type="button" value="Download" (click)="captureScreen()" /> -->
+        </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        <div style="text-align:center; border: 10px solid #178509"  id="contentToConvert">
+            <div style=" text-align:center; border: 5px solid #ff9831">
+                <div style="margin: 5%;">
+                    <img src="../../../assets/images/logo.png" width="100px">
+                    <h3 style="font-size:45px; font-weight:bold">Certificate of Participation</h3>
+                    <div>
+                        <span style="font-size:25px"></span>
+                    </div>
+                    <div>
+                        <span style="font-size:35px;">
+                            This is to certify that <b style=" font-family: Lucida Calligraphy;">{{singleCertificateData.userId.firstName}} {{singleCertificateData.userId.lastName}}</b>, has actively participated in the  <strong>{{singleCertificateData.eventId.note}}</strong> event at<strong> {{singleCertificateData.eventId.location}}</strong> on <strong>{{singleCertificateData.eventId.date | date:'MM-dd-yyyy'}}</strong>.
+                        </span>
+                    </div>
+                    <!-- <div>
+                        <span style="font-size:25px">has actively participated in the
+                            <strong>{{singleCertificateData.eventId.note}}</strong> event at<strong> {{singleCertificateData.eventId.location}}</strong> on <strong>{{singleCertificateData.eventId.date | date:'MM-dd-yyyy'}}</strong>.</span>
+                    </div>       -->
+                    <div>
+                        <span style="font-size:25px">Generated Date - {{singleCertificateData.generatedDate | date:'MM-dd-yyyy'}}  </span>
+                    </div>
+                        <br/><br/><br/>
+                    <div class="pull-right">
+                        <h2>DNF Team</h2>
+                    </div> 
+                 
+                </div>
+             
+                 
+            </div>
+           
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-success" (click)="sendMail(singleCertificateData,resultModal)">Send Email</button> -->
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+     
+    </div>
+  </ng-template>
+
+  <ng-template #previewDonaorCertificate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Preview 
+           <!-- <input class="btn btn-primary" id="saveResume" type="button" value="Download" (click)="captureScreen()" /> -->
+        </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        <div>
+            <div style=" height:650px;  padding:20px; text-align:center; border: 8px solid #eea200; border-radius:20px ">
+                <div style=" height:590px; padding:20px; text-align:center; border: 5px solid #060757; border-radius:20px">          
+                  <div style="margin: 2%;">
+                    <div class="container-fluid" style="background-color: #178509">
+                        <h3 style="font-size:45px; font-weight:bold; font-family:Lucida Calligraphy; color: #ffffff"> Certificate of Appreciation</h3>
+                    </div>
+                    <div>
+                        <span style="font-size:25px"><i></i></span>
+                    </div>
+                           <br><br>
+                           <div>
+                                <span style="font-size:35px; ">This certificate is gratefully presented to <b style="font-family: Caviar Dreams;">{{singleDonationDetails.memberName}}</b>, we express our sincere gratitude for your contribution of &#8377; {{singleDonationDetails.amount}} in support of the <strong>{{singleDonationDetails.projectId.projectName}}</strong> at <strong>{{singleDonationDetails.projectId.projectLocation}}</strong> and shows our appreciation for their sacrifices.</span>
+                           </div>
+                           <br/><br/><br/><br/>
+                           <div class="row">
+                                <div class="col-md-4">
+                                    <p style="font-size:25px; float: left"><i>Date: {{singleDonationDetails.dateAdded | date:'MM-dd-yyyy'}}</i></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <img src="../../../assets/images/logo.png" width="100px">
+                                </div>
+                                <div class="col-md-4">
+                                    <p style="font-size:25px; float: right"><i>DNF Team</i></p>
+                                </div> 
+                           </div>
+
+                           <!-- <span style="font-size:25px"><i>We express our sincere gratitude for your contribution in support of the <strong>{{singleDonationDetails.projectId.projectName}}</strong> at <strong>{{singleDonationDetails.projectId.projectLocation}}</strong> and shows our appreciation for their sacrifices.</i></span> -->
+                            
+                           <!-- <span style="font-size:20px"></span> <br/><br/> -->
+                        
+                  </div>                                      
+                </div>
+            </div>
+        </div>
+     
+    </div>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-success" (click)="sendMail(singleCertificateData,resultModal)">Send Email</button> -->
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+     
+    </div>
+  </ng-template>
+

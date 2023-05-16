@@ -1,0 +1,220 @@
+
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+   <div class="breadcrumb justify-content-end">
+      <ul>
+          <li><a>Organization Details </a></li>
+         <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+      
+      </ul>
+   </div> 
+  <!-- <div class="separator-breadcrumb border-top"></div> -->
+  <!-- <div class="row">
+     <div class="col-md-12">
+        <div class="card mb-4"> 
+           <div class="card-body">
+              <div class="card-title mb-3">News <button class="btn btn-sm btn-primary" routerLink="/news/addNews">+Add</button></div>
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="text-left">
+                       <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table table-bordered" *ngIf="newsData">
+                              <thead class="table-success">
+                                <tr>
+                                  <th scope="col"> ID</th>
+                                  <th scope="col">Title</th>
+                                  <th scope="col">Discription</th>
+                                  <th scope="col">Image</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let user of newsData.News; let i = index">
+                                  <th scope="row">{{user._id}}</th>
+                                  <td>{{user.title}} </td>
+                                  <td>{{user.discription}}</td>
+                                  <td>
+                                      
+                                        <img src="{{user.image}}">
+                                    </td>
+                                  
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div> -->
+  <div class="row">
+   <div class="col-md-12">
+      <div class="card o-hidden mb-4">
+            <div class="row  card-header">
+               <div class="col-md-6">
+                  <div class="card-title mb-3">Organization Details</div>
+               </div>
+               <div class="col-md-3">
+
+               </div>
+               <!-- <div class="col-md-3">
+                 
+                  <input type="text" placeholder="Search News Title" name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+
+              </div> -->
+            </div>
+            <div class="table-responsive">
+               <table class="table">
+                  <thead>
+                     <tr>
+                        <th scope="col">Name of the Organization</th>
+                        <th scope="col">Logo</th>
+                        <th scope="col">Actions</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <ng-container >
+                       <tr *ngIf="!dataPresent">
+                           <td >
+                              -Not updated-
+                           </td>
+                           <td>
+                              -Not updated-
+                           </td>
+                           <td>
+                            <a (click)="updateModel(updateData)" class="text-success mr-4" title="update data"> <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                            </a>
+                           </td>
+                       </tr>
+                       <tr *ngIf="dataPresent">
+                        <td >
+                           {{orgdataRes.orgInfo[0].title}}
+                        </td>
+                        <td>
+                           <img src="{{orgdataRes.orgInfo[0].logo}}">
+                        </td>
+                        <td>
+                         <a (click)="updateModel(updateData)" class="text-success mr-4" title="upadte data"> <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                         </a>
+                        </td>
+                    </tr>
+
+                     </ng-container>
+                  
+                  
+                  </tbody>
+                  <tfoot>
+                    
+                  
+                  </tfoot>
+               </table>
+            </div>
+      </div>
+   </div>
+</div>
+</div>
+
+
+  <!-- edit News Start -->
+  <ng-template #updateData let-modal>
+      <!-- Pre Loader Strat  -->
+      <div class='loadscreen' *ngIf="loading">
+
+        <div class="loader spinner-bubble spinner-bubble-primary">
+        </div>
+    </div>
+    <!-- Pre Loader end  -->
+   <div class="modal-header">
+     <h4 class="modal-title">Edit Organization details</h4>
+     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+     </button>
+   </div>
+   <div class="modal-body">
+      <form [formGroup]="orgEditDataForm" >
+         <div class="row">
+            <div class=" col-md-6">
+               <div class="form-group">
+                 <label>Name of the Organization <span class="text-danger"> *</span> </label>
+                 <input type="text"    formControlName="title" class="form-control form-control-rounded" />
+	 			<div class="error-block text-danger"
+                  *ngIf="orgEditDataForm.get('title').errors && (orgEditDataForm.get('title').touched || orgEditDataForm.get('title').dirty)">
+                  <!-- <span *ngIf="orgEditDataForm.get('title').errors.required">
+                     {{errorMessageTitleReq}}
+                  </span>
+                  <span *ngIf="orgEditDataForm.get('title').errors.pattern">
+                     {{errorMessageTitleInvalid}}
+                  </span> -->
+               </div>
+				</div>
+                 
+             </div>
+            
+         </div>       
+        
+         <div class="row">
+           <div class="col-md-6 form-group">
+             <label>Logo <span class="text-danger"> *</span> </label>
+             <input type="file" class="form-control form-control-rounded" formControlName="image" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" class="form-control mb-10">
+           </div>
+             <!-- <input type="file" formControlName="image" class="form-control form-control-rounded"  /> -->
+           <!-- <div class="col-md-6">
+               <img  src="{{orgdataRes.orgInfo[0].logo}}" alt="newImage" style="width: 50%;">
+           </div> -->
+            
+         </div>
+         <div class="row">
+            
+            <div class="col-md-6">
+               <div class="col-md-8">
+                   <img [src]="image" *ngIf="image != null || image == ''" alt="profile pic" class="picture" />
+               </div>
+            
+           </div>
+           <div class="col-md-6">
+               <image-cropper [imageChangedEvent]="imageChangedEvent" id="imageCropper" [maintainAspectRatio]="true" [aspectRatio]="1/1" [resizeToWidth]="128" format="png" outputType="both" autoCrop="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+           </div>
+         </div>
+         <div class="clearfix"></div>
+     </form>   
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+     <button type="button" class="btn btn-success"  [disabled]="!orgEditDataForm.valid" (click)="updateOrg(resultModal)" >Update</button>
+    
+   </div>
+ </ng-template>
+  <!-- edit News End -->
+
+  
+
+    <!-- result modal -->
+ <ng-template #resultModal let-modal>
+   <div class="modal-header border-0 pt-2 pb-2 pr-2">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body pt-0" *ngIf="addSuccess">
+     <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+     </p>
+   </div>
+   <div class="modal-body pt-0"  *ngIf="addDanger">
+      <p class="text-error-message mb-0"><strong><span> Error! </span></strong>{{message}}
+      </p>
+    </div>
+   <div class="modal-footer p-2">
+    
+     <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+   </div>
+</ng-template>
+<!-- result modal end -->

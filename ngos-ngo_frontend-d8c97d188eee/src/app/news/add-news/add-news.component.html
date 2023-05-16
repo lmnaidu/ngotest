@@ -1,0 +1,121 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+                 <!-- Pre Loader Strat  -->
+                 <div class='loadscreen' *ngIf="loading">
+
+                  <div class="loader spinner-bubble spinner-bubble-primary">
+                  </div>
+              </div>
+              <!-- Pre Loader end  -->
+    <div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+      <div class="breadcrumb justify-content-end">
+        <ul>
+          <li><a> Add News</a></li>
+          <li><a routerLink = "/news/newsList" class = "underlineOnHover" title = "Go To News List"> News</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>   
+        <!-- <div class="separator-breadcrumb border-top"></div> -->
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="card-title mb-3">Add News</div>
+                        <form [formGroup]="newsDataForm" >
+                    
+                            <div class="form-group">
+                              <div class="col-md-6">
+                                <label>Title<span class="text-danger"> *</span></label>
+                                <input type="text" formControlName="title" class="form-control form-control-rounded" />
+                                <div class="error-block text-danger"
+                                  *ngIf="newsDataForm.get('title').errors && (newsDataForm.get('title').touched || newsDataForm.get('title').dirty)">
+                                  <span *ngIf="newsDataForm.get('title').errors.required">
+                                    {{errorMessageTitleReq}}
+                                  </span>
+                                  <span *ngIf="newsDataForm.get('title').errors.pattern">
+                                    {{errorMessageTitleInvalid}}
+                                  </span>
+                                </div>
+                              </div>
+                                
+                            </div>
+                            <div class="form-group">
+                               <div class="col-md-6">
+                                    <label>Description<span class="text-danger"> *</span></label>
+                                    <textarea formControlName="description" rows="4" class="form-control form-control-rounded" ></textarea>
+                                    <!-- <input type="text" formControlName="description" class="form-control form-control-rounded" /> -->
+                                    <div class="error-block text-danger"
+                                      *ngIf="newsDataForm.get('description').errors && (newsDataForm.get('description').touched || newsDataForm.get('description').dirty)">
+                                      <span *ngIf="newsDataForm.get('description').errors.required">
+                                       {{errorMessageDescriptionReq}}
+                                      </span>
+                                      <span *ngIf="newsDataForm.get('description').errors.pattern">
+                                        {{errorMessageDescriptionInvalid}}
+                                      </span>
+                                      <!-- <span *ngIf="newsDataForm.get('description').errors.maxlength">
+                                        {{errorMessageDescriptionMaxLimit}}
+                                      </span> -->
+                                    </div>
+                               </div>
+                                
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-6">
+                                <label>image<span class="text-danger"> *</span></label>
+                                <input type="file" class="form-control form-control-rounded" formControlName="image" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" class="form-control mb-10">
+                                <div class="error-block text-danger"
+                                  *ngIf="newsDataForm.get('image').errors && (newsDataForm.get('image').touched || newsDataForm.get('image').dirty)">
+                                  <span *ngIf="newsDataForm.get('image').errors.required">
+                                    {{errorMessageImageReq}}
+                                  </span>                              
+                                </div>
+                              </div>
+                                <!-- <input type="file" formControlName="image" class="form-control form-control-rounded"  /> -->
+            
+                                <div class="col-md-6">
+                                    <div class="col-md-8">
+                                        <img [src]="image" *ngIf="image != null || image == ''" alt="profile pic" class="picture" />
+                                    </div>
+                                 
+                                </div>
+                                <div class="col-md-6">
+                                    <image-cropper [imageChangedEvent]="imageChangedEvent" id="imageCropper" [maintainAspectRatio]="true" [aspectRatio]="1/1" [resizeToWidth]="128" format="png" outputType="both" autoCrop="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+                                </div>
+                               
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success pull-right m-2" [disabled] = "!newsDataForm.valid" (click)="addNews(resultModal)" id="addPersonalDetails">Save</button>
+                                <button type="button" class="btn btn-danger pull-right m-2" (click)="cancel()" id="addPersonalDetails" >Cancel</button>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                        </form>   
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+</div>
+
+
+   <!-- result modal -->
+   <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+ </ng-template>
+ <!-- result modal end -->

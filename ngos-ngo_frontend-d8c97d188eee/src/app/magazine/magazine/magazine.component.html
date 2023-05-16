@@ -1,0 +1,168 @@
+<div class="container">
+    <div class="main-content-wrap sidenav-open screen-min-height d-flex flex-column pt-0">
+        <div class="breadcrumb justify-content-end">
+            <ul>
+                <li><a> Add Magazines</a></li>
+                <li><a routerLink = "/magazine/magazine-list" class = "underlineOnHover" title = "Go To MagazinesList"> Magazines</a></li>
+               <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+            
+            </ul>
+         </div>  
+        <!-- <div class="separator-breadcrumb border-top"></div> -->
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card-title mb-3">Add Magazine</div>
+                            </div>
+                            <div class="col-md-8">
+                                <form [formGroup]="filterForm" >
+                                    <div class="row">
+                                            <div class="col-md-4">
+                                                <!-- <label>Start Date <span class="text-danger"> *</span></label> -->
+                                                <div class="input-group">
+                                                    <input class="form-control" [owlDateTime]="startDate" placeholder="Start Date"  [owlDateTimeTrigger]="startDate" formControlName="startDate" [max]="todayDate" (dateTimeInput)="dateValidate()">
+                                                    <div class="input-group-append datePicker">
+                                                        <button class="btn btn-secondary" [owlDateTimeTrigger]="startDate" type="button">
+                                                            <i class="icon-regular i-Calendar-4"></i>
+                                                        </button>
+                                                    </div>
+                                                    <owl-date-time #startDate [pickerType]="'calendar'"></owl-date-time>
+                                                
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>End Date <span class="text-danger"> *</span></label> -->
+                                                <div class="input-group">
+                                                    <input class="form-control" [owlDateTime]="endDate" placeholder="End Date"  [owlDateTimeTrigger]="endDate"  formControlName="endDate" [max]="todayDate" (dateTimeInput)="dateValidate()">
+                                                    <div class="input-group-append datePicker">
+                                                        <button class="btn btn-secondary" [owlDateTimeTrigger]="endDate" type="button">
+                                                            <i class="icon-regular i-Calendar-4"></i>
+                                                        </button>
+                                                    </div>
+                                                    <owl-date-time #endDate [pickerType]="'calendar'"></owl-date-time>
+                                                
+                                                </div>
+                                                <p class="error-block text-danger" *ngIf="dateError">{{dateError}}</p>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                               
+                                                <div class="input-group">
+                                                    <button type="button" [disabled] = "!filterForm.valid || dateError" class="btn btn-success pull-right m-2" (click)="serachFilter()"  id="addMagazines">Filter</button>
+                                                    <button type="reset" (click)="reset()" class="btn btn-info pull-right m-2"  id="reset">Reset</button> 
+                                                    
+                                                </div>  
+                                               
+                                            </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <ul *ngIf="nofilterProjects">
+                                    <li class="error-block text-danger">{{nofilterProjects}}</li>
+                                   
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <ul  *ngIf="nofilterNews">
+                                    <li class="error-block text-danger">{{nofilterNews}}</li> 
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <ul *ngIf="nofilterEvents">
+                                    <li class="error-block text-danger">{{nofilterEvents}}</li> 
+                                </ul>
+                            </div> 
+                        </div>
+                       
+                        <form [formGroup]="magazineForm" >
+                    
+                           <div class="row"> 
+                                <div class="form-group col-md-6">
+                                    <label>Project <span class="text-danger"> *</span></label>                                 
+                                     <ng-multiselect-dropdown  formControlName="projectId"  class="form-control-rounded" [placeholder]="'Select Project'" [settings]="projectSettings"  [data]="projectsData" (onDeSelect)="onItemDeSelect($event)" (onSelect)="onItemSelect($event)"></ng-multiselect-dropdown>
+                                     <div class="error-block text-danger"
+                                        *ngIf="magazineForm.get('projectId').errors && (magazineForm.get('projectId').touched || magazineForm.get('projectId').dirty)">
+                                        <span *ngIf="magazineForm.get('projectId').errors.required">Project Data is required.
+                                        </span>
+                                     
+                                    </div> 
+                                </div>
+                                <div class="form-group col-md-6">
+                                        <label>News <span class="text-danger"> *</span></label>                                  
+                                         <ng-multiselect-dropdown formControlName="newsId" class="form-control-rounded" [placeholder]="'Select News'" [settings]="newsSettings"  [data]="newsesData" (onSelect)="onItemNewsSelect($event)" (onDeSelect)="onNewsDeSelect($event)"></ng-multiselect-dropdown>
+                                         <div class="error-block text-danger"
+                                        *ngIf="magazineForm.get('newsId').errors && (magazineForm.get('newsId').touched || magazineForm.get('newsId').dirty)">
+                                            <span *ngIf="magazineForm.get('newsId').errors.required">news Data is required.
+                                            </span>
+                                     
+                                        </div>
+                                </div>
+                           </div>
+                           <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Events <span class="text-danger"> *</span></label>
+                                  
+                                     <ng-multiselect-dropdown  formControlName="event" class="form-control-rounded" [placeholder]="'Select Event'" [settings]="eventSettings"  [data]="eventsData" (onSelect)="onItemEventSelect($event)" (onDeSelect)="onEventsDeSelect($event)"></ng-multiselect-dropdown>
+                                    
+                                     <div class="error-block text-danger"
+                                     *ngIf="magazineForm.get('event').errors && (magazineForm.get('event').touched || magazineForm.get('event').dirty)">
+                                         <span *ngIf="magazineForm.get('event').errors.required">Events Data is required.
+                                         </span>
+                                  
+                                     </div>
+                                </div>
+                                <!-- <div class="form-group col-md-6">
+                                        <label>Ads</label>
+                                        <input type="text" formControlName="adds" class="form-control form-control-rounded" />
+                                </div> -->
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success pull-right m-2" (click)="addmagazine(resultModal)" [disabled] = "!magazineForm.valid" id="addMagazines">Save</button>
+                                <button type="button" class="btn btn-danger pull-right m-2" (click)="cancel()" id="addPersonalDetails" >Cancel</button>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                        </form>   
+                            <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+</div>
+
+   <!-- result modal -->
+   <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+ </ng-template>
+ <!-- result modal end -->

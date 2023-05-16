@@ -1,0 +1,165 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> User Types</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div> 
+
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-1">
+
+        </div>
+        <div class="col-md-10">
+            <div class="card text-left">
+                    <div class="card-body">
+                    <h4 class="card-title mb-3">User Types <button class="btn btn-primary" title="Add User Type"  (click)="openAddUserType(addUserType)"> + Add </button></h4>
+    
+                    
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">User Types</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let userType of userTypesList.UserTypes ; let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{userType.userType | uppercase}}</td>
+                                    <td>
+                                        <a  class="text-success mr-2 pointer" (click)="editUserType(editUerTypes,userType._id)" title = "Edit User Type">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- <div *ngIf = "length > 5 "> -->
+                            <!-- <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="userTypesList.length" [boundaryLinks]="true">
+                            </ngb-pagination> -->
+                        <!-- </div> -->
+                    </div>
+    
+    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+
+        </div>
+       
+    
+    </div>
+</div>
+<!-- add user types -->
+    <ng-template #addUserType let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Add User Type</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body pt-0">
+
+            <form  [formGroup] = "userTypesForm" id="userTypesForm">
+
+                <div class="row ">           
+                    <div class="col-md-12 form-group mb-3"> 
+                        <strong>User Type<span class="text-danger">*</span></strong>
+                        <input type="text" class="form-control" placeholder="Enter User Type" formControlName = "userType">
+                        <div class="error-block text-danger"
+                        *ngIf="userTypesForm.get('userType').errors && (userTypesForm.get('userType').touched || userTypesForm.get('userType').dirty)">
+                        <span *ngIf="userTypesForm.get('userType').errors && userTypesForm.get('userType').errors.required">
+                            User Type is required
+                        </span>
+                    </div>
+                     </div>
+                </div>
+                
+                <div class="col-md-12  text-center"> 
+                    <button type="button" class="btn btn-success"  [disabled] = !userTypesForm.valid (click) = "onUserTypeSubmit(resultModal,resultErrorModal)">Submit</button>
+                 </div>
+
+            </form>
+        </div>
+
+     </ng-template>
+
+     <!-- edit user type -->
+     <ng-template #editUerTypes let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Edit User Type</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body pt-0">
+
+            <form  [formGroup] = "userTypesEditForm" id="userTypesEditForm">
+
+                <div class="row ">           
+                    <div class="col-md-12 form-group mb-3"> 
+                        <strong>User Type<span class="text-danger">*</span></strong>
+                        <input type="text" class="form-control" placeholder="Enter User Type" formControlName = "userType">
+                        <div class="error-block text-danger"
+                        *ngIf="userTypesEditForm.get('userType').errors && (userTypesEditForm.get('userType').touched || userTypesEditForm.get('userType').dirty)">
+                        <span *ngIf="userTypesEditForm.get('userType').errors && userTypesEditForm.get('userType').errors.required">
+                            User Type is required
+                        </span>
+                    </div>
+                     </div>
+                </div>
+                
+                <div class="col-md-12  text-center"> 
+                    <button type="button" class="btn btn-success"  [disabled] = !userTypesEditForm.valid (click) = "updateUserType(resultModal,resultErrorModal)">Update</button>
+                 </div>
+
+            </form>
+        </div>
+
+     </ng-template>
+     <!-- result modal -->
+<ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <p  class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+        </p>
+        
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+    <!-- result modal end -->
+
+    <!-- result modal -->
+<ng-template #resultErrorModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+       
+        <p  class="text-error-message mb-0"><strong><span> Error! </span></strong> {{error}}
+        </p>
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+    <!-- result modal end -->

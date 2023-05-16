@@ -1,0 +1,225 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0" *ngIf="userToken.activeUser != 'member'">
+           <!-- Pre Loader Strat  -->
+           <div class='loadscreen' *ngIf="loading">
+
+            <div class="loader spinner-bubble spinner-bubble-primary">
+            </div>
+        </div>
+        <!-- Pre Loader end  -->
+    <div class="row"  *ngIf="displayMarquee">
+        <div class="col-md-11 text-center" title="Ucoming Event">
+            <ng-template #marqueeContent1>
+              <a class="markColor textColor" *ngIf="upcomingEvents.upcomingEvents" style="padding: 10px;">Upcoming Events  :</a> <mark class="markColor" *ngFor="let event of upcomingEvents.upcomingEvents">
+                    <a class="textColor" href="/events/events" title="click to see more details"> {{event.index}}. {{event.note}} . </a>
+                </mark>
+            </ng-template>
+            <section>
+                <ng-marquee [stopOnHover]="true" class="marqueeMargin" speed="drowsy">
+                  <ng-container *ngTemplateOutlet="marqueeContent1"></ng-container>
+                </ng-marquee>
+            </section>
+        </div>
+        <div class="col-md-1 breadcrumb justify-content-end">
+            <ul>      
+                <li><a>Dashboard</a></li>       
+             </ul>  
+        </div>
+    </div>
+    <div class="row"  *ngIf="!displayMarquee">
+       
+        <div class="col-md-12 breadcrumb justify-content-end">
+            <ul>      
+                <li><a>Dashboard</a></li>       
+             </ul>  
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- ICON BG -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <a href="/uam/all-users">
+                <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                    <div class="card-body text-center">
+                        <i class="i-Business-Man"></i>
+                        <div class="content">
+                            <!-- <p class="text-muted mt-2 mb-0">Expense</p> -->
+                            <p class="text-primary text-24 line-height-1 mb-2">UAM</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        
+        <div class="col-lg-3 col-md-6 col-sm-6"> 
+            <a routerLink="/magazine/magazine-list">
+                <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                    <div class="card-body text-center">
+                        <i class="i-Book"></i>
+                        <div class="content">
+                            <!-- <p class="text-muted mt-2 mb-0">Magazine</p> -->
+                            <p class="text-primary text-24 line-height-1 mb-2">Magazine</p>
+                        </div>
+                    </div>
+                </div> 
+            </a>     
+               
+        </div>
+
+        <!-- <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Pointer"></i>
+                    <div class="content">
+                        <p class="text-primary text-24 line-height-1 mb-2">Approval</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <a routerLink="/org-chart/orgchart">
+                <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                    <div class="card-body text-center">
+                        <!-- <i class="i-Calendar"></i> -->
+                        <i class="fa fa-sitemap" aria-hidden="true" style="font-size: 65px;"></i>
+                        <div class="content">
+                            <!-- <p class="text-muted mt-2 mb-0">Sales</p> -->
+                            <!-- <p class="text-primary text-24 line-height-1 mb-2">Calendar</p> -->
+                            <p class="text-primary text-24 line-height-1 mb-2">Org Chart</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+    
+
+    </div>
+
+
+
+    
+    <!-- <h1>{{ name }}</h1> -->
+    <!-- <share-buttons theme="material-dark" show="11" image="https://loremflickr.com/320/240"></share-buttons>
+    <share-buttons [theme]="'modern-dark'"
+        [include]="['facebook','twitter','linkedin','pinterest','reddit','tumblr','mix','vk','telegram','messenger','whatsapp','xing','line','sms','email','print','copy']"
+        [show]="1"
+        [url]="'https://twitter.com/'"
+        [autoSetMeta]="false">
+    </share-buttons>
+
+    <share-buttons [theme]="'modern-dark'"
+ [include]="['facebook']"
+ [show]="1"
+ [url]="'https://twitter.com/'"
+ [autoSetMeta]="false"
+></share-buttons> -->
+
+<!-- <share-buttons [theme]="'modern-dark'"
+ [include]="['facebook']"
+ [show]="1"
+ [showText]="true"
+ [title]="'test data'"
+ [description] = "'testing data'"
+ [url]="'https://twitter.com/'"
+ [autoSetMeta]="false"
+></share-buttons> -->
+<!-- [url]="'http://151.106.39.84:4203/authorization/login'" -->
+
+<!-- <hr>
+<share-buttons [theme]="'modern-dark'"
+ [include]="['facebook']"
+ [show]="1"
+ [showText]="true"
+ [title]="'test test'"
+ [description]="'test test'"
+ [url]="'http://151.106.39.84:4203/authorization/login'"
+ [autoSetMeta]="true"
+></share-buttons>
+<br/>
+<share-buttons [theme]="'classic-light'"
+ [include]="['facebook']"
+ [show]="1"
+ [showText]="true"
+ [title]="'test'"
+ [description]="'test'"
+></share-buttons> -->
+    
+
+<!-- <div class="fb-like" [attr.data-href]="url" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>-->
+</div> 
+
+
+
+
+
+
+
+<div class="container min-height" *ngIf="userToken.activeUser === 'member'">
+           <!-- Pre Loader Strat  -->
+           <div class='loadscreen' *ngIf="loading">
+
+            <div class="loader spinner-bubble spinner-bubble-primary">
+            </div>
+        </div>
+        <!-- Pre Loader end  -->
+    <div class="row" *ngIf="displayMarquee">
+        <div class="col-md-11 text-center" title="Ucoming Event" >
+            <ng-template #marqueeContent1>
+              <a class="markColor textColor" *ngIf="upcomingEvents.upcomingEvents" style="padding: 10px;">Upcoming Events  :</a> <mark class="markColor" *ngFor="let event of upcomingEvents.upcomingEvents">
+                    <a class="textColor" href="/events/events" title="click to see more details"> {{event.index}}. {{event.note}} . </a>
+                </mark>
+            </ng-template>
+            <section>
+                <ng-marquee [stopOnHover]="true" class="marqueeMargin" >
+                  <ng-container *ngTemplateOutlet="marqueeContent1"></ng-container>
+                </ng-marquee>
+            </section>
+        </div>
+        <div class="col-md-1 breadcrumb justify-content-end">
+            <ul>      
+                <li><a>Dashboard</a></li>       
+             </ul>  
+        </div>
+    </div>
+    <div class="row" *ngIf="!displayMarquee">
+       
+        <div class="col-md-12 breadcrumb justify-content-end">
+            <ul>      
+                <li><a>Dashboard</a></li>       
+             </ul>  
+        </div>
+    </div>
+    <br/>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+
+    <div class="row">
+        <div class="col-md-2 dashboard-panes bg-danger">
+            <p> <a routerLink = "/my-occasions" class="nav-link text-white"><i class="i-Administrator" style="font-size: 30px"></i> My Occasions </a></p>
+            
+        </div>
+        <div class="col-md-2 bg-info dashboard-panes">
+            <p> <a routerLink = "/my-events" class="nav-link text-white"><i class="i-File-Clipboard-File--Text" style="font-size: 30px"></i> My Events</a></p>
+            
+        </div>
+        <div class="col-md-2  bg-success text-white dashboard-panes">
+            <p>  <a routerLink = "/profile/profile-info" class="nav-link text-white"><i class="i-Receipt-4 mr-2" style="font-size: 30px"></i>My Certificates</a></p>
+            
+        </div>
+        <div class="col-md-2 bg-warning dashboard-panes">
+             <p> <a routerLink = "/profile/profile-info" class="nav-link text-white"><i class=" i-Receipt-3" style="font-size: 30px"></i>My Details</a></p>
+        </div>
+        <div class="col-md-2 dashboard-panes" style="background-color: #4889aa;">
+            <p> 
+                <a  routerLink="/org-chart/orgchart" class="nav-link text-white">
+                    <i class="fa fa-sitemap" aria-hidden="true" style="font-size: 30px;"></i>
+                Org Chart</a>
+            </p>
+       </div>
+
+    </div>
+
+ 
+</div>

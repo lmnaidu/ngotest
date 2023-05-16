@@ -1,0 +1,119 @@
+<!-- Member Block starts-->
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+              <!-- Pre Loader Strat  -->
+              <div class='loadscreen' *ngIf="loading">
+
+                <div class="loader spinner-bubble spinner-bubble-primary">
+                </div>
+            </div>
+            <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Member Pledges</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+
+    <div class="col-md-12 ">
+        <div class="card o-hidden mb-4">
+                <div class="row card-header">
+                    <div class="col-md-6">
+                    <div class="card-title mb-3">Member Pledges </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        
+                        <input type="text" placeholder="Search Member Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                    </div>
+
+                </div> 
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th>Member</th>
+                                <th scope="col">Pledge Info</th>
+                                <th scope="col">Donation Frequency</th>
+                                <th scope="col">Pledged Amount</th>
+                                <th scope="col">Remaining Amount</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="availableRecords; else noData">
+                            <tr *ngFor = "let list of pledges.pledges | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                <th scope="row">{{list.index}}</th>
+                                <td>{{list.name}} </td>
+                                <td>{{list.projectName}}</td>
+                                <td><span class="badge badge-success">{{list.donationFrequency}}</span>  </td>
+                                <td *ngIf="list.pledgedCurrency=='INR'"> &#8377;{{list.pledgeAmount}}</td>
+                                <td  *ngIf="list.pledgedCurrency!='INR'"> &#36;{{list.pledgeAmount}}</td>
+                                <td><span *ngIf="list.pledgedCurrency=='INR'"> &#8377;{{list.remAmount}}</span>
+                                    <span *ngIf="list.pledgedCurrency!='INR'">&#36;{{list.remAmount}}</span>
+                                </td>
+                                <td> {{list.date | date:'MM-dd-yyyy' }}</td>
+                                <td>
+
+                                    <a  class="text-danger mr-2" (click)="openViewModal(viewPledge,list)">
+                                        <i class="nav-icon i-Eye font-weight-bold"></i>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        </ng-container>
+                        <ng-template #noData> 
+                            <tr>
+                                <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                  No Records Found 
+                                </td>
+                            </tr>
+                          </ng-template>
+                        </tbody>
+                    </table>
+                    <div *ngIf = "pledgesLength > pageSize ">
+                        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="pledgesLength" [boundaryLinks]="true">
+                        </ngb-pagination>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- Member Block Ends-->
+<ng-template #viewPledge let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{viewPledgeData.projectName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+           <div class="col-md-6">
+             <strong>Pledged Amount : </strong><span *ngIf="viewPledgeData.pledgedCurrency=='INR'">  &#8377; {{viewPledgeData.pledgeAmount}}</span>
+             <span *ngIf="viewPledgeData.pledgedCurrency!='INR'">&#36; {{viewPledgeData.pledgeAmount}}</span>
+          </div>
+          <div class="col-md-6">
+            <strong>Remaining Amount: </strong><span *ngIf="viewPledgeData.pledgedCurrency=='INR'"> &#8377;{{viewPledgeData.remAmount}} </span>
+            <span *ngIf="viewPledgeData.pledgedCurrency!='INR'"> &#36; {{viewPledgeData.remAmount}} </span>
+        </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <strong>Donation Frequency: </strong><span class="badge badge-success">{{viewPledgeData.donationFrequency  }} </span>
+            </div>
+            <div class="col-md-6">
+                <strong>Date :</strong><span>{{viewPledgeData.date | date:'MM-dd-yyyy' }}</span>
+              </div>
+         </div>
+    </div>
+ </ng-template>

@@ -1,0 +1,655 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+   <div class="breadcrumb justify-content-end" >
+      <ul>
+          <li><a> Sponsor Company</a></li>
+         <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+      
+      </ul>
+
+   </div>
+
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+       <div class="col-md-12">
+          <div class="card mb-4">
+             <div class="card-body">
+               <div class="card-title mb-3">Sponsor Companies <button *ngIf="userToken.activeUser === 'admin'" class="btn btn-sm btn-primary" (click)="openCompanyModal(addCompany)">+Add</button></div>
+                <div class="row">
+                   <div class="col-md-12">
+                      <div class="text-left">
+                         <div class="card-body">
+                            <div class="table-responsive">
+                               <table class="table">
+                                  <thead>
+                                     <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Company name</th>
+                                        <th scope="col">location</th>
+                                        <th scope="col">Donation</th>
+                                        <th scope="col">Action</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody>
+                                     <tr *ngFor="let company of companies">
+                                        <th scope="row">{{company.id}}</th>
+                                        <td>{{company.companyName}}</td>
+                                        <td>
+                                          {{company.loaction}}
+                                        </td>
+                                        <td>
+                                          {{company.amount}}
+                                        </td>
+                                        <td>
+                                           <a (click)="openEditModal(editCompany,company.id)"class="text-success mr-2">
+                                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                           </a>
+                                           <a (click)="openViewSponsor(viewCompany,company.id)" class="text-danger mr-2">
+                                           <i class="nav-icon i-Eye font-weight-bold"></i>
+                                           </a>
+                                        </td>
+                                     </tr>
+                                  </tbody>
+                               </table>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <ng-template #addCompany let-modal>
+
+   <div class="modal-header">
+      <div class="row align-items-center">
+          <div class="modal-logo ml-2">
+              <a href="dashboard/home">
+                  <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+              </a>
+          </div>
+          <div class= "ml-2">
+              <h4 class="modal-title" id="modal-basic-title ">Add Sponsor Company</h4>
+          </div>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body overflow-y-scroll"> 
+     <form  [formGroup] ="companyAddForm">                               
+      <div class="row" style="margin: auto;">
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Company name<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your company name" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Company type<span class="text-danger">*</span></label>
+            <!-- <input type="text" class="form-control" placeholder="Enter your company name" > -->
+            <select class="form-control">
+               <option>Corporate</option>
+               <option>Government</option>
+               <option>Non profit organization</option>
+            </select>
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Phone<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your phone number" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Website<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your website address" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Fin</label>
+            <input type="text" class="form-control" placeholder="Enter the FIN" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Dun</label>
+            <input type="text" class="form-control" placeholder="Enter the DUN" >
+         </div>
+         <!-- <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Team<span class="text-danger">*</span></label>
+            <select class="form-control">
+               <option>Education team</option>
+               <option>Health Care team</option>
+            </select>
+         </div> -->
+         <!-- <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Leader<span class="text-danger">*</span></label>
+           
+            <select class="form-control">
+               <option>Education team</option>
+               <option>Health Care team</option>
+            </select>
+         </div> -->
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Brief Description<span class="text-danger">*</span></label>
+            <textarea type="text" class="form-control" placeholder="Enter the description" ></textarea>
+         </div>
+         <div class="col-md-12">
+         <h4>Address</h4>
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Street<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the street name" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">City<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the city" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">State<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the state" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Country<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the country" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Zipcode<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the zipcode" >
+         </div>
+         <div class="col-md-12">
+            <h4>Members</h4>
+         </div>
+
+            <div class="col-md-12">
+               <div  formArrayName="members" *ngFor="let item of companyAddForm.controls.members['controls']; let i = index;">
+                  <div [formGroupName]="i" class="row">
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">First name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the first name" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">Last name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the last name" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">email<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the email" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1" style="visibility: hidden;">Primary Contact</label>
+                         <!--<input type="checkbox" class="form-control" placeholder="Enter the email" > -->
+                        <label class="checkbox checkbox-outline-primary">
+                           <input type="checkbox" name="paymentType" > <span>Primary Contact</span>
+                           <span class="checkmark"></span>
+                       </label>
+                     </div>
+               </div>
+               </div>
+               <div class="col-md-3 form-group mb-3"> 
+                  <button (click)="deleteMemberRow()" *ngIf="companyAddForm.value.members.length > 1" class="btn-danger btn btn-sm mt-5" >Remove member</button> &nbsp;
+                  <button (click)="addMemberRow()" class="btn-primary btn btn-sm mt-5" >Add another member</button>
+               </div>
+             </div>
+             <div class="col-md-12">
+               <h4>Donations</h4>
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">First gift date</label>
+               <!-- <input type="date" class="form-control" placeholder="Enter the first gift date" > -->
+               <div class="input-group">
+                  <input class="form-control" [owlDateTime]="giftDate" placeholder="mm-dd-yyyy" id = "giftDate"
+                       [owlDateTimeTrigger]="giftDate">
+                  <div class="input-group-append datePicker">
+                      <button class="btn btn-secondary " [owlDateTimeTrigger]="giftDate"
+                          type="button">
+                          <i class="icon-regular i-Calendar-4"></i>
+                      </button>
+                  </div>
+                  <owl-date-time #giftDate [pickerType]="'calendar'"></owl-date-time>
+              </div>
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Last gift date</label>
+               <!-- <input type="date" class="form-control" placeholder="Enter the first gift date" > -->
+               <div class="input-group">
+                  <input class="form-control" [owlDateTime]="lastDate" placeholder="mm-dd-yyyy" id = "lastDate"
+                       [owlDateTimeTrigger]="lastDate">
+                  <div class="input-group-append datePicker">
+                      <button class="btn btn-secondary " [owlDateTimeTrigger]="lastDate"
+                          type="button">
+                          <i class="icon-regular i-Calendar-4"></i>
+                      </button>
+                  </div>
+                  <owl-date-time #lastDate [pickerType]="'calendar'"></owl-date-time>
+              </div>
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Last gift amount</label>
+               <input type="text" class="form-control" placeholder="Enter the last gift amount" >
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Largest gift</label>
+               <input type="text" class="form-control" placeholder="Enter the largest gift" >
+            </div>
+
+      </div>   
+     </form> 
+     <div class="modal-footer">
+      <div class="">
+         <button class="btn btn-primary" (click)="addSponsorCompany(resultModal)">Submit</button>
+         <button type="button" class="btn btn-outline-danger ml-2" (click)="modal.dismiss('Cross click')">Cancel</button>
+      </div>
+   </div> 
+   </div>
+
+
+   <div class="">
+      <div class="flex-grow-1"></div>
+      <div class="app-footer">
+
+          <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+
+              <span class="flex-grow-1"></span>
+              <div class="d-flex align-items-center">
+                  <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                  <div>
+                      <p class="m-0">&copy; 2020 DNF</p>
+                      <p class="m-0">All rights reserved</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+   </div>
+</ng-template>
+<ng-template #resultModal let-modal>
+   <div class="modal-header border-0 pt-2 pb-2 pr-2">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body pt-0">
+     <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+     </p>
+   </div>
+   <!-- <div class="modal-footer p-2">
+      <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewNext()" *ngIf="!showFinish">Next</button>
+      <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewProjects()" *ngIf="showFinish">View Projects</button>
+     <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button>
+   </div> -->
+</ng-template>
+<ng-template #viewCompany let-modal>
+   <!-- <div class="modal-content modal-content-height" > -->
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">View Sponor Company - {{companies[companyIndex].companyName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+
+     <div class="modal-body overflow-y-scroll"> 
+        <div class="row">
+           <div class="col-md-6">
+             <div class="row">
+                  <div class="col-md-4 col-6">
+                     <div class="mb-4">
+                        <p class="text-primary mb-1"><i class="i-Business-Man text-16 mr-1"></i>Primary Contact</p>
+                        <span>Mark Twitch</span>
+                     </div>
+               </div>
+               <div class="col-md-4 col-6">
+                  <div class="mb-4">
+                     <p class="text-primary mb-1"><i class="i-Gift-Box text-16 mr-1"></i>Total Gifts</p>
+                     <span>$450</span>
+                  </div>
+               </div>
+               <div class="col-md-4 col-6">
+                  <div class="mb-4">
+                     <p class="text-primary mb-1"><i class="i-Telephone text-16 mr-1"></i>Phone</p>
+                     <span>9053986345</span>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills"  orientation="horizontal">
+                     <li ngbNavItem="1">
+                     <a ngbNavLink>Details</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-md-4 col-6">
+                              <div class="mb-4">
+                                 <p class="text-primary mb-1">Company name</p>
+                                 <span> {{companies[companyIndex].companyName}}</span>
+                              </div>
+                           </div>  
+                           <div class="col-md-4 col-6"> 
+                              <div class="mb-4">
+                                 <p class="text-primary mb-1">Primary Contact</p>
+                                 <span>Mark Twitch</span>
+                              </div>
+                           </div>
+                           <div class="col-md-4 col-6">
+                           <div class="mb-4">
+                              <p class="text-primary mb-1">No.of Members</p>
+                              <span>3</span>
+                           </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-12">
+                           <h4>Address</h4>
+                        </div>
+                     </div>
+                        <div class="row">
+                        <div class="col-md-4 col-6">
+                           <div class="mb-4">
+                              <p class="text-primary mb-1">City</p>
+                              <span>Aurora</span>
+                           </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                           <div class="mb-4">
+                              <p class="text-primary mb-1">State</p>
+                              <span>Illinois</span>
+                           </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                           <div class="mb-4">
+                              <p class="text-primary mb-1">Country</p>
+                              <span>USA</span>
+                           </div>
+                        </div>
+                     </div>
+                        
+                        <div class="row">
+                           <div class="col-md-12">
+                              <h4>Description</h4>
+                           </div>
+                           <div class="col-md-12 col-12">
+                              <div class="mb-4">
+                                 <!-- <p class="text-primary mb-1">Description</p> -->
+                                 <span>We are a company is a form of marketing in which a company pays for the right to be associated with a project or program. We strive for corporate sponsorships entails a collaboration between a nonprofit organization and a sponsor corporation, in which the latter funds a project or program managed by the former in exchange for recognition.</span>
+                              </div>
+                           </div>
+                        </div>
+                        
+                     </ng-template>
+                     </li>
+                     <li ngbNavItem="2">
+                        <a ngbNavLink>Members</a>
+                        <ng-template ngbNavContent>
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <div class="text-left">
+                                    <div class="card-body">
+                                       <div class="table-responsive">
+                                          <table class="table">
+                                             <thead>
+                                                <tr>
+                                                   <th scope="col">#</th>
+                                                   <th scope="col">First name</th>
+                                                   <th scope="col">Last name</th>
+                                                   <th scope="col">Email</th>
+                                                   <th scope="col">Primary Contact</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody>
+                                                <tr *ngFor="let member of companies[companyIndex].members">
+                                                   <th scope="row">{{member.id}}</th>
+                                                   <td>{{member.firstName}}</td>
+                                                   <td>
+                                                     {{member.lastName}}
+                                                   </td>
+                                                   <td>
+                                                     {{member.email}}
+                                                   </td>
+                                                   <td>{{member.primaryContact}}</td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </ng-template>
+                     </li>
+                  </ul>
+              
+                <div [ngbNavOutlet]="nav" class="ml-4"></div>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-6">
+            <div style="overflow-y: scroll;height: 500px;">
+               <ul class="timeline clearfix" >
+                  <li class="timeline-line"></li>
+                  <li class="timeline-item">
+                     <div class="timeline-badge">
+                        <i class="badge-icon bg-primary text-white i-Business-Man
+                        "></i>
+                     </div>
+                     <div class="timeline-card card">
+                        <div class="card-body">
+                              <div class="mb-1">
+                                 <strong class="mr-1">Mark Twitch</strong> added new member
+                                 <p class="text-muted">2 hour ago</p>
+                              </div>
+                              
+                        </div>
+                     </div>
+                  </li>
+                  <li class="timeline-item">
+                     <div class="timeline-badge">
+                        <i class="badge-icon bg-primary text-white i-Money-2
+
+                        "></i>
+                     </div>
+                     <div class="timeline-card card">
+                        <div class="card-body">
+                              <div class="mb-1">
+                                 <strong class="mr-1">Company</strong> donated 1000$
+                                 <p class="text-muted">3 hours ago</p>
+                              </div>
+                              <!-- <p>BA solutions Has donated 
+                              </p> -->
+                        </div>
+                     </div>
+                  </li>
+            </ul>
+            <ul class="timeline clearfix" >
+               <li class="timeline-line"></li>
+               <li class="timeline-item">
+                  <div class="timeline-badge">
+                     <i class="badge-icon bg-primary text-white i-Business-Man
+
+                     "></i>
+                  </div>
+                  <div class="timeline-card card">
+                     <div class="card-body">
+                           <div class="mb-1">
+                              <strong class="mr-1">Mark Twitch</strong> added another member
+                              <p class="text-muted">3 hours ago</p>
+                           </div>
+                           
+                     </div>
+                  </div>
+               </li>
+               <li class="timeline-item">
+                  <div class="timeline-badge">
+                     <i class="badge-icon bg-primary text-white i-Money-2
+
+                     "></i>
+                  </div>
+                  <div class="timeline-card card">
+                     <div class="card-body">
+                           <div class="mb-1">
+                              <strong class="mr-1">Company</strong> pledged 600$
+                              <p class="text-muted">16 hours ago</p>
+                           </div>
+                           <!-- <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                           </p> -->
+                           
+                     </div>
+                  </div>
+               </li>
+              
+            </ul>
+            </div>
+
+
+
+         </div>
+        </div>
+     
+    
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Close</button>
+      <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+    </div>
+    <!-- </div> -->
+   
+   
+   <!-- </div> -->
+</ng-template>
+<ng-template #editCompany let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Edit Sponsor Company- {{companies[companyIndex].companyName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body overflow-y-scroll"> 
+     <form  [formGroup] ="companyAddForm">                               
+      <div class="row" style="margin: auto;">
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Company name<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your company name" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Company type<span class="text-danger">*</span></label>
+            <!-- <input type="text" class="form-control" placeholder="Enter your company name" > -->
+            <select class="form-control">
+               <option>Corporate</option>
+               <option>Government</option>
+               <option>Non profit organization</option>
+            </select>
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Phone<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your phone number" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Website<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter your website address" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Fin</label>
+            <input type="text" class="form-control" placeholder="Enter the FIN" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Dun</label>
+            <input type="text" class="form-control" placeholder="Enter the DUN" >
+         </div>
+         <!-- <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Team<span class="text-danger">*</span></label>
+            <select class="form-control">
+               <option>Education team</option>
+               <option>Health Care team</option>
+            </select>
+         </div> -->
+         <!-- <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Leader<span class="text-danger">*</span></label>
+           
+            <select class="form-control">
+               <option>Education team</option>
+               <option>Health Care team</option>
+            </select>
+         </div> -->
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Brief Description<span class="text-danger">*</span></label>
+            <textarea type="text" class="form-control" placeholder="Enter the description" ></textarea>
+         </div>
+         <div class="col-md-12">
+         <h4>Address</h4>
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Street<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the street" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">City<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the city" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">State<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the state" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Country<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the country" >
+         </div>
+         <div class="col-md-3 form-group mb-3"> 
+            <label for="exampleInputEmail1">Zipcode<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the zipcode" >
+         </div>
+         <div class="col-md-12">
+            <h4>Members</h4>
+         </div>
+
+            <div class="col-md-12">
+               <div  formArrayName="members" *ngFor="let item of companyAddForm.controls.members['controls']; let i = index;">
+                  <div [formGroupName]="i" class="row">
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">First name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the first name" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">Last name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the last name" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">email<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the email" >
+                     </div>
+                     <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1" style="visibility: hidden;">Primary Contact</label>
+                         <!--<input type="checkbox" class="form-control" placeholder="Enter the email" > -->
+                        <label class="checkbox checkbox-outline-primary">
+                           <input type="checkbox" name="paymentType" > <span>Primary Contact</span>
+                           <span class="checkmark"></span>
+                       </label>
+                     </div>
+               </div>
+               </div>
+               <div class="col-md-3 form-group mb-3"> 
+                  <button (click)="deleteMemberRow()" *ngIf="companyAddForm.value.members.length > 1" class="btn-danger btn btn-sm mt-5" >Remove member</button> &nbsp;
+                  <button (click)="addMemberRow()" class="btn-primary btn btn-sm mt-5" >Add another member</button>
+               </div>
+             </div>
+             <div class="col-md-12">
+               <h4>Donations</h4>
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">First gift date</label>
+               <input type="date" class="form-control" placeholder="Enter the first gift date" >
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Last gift date</label>
+               <input type="date" class="form-control" placeholder="Enter the first gift date" >
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Last gift amount</label>
+               <input type="text" class="form-control" placeholder="Enter the last gift amount" >
+            </div>
+            <div class="col-md-3 form-group mb-3"> 
+               <label for="exampleInputEmail1">Largest gift</label>
+               <input type="text" class="form-control" placeholder="Enter the largest gift" >
+            </div>
+
+      </div>   
+     </form>  
+   </div>
+   <div class="modal-footer">
+      <div class="col-md-12 text-center">
+         <button class="btn btn-primary" (click)="addSponsorCompany(resultModal)">Submit</button>
+      </div>
+   </div>
+</ng-template>
+ 

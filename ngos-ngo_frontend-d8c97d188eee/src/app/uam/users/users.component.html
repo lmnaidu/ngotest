@@ -1,0 +1,1068 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+             <!-- Pre Loader Strat  -->
+             <div class='loadscreen' *ngIf="loading">
+
+              <div class="loader spinner-bubble spinner-bubble-primary">
+              </div>
+          </div>
+          <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Users</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div> 
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+       <div class="col-md-12">
+          <div class="card o-hidden mb-4">
+             <!-- <div class="card-body"> -->
+                 <div class="row card-header">
+                     <div class="col-md-6">
+                        <div class="card-title mb-3">Users <button *ngIf="userPermissions.write" class="btn btn-sm btn-primary" (click)="addUserModel(addingUser)"
+                            >+ Add User</button></div>
+                     </div>
+                     <div class="col-md-3"></div>
+                     <div class="col-md-3">
+                        
+                        <input type="text" placeholder="Search User Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                        <!-- <input type="text" placeholder="Search CandidateName / JobName" name="search" (keyup)="search($event.target.value,'canName')" class="search-filter form-control" id="searchName"> -->
+                    </div>
+                          
+                        <!-- [formControl]="filter" -->
+                 </div>
+              
+                <!-- <div class="row">
+                   <div class="col-md-12">
+                      <div class="text-left">
+                         <div class="card-body"> -->
+
+                            <div class="table-responsive">
+                               <table class="table">
+                                  <thead>
+                                     <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">User Name</th>
+                                        <th scope="col">User Id</th>
+                                        <th scope="col">Email</th>
+                                        <!-- <th scope="col">User Type</th> -->
+                                        <th scope="col">Role</th>
+                                        <th scope="col" >Action</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody>
+                                    <ng-container *ngIf="availableRecords; else noData">
+
+                                        <tr *ngFor="let user of usersList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ">
+                                            <td scope="row">{{user.index}}</td>
+                                            <td>{{user.name}} </td>
+                                            <td>
+                                                {{user.userId}}
+                                            </td>
+                                            <td>
+                                                {{user.email}}
+                                            </td>
+                                            <!-- <td> {{user.userType.userType | titlecase}}</td> -->
+                                            <td>
+                                                <span >{{user.role.roleName | titlecase}}</span>
+                                               
+                                                <!-- <span class="badge badge-success">Suresh</span></td> -->
+                                                <!-- *ngIf="tokenData.activeUser === 'admin'" -->
+                                            <td >
+                                                <!-- <a class="text-success mr-3" *ngIf="userPermissions.update" title="Edit User" (click)="editUserModel(editingUser,user._id)">
+                                                    <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                    </a> -->
+                                                    <a class="text-success pointer mr-2" title="Edit User" [routerLink]="['/member/editUser',user._id]" *ngIf="userPermissions.update">
+                                                        <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                    </a>
+                                                <a  class="text-danger pointer mr-3" (click)="viewUsersData(viewUserData,user._id)" title="View Details"  *ngIf="userPermissions.read">
+                                                    <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                    </a>
+                                            </td>
+                                         </tr>
+                                    </ng-container>
+                                    <ng-template #noData> 
+                                        <tr>
+                                            <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                              No Records Found 
+                                            </td>
+                                        </tr>
+                                      </ng-template> 
+                                    
+                                  </tbody>
+                                  <tfoot>
+                                      <tr *ngIf="usersList.length > pageSize">
+                                          <td colspan="12">
+                                            <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="usersList.length" [boundaryLinks]="true">
+                                            </ngb-pagination>
+                                          </td>
+                                      </tr>
+                                  
+                                  </tfoot>
+                               </table>
+                            </div>
+
+                         <!-- </div>
+                      </div>
+                   </div>
+                </div> -->
+             <!-- </div> -->
+          </div>
+       </div>
+    </div>
+ </div>
+
+
+ <ng-template #addingUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Add User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form [formGroup] = "userForm"  id="userForm">
+    <div class="modal-body pt-0">
+        
+            <div class="row">           
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>First Name<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter first name" formControlName="firstName">
+                    <div class="error-block text-danger"
+                        *ngIf="userForm.get('firstName').errors && (userForm.get('firstName').touched || userForm.get('firstName').dirty)">
+                        <span *ngIf="userForm.get('firstName').errors.required">First name is required.
+                        </span>
+                        <span *ngIf="userForm.get('firstName').errors && userForm.get('firstName').errors.pattern">
+                            Enter valid name.
+                        </span>
+                        <span *ngIf="userForm.get('firstName').errors && (userForm.get('firstName').errors.maxlength || userForm.get('firstName').errors.minlength)">
+                        The minimum and maximum characters should be {{firstNameMinLength}} and {{firstNameMaxLength}} respectively.
+                        </span>
+                    </div> 
+                 </div>
+                 <div class="col-md-6 form-group mb-3"> 
+                    <label>Last Name<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter last name" formControlName="lastName">
+                    <div class="error-block text-danger"
+                        *ngIf="userForm.get('lastName').errors && (userForm.get('lastName').touched || userForm.get('lastName').dirty)">
+                        <span *ngIf="userForm.get('lastName').errors.required">Last name is required.
+                        </span>
+                        <span *ngIf="userForm.get('lastName').errors && userForm.get('lastName').errors.pattern">
+                            Enter valid name.
+                        </span>
+                        <span *ngIf="userForm.get('lastName').errors && (userForm.get('lastName').errors.maxlength || userForm.get('lastName').errors.minlength)">
+                        The minimum and maximum characters should be {{lastNameMinLength}} and {{lastNameMaxLength}} respectively.
+                        </span>
+                    </div> 
+                 </div>
+            </div>
+            <div class="row">           
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>Email<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter first name" formControlName="email" pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})">
+                    <div class="error-block text-danger"
+                        *ngIf="userForm.get('email').errors && (userForm.get('email').touched || userForm.get('email').dirty)">
+                        <span *ngIf="userForm.get('email').errors.required">Email is required.
+                        </span>
+                        <span *ngIf="userForm.get('email').errors && userForm.get('email').errors.pattern">
+                            Enter valid email.
+                        </span>
+                        <span *ngIf="userForm.get('email').errors && (userForm.get('email').errors.maxlength)">
+                        The maximum characters should be {{emailMaxLength}}.
+                        </span>
+                    </div> 
+                 </div>
+                 <div class="col-md-6 form-group mb-3"> 
+                    <label>Role<span class="text-danger">*</span></label>
+                     <ng-multiselect-dropdown  formControlName="role"  class="form-control-rounded" [placeholder]="'Select Roles'" [settings]="roleSettings"  [data]="rolesData" 
+                     ></ng-multiselect-dropdown>
+                     <!-- <div class="error-block text-danger"
+                        *ngIf="userForm.get('role').errors && (userForm.get('role').touched || userForm.get('role').dirty)">
+                        <span *ngIf="userForm.get('role').errors.required">Role is required.
+                        </span>
+                    </div>  -->
+                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>Phone<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" 
+                    formControlName="phoneNumber" pattern="^([+]?\d{1,3}[-])?\d{10}$"
+                    placeholder="XXX-XXXXXXXXXX">
+                   <div class="error-block text-danger"
+                   *ngIf="userForm.get('phoneNumber').errors && (userForm.get('phoneNumber').touched || userForm.get('phoneNumber').dirty)">
+                    <span *ngIf="userForm.get('phoneNumber').errors.required">
+                        {{errorMessagePhnoReq}}
+                    </span>
+                    <span *ngIf="userForm.get('phoneNumber').errors.pattern">
+                        {{errorMessagePhnoInvalid}}
+                    </span>
+                   </div>
+                  
+                 </div>
+                 <div class="col-md-6 form-group mb-3"> 
+                    <label>Status<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="status">
+                        <option selected  value="1" >Active</option>
+                        <option value="0">DeActive</option>
+                     </select>
+                     <div class="error-block text-danger"
+                        *ngIf="userForm.get('status').errors && (userForm.get('status').touched || userForm.get('status').dirty)">
+                        <span *ngIf="userForm.get('status').errors.required">Status is required.
+                        </span>
+                    </div> 
+                 </div>
+            </div>
+            <div class="row">           
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>Password<span class="text-danger">*</span></label>
+                    <input type="password" class="form-control" placeholder="Enter first name" formControlName="password">
+                    <div class="error-block text-danger"
+                        *ngIf="userForm.get('password').errors && (userForm.get('password').touched || userForm.get('password').dirty)">
+                        <span *ngIf="userForm.get('password').errors.required">Password is required.
+                        </span>
+                        <span *ngIf="userForm.get('password').errors && userForm.get('password').errors.pattern">
+                            Password should contain minimum eight characters, at least one uppercase & lowercase letter, one number and one special character
+                        </span>
+                       
+                    </div>
+                 </div>
+                 <div class="col-md-6 form-group mb-3"> 
+                    <label>Confirm Password<span class="text-danger">*</span></label>
+                    <input type="password" class="form-control" placeholder="Enter last name" formControlName="confPassword" >
+                    
+                    <div class="error-block text-danger"
+                        *ngIf="userForm.get('confPassword').errors && (userForm.get('confPassword').touched || userForm.get('confPassword').dirty)">
+                        <span *ngIf="userForm.get('confPassword').errors.required">Please re-enter password.
+                        </span>
+                    </div>
+                    <div class="error-block text-danger" *ngIf=" userForm.get('confPassword').touched && userForm.value.password != userForm.value.confPassword">
+                        Passwords don't match.
+                    </div>
+                 </div>
+            </div>
+        
+    </div>
+    <div class=" p-2 form-group pull-right">
+     
+      <button type="button" class="btn btn-light btn-rounded"   (click)="modal.dismiss('Cross click')">close</button> 
+      <!-- [disabled]="!userForm.valid" -->
+      <button type="button" class="btn btn-success btn-rounded" [disabled]="!userForm.valid || userForm.value.password != userForm.value.confPassword" (click)="addUser(resultModal,resultErrorModal)" >Submit</button>
+    </div>
+</form>
+<!-- Pre Loader Strat  -->
+<div class='loadscreen' *ngIf="loading">
+
+ <div class="loader spinner-bubble spinner-bubble-primary">
+ </div>
+</div>
+<!-- Pre Loader end  -->
+ </ng-template>
+
+
+<!-- result modal -->
+<ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <p  class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+        </p>
+        
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+    <!-- result modal end -->
+
+    <!-- result modal -->
+<ng-template #resultErrorModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+       
+        <p  class="text-error-message mb-0"><strong><span> Error! </span></strong> {{error}}
+        </p>
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+    <!-- result modal end -->
+
+
+<!-- edit user form start -->
+    
+ <ng-template #editingUser let-modal>
+   <div class="modal-header">
+       <h4 class="modal-title">Edit Details of {{singleUserData.firstName}} {{singleUserData.lastName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+       </button>
+   </div>
+   
+       <form [formGroup] = "updatedUserForm"  id="updatedUserForm">
+        <div class="modal-body pt-0">
+           <div class="row">           
+               <div class="col-md-6 form-group mb-3"> 
+                   <label>First Name<span class="text-danger">*</span></label>
+                   <input type="text" class="form-control" placeholder="Enter first name" formControlName="firstName" value="{{singleUserData.firstName}}">
+                   <div class="error-block text-danger"
+                   *ngIf="updatedUserForm.get('firstName').errors && (updatedUserForm.get('firstName').touched || updatedUserForm.get('firstName').dirty)">
+                   <span *ngIf="updatedUserForm.get('firstName').errors.required">First name is required.
+                   </span>
+                   <span *ngIf="updatedUserForm.get('firstName').errors && updatedUserForm.get('firstName').errors.pattern">
+                       Enter valid name.
+                   </span>
+                   <span *ngIf="updatedUserForm.get('firstName').errors && (updatedUserForm.get('firstName').errors.maxlength || updatedUserForm.get('firstName').errors.minlength)">
+                   The minimum and maximum characters should be {{firstNameMinLength}} and {{firstNameMaxLength}} respectively.
+                   </span>
+               </div> 
+                </div>
+                <div class="col-md-6 form-group mb-3"> 
+                   <label>Last Name<span class="text-danger">*</span></label>
+                   <input type="text" class="form-control" placeholder="Enter last name" formControlName="lastName" value="{{singleUserData.lastName}}">
+                   <div class="error-block text-danger"
+                   *ngIf="updatedUserForm.get('lastName').errors && (updatedUserForm.get('lastName').touched || updatedUserForm.get('lastName').dirty)">
+                   <span *ngIf="updatedUserForm.get('lastName').errors.required">Last name is required.
+                   </span>
+                   <span *ngIf="updatedUserForm.get('lastName').errors && userForm.get('lastName').errors.pattern">
+                       Enter valid name.
+                   </span>
+                   <span *ngIf="updatedUserForm.get('lastName').errors && (updatedUserForm.get('lastName').errors.maxlength || updatedUserForm.get('lastName').errors.minlength)">
+                   The minimum and maximum characters should be {{lastNameMinLength}} and {{lastNameMaxLength}} respectively.
+                   </span>
+               </div> 
+                </div>
+           </div>
+           <div class="row">           
+               <div class="col-md-6 form-group mb-3"> 
+                   <label>Email<span class="text-danger">*</span></label>
+                   <input type="text" class="form-control" placeholder="Enter first name" formControlName="email" value="{{singleUserData.email}}" pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})">
+                   <div class="error-block text-danger"
+                        *ngIf="updatedUserForm.get('email').errors && (updatedUserForm.get('email').touched || updatedUserForm.get('email').dirty)">
+                        <span *ngIf="updatedUserForm.get('email').errors.required">Email is required.
+                        </span>
+                        <span *ngIf="updatedUserForm.get('email').errors && updatedUserForm.get('email').errors.pattern">
+                            Enter valid email.
+                        </span>
+                        <span *ngIf="updatedUserForm.get('email').errors && (updatedUserForm.get('email').errors.maxlength)">
+                        The maximum characters should be {{emailMaxLength}}.
+                        </span>
+                    </div> 
+                </div>
+                <div class="col-md-6 form-group mb-3"> 
+                   <label>Role<span class="text-danger">*</span></label>
+                
+                    <ng-multiselect-dropdown   class="form-control-rounded" formControlName="role" [placeholder]="'Select Roles'" [settings]="roleSettings"  [data]="rolesData" ></ng-multiselect-dropdown>
+                    <div class="error-block text-danger"
+                       *ngIf="updatedUserForm.get('role').errors && (updatedUserForm.get('role').touched || updatedUserForm.get('role').dirty)">
+                       <span *ngIf="updatedUserForm.get('role').errors.required">Role is required.
+                       </span>
+                   </div>
+                </div>
+           </div>
+        
+           <div class="row">   
+            <div class="col-md-6 form-group mb-3"> 
+                <label>Phone<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="phoneNumber"
+                formControlName="phoneNumber" pattern="([+]?\d{1,3}[-])?\d{10}"
+                placeholder="Enter Phone Number">
+                <span class="error-block text-danger"
+                    *ngIf="updatedUserForm.get('phoneNumber').errors && (updatedUserForm.get('phoneNumber').touched || updatedUserForm.get('phoneNumber').dirty)">
+                    <span *ngIf="updatedUserForm.get('phoneNumber').errors.required">
+                        {{errorMessagePhnoReq}}
+                    </span>
+                    <span *ngIf="updatedUserForm.get('phoneNumber').errors.pattern">
+                        {{errorMessagePhnoInvalid}}
+                    </span>
+
+                </span>
+                <!-- <select class="form-control" formControlName="userType">
+                    <option value="" disabled selected>Select the User Type</option>
+                    <option *ngFor="let user of userTypesList.UserTypes" value="{{user._id}}">{{user.userType | titlecase}}</option>
+                 </select>  
+                 <div class="error-block text-danger"
+                 *ngIf="updatedUserForm.get('userType').errors && (updatedUserForm.get('userType').touched || updatedUserForm.get('userType').dirty)">
+                    <span *ngIf="updatedUserForm.get('userType').errors.required">User Type is required.
+                    </span>
+                </div>            -->
+             </div>        
+               <div class="col-md-6 form-group mb-3"> 
+                   <label>Status<span class="text-danger">*</span></label>
+                   <select class="form-control" formControlName="status" value="{{singleUserData.status}}">
+                       <option value="1" selected>Active</option>
+                       <option value="0">DeActive</option>
+                    </select>
+                    <div class="error-block text-danger"
+                    *ngIf="updatedUserForm.get('status').errors && (updatedUserForm.get('status').touched || updatedUserForm.get('status').dirty)">
+                        <span *ngIf="updatedUserForm.get('status').errors.required">Status is required.
+                        </span>
+                    </div> 
+                </div>
+              
+           </div>
+        </div>
+        <div class="modal-footer p-2">
+    
+            <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button> 
+            
+            <button type="button" class="btn btn-success btn-rounded"   (click)="updateUser(resultModal,resultErrorModal)" >Update</button>
+            <!-- [disabled]="!updatedUserForm.valid" -->
+          </div>
+       </form>
+</ng-template>
+
+<!-- edit user form end -->
+
+
+<!-- view user details  -->
+
+<ng-template #viewUserData let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">User Details of <strong>{{userDetails.firstName}} {{userDetails.lastName}}</strong></h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        <div calss="row" >
+         <div class="card user-profile o-hidden mb-4">
+             <div class="row">
+                 <div class="col-md-4" >
+                     <div class="row" style="margin-left: 25%;">
+                         <div class="user-info" style="margin-top: 15px;">
+                             <div *ngIf="userDetails.profileImage">
+                                 <img   src="{{userDetails.profileImage}}" class="profile-picture avatar-lg mb-2">
+                             </div>
+                             <div *ngIf="!userDetails.profileImage">
+                                 <img  src="../../../assets/images/faces/avatar1.png"class="profile-picture avatar-lg mb-2">
+                             </div>
+                 
+                             <p class="m-0 text-24">{{userDetails.firstName}} {{userDetails.lastName}} </p>
+                             <p class="text-muted m-0">{{userDetails.role.roleName | titlecase}}</p>
+                             <p class="text-muted m-0">{{userDetails.userId }}</p>
+                         </div>
+                     </div><br/>
+                     <div class="row" style="margin-left: 5%;">
+                         <div class="col-md-4">
+                             <h6>Donated amount</h6>
+                             <p>50/-</p>
+                         </div>
+                         <div class="col-md-4">
+                             <h6>Involved projects</h6>
+                             <p>5</p>
+                         </div>
+                         <div class="col-md-4">
+                             <h6>Involved Events</h6>
+                             <p>5</p>
+                         </div>
+                     </div>
+                    <div class="row" style="margin-left: 5%;">
+                         <div>
+                            <h5><b> Self Description</b></h5>
+                         </div>
+                         <div>
+                            <p class="textSpace">{{userDetails.description}}</p>
+                         </div>
+                    </div>
+                   
+                 </div>
+                 <div class="col-md-8">
+                     <div class="card-body">
+                         <ul class="nav nav-tabs profile-nav mb-4" id="profileTab" role="tablist">
+                             <!-- <li class="nav-item">
+                                 <a class="nav-link " id="timeline-tab" data-toggle="tab" href="#timeline" role="tab" aria-controls="timeline" aria-selected="false">Timeline</a>
+                             </li> -->
+                             <li class="nav-item">
+                                 <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a>
+                             </li>
+                             <!-- <li class="nav-item">
+                                 <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Certificates</a>
+                             </li>
+                             <li class="nav-item">
+                                 <a class="nav-link" id="photos-tab" data-toggle="tab" href="#photos" role="tab" aria-controls="photos" aria-selected="false">Photos</a>
+                             </li> -->
+                         </ul>
+             
+                         <div class="tab-content" id="profileTabContent">
+                             <div class="tab-pane fade " id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+                                 <ul class="timeline clearfix">
+                                     <li class="timeline-line"></li>
+                                     <li class="timeline-item">
+                                         <div class="timeline-badge">
+                                             <i class="badge-icon bg-primary text-white i-Cloud-Picture"></i>
+                                         </div>
+                                         <div class="timeline-card card">
+                                             <div class="card-body">
+                                                 <div class="mb-1">
+                                                     <strong class="mr-1">Babu</strong> added a new photo
+                                                     <p class="text-muted">3 hours ago</p>
+                                                 </div>
+                                                 <img class="rounded mb-2" src="assets/images/projectimages/Youth empowerment/Yoga1.jpg" alt="">
+                                                 <div class="mb-3">
+                                                     <a href="#" class="mr-1">Like</a>
+                                                     <a href="#">Comment</a>
+                                                 </div>
+                                                 <div class="input-group">
+                                                     <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                     <div class="input-group-append">
+                                                         <button class="btn btn-primary" type="button" id="button-comment1">Submit</button>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </li>
+                                     <li class="timeline-item">
+                                         <div class="timeline-badge">
+                                             <img class="badge-img" src="assets/images/faces/profilePic1.jpg" alt="">
+                                         </div>
+                                         <div class="timeline-card card">
+                                             <div class="card-body">
+                                                 <div class="mb-1">
+                                                     <strong class="mr-1">Babu</strong> updated his sattus
+                                                     <p class="text-muted">3 hours ago</p>
+                                                 </div>
+                                                 <p> Yoga is not a work-out it is a  work-in and this is the point of spiritual practice to make us teachable to open our hearts and focus our awareness. So, that we can know what we already know and be who we already are.
+                                                 </p>
+                                                 <div class="mb-3">
+                                                     <a href="#" class="mr-1">Like</a>
+                                                     <a href="#">Comment</a>
+                                                 </div>
+                                                 <div class="input-group">
+                                                     <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                     <div class="input-group-append">
+                                                         <button class="btn btn-primary" type="button" id="button-comment2">Submit</button>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </li>
+                                 </ul>
+                                 <ul class="timeline clearfix">
+                                     <li class="timeline-line"></li>
+                                     <li class="timeline-group text-center">
+                                         <button class="btn btn-icon-text btn-primary"><i class="i-Calendar-4"></i> 2020</button>
+                                     </li>
+                                 </ul>
+                                 <ul class="timeline clearfix">
+                                     <li class="timeline-line"></li>
+                                     <li class="timeline-item">
+                                         <div class="timeline-badge">
+                                             <i class="badge-icon bg-danger text-white i-Love-User"></i>
+                                         </div>
+                                         <div class="timeline-card card">
+                                             <div class="card-body">
+                                                 <div class="mb-1">
+                                                     <strong class="mr-1">New followers</strong>
+                                                     <p class="text-muted">2 days ago</p>
+                                                 </div>
+                                                 <p><a href="#">Henry krick</a> and 16 others followed you</p>
+                                                 <div class="mb-3">
+                                                     <a href="#" class="mr-1">Like</a>
+                                                     <a href="#">Comment</a>
+                                                 </div>
+                                                 <div class="input-group">
+                                                     <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                     <div class="input-group-append">
+                                                         <button class="btn btn-primary" type="button" id="button-comment3">Submit</button>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </li>
+                                     <li class="timeline-item">
+                                         <div class="timeline-badge">
+                                             <i class="badge-icon bg-primary text-white i-Cloud-Picture"></i>
+                                         </div>
+                                         <div class="timeline-card card">
+                                             <div class="card-body">
+                                                 <div class="mb-1">
+                                                     <strong class="mr-1">Babu</strong> added a new photo
+                                                     <p class="text-muted">2 days ago</p>
+                                                 </div>
+                                                 <img class="rounded mb-2" src="../../../assets/images/projectimages/Youth empowerment/youth1.jpg" alt="">
+                                                 <div class="mb-3">
+                                                     <a href="#" class="mr-1">Like</a>
+                                                     <a href="#">Comment</a>
+                                                 </div>
+                                                 <div class="input-group">
+                                                     <input type="text" class="form-control" placeholder="Write comment" aria-label="comment">
+                                                     <div class="input-group-append">
+                                                         <button class="btn btn-primary" type="button" id="button-comment4">Submit</button>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </li>
+                                 </ul>
+                                 <ul class="timeline clearfix">
+                                     <li class="timeline-line"></li>
+                                     <li class="timeline-group text-center">
+                                         <button class="btn btn-icon-text btn-warning"><i class="i-Calendar-4"></i> Joined
+                                             in 2013</button>
+                                     </li>
+                                 </ul>
+                             </div>
+                             <div class="tab-pane fade active show" id="about" role="tabpanel" aria-labelledby="about-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                       <h4 >Personal Information</h4>
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                                         <h4 style="float: right;">
+                                             <button type="button" class="btn btn-success pull-right"(click)="openModel(updateData)">Update Personal Information</button>
+                                         </h4>
+                                    </div> -->
+                                  
+                                </div>
+             
+                                 <div class="row">
+                                    
+                                     <div class="col-md-4 col-6">
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-MaleFemale text-16 mr-1"></i> Gender</p>
+                                             <span>Male</span>
+                                         </div>
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-MaleFemale text-16 mr-1"></i> Email</p>
+                                             <span>{{userDetails.email}}</span>
+                                         </div>
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Cloud-Weather text-16 mr-1"></i> Company</p>
+                                             <span>Tech Soup</span>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4 col-6">
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Face-Style-4 text-16 mr-1"></i> Phone</p>
+                                             <span>{{userDetails.phone.phoneNumber}}</span>
+                                         </div>
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Professor text-16 mr-1"></i> Address</p>
+                                             <span>{{userDetails.street}}, {{userDetails.address}}</span>
+                                             
+                                         </div>
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> City</p>
+                                             <span>{{cityDetails.name}}</span>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4 col-6">
+                                         <div class="mb-4" *ngIf="userDetails.birthDay">
+                                             <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i> Birth Date</p>
+                                             <span>{{userDetails.birthDay | date:'MM-dd-yyyy'}}</span>
+                                         </div>
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Face-Style-4 text-16 mr-1"></i> State</p>
+                                             <span>{{stateDetails.name}}</span>
+                                         </div>
+                                      
+                                         <div class="mb-4">
+                                             <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Country</p>
+                                             <span>{{countryDetails.name}}</span>
+                                         </div>
+                                     </div>
+                                 
+                                 </div>
+                                 <hr>
+                                 <div *ngIf="userDetails.indiaAccountDetails.length != 0">
+                                    <h4>Account Details</h4>
+                                 <h5 class="textSpace"><strong>Indian Account Details</strong></h5>
+                                 <div class="row">
+                                  <div class="col-md-4 col-6">
+                                      <div class="mb-4" >
+                                          <p class="text-primary mb-1">
+                                              <i class="i-Face-Style-4 text-16 mr-1"></i>
+                                               Account holder Name</p>
+                                          <span>{{indianAccounts.accountHolderName | titlecase}}</span>
+                                      </div>
+                                     
+                                  </div>
+                                  <div class="col-md-4 col-6">
+                                     
+                                      <div class="mb-4">
+                                          <p class="text-primary mb-1">
+                                              <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                               Account Number</p>
+                                          <span>{{indianAccounts.accountNumber }}</span>
+                                      </div>
+                                  
+                                     
+                                  </div>
+                                  <div class="col-md-4 col-6">
+      
+                                  
+                                      <div class="mb-4">
+                                          <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Bank Name</p>
+                                          <span>{{indianAccounts.bankName}}</span>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-4 col-6">
+                                      <div class="mb-4" >
+                                          <p class="text-primary mb-1">
+                                              <i class="fa fa-university" aria-hidden="true"></i>
+                                               Branch Name</p>
+                                          <span>{{indianAccounts.branchName }}</span>
+                                      </div>
+                                     
+                                  </div>
+                                  <div class="col-md-4 col-6">
+                                     
+                                      <div class="mb-4">
+                                          <p class="text-primary mb-1">
+                                              <i class="fa fa-codepen" aria-hidden="true"></i>
+                                               IFSC Code</p>
+                                          <span>{{indianAccounts.ifscCode}}</span>
+                                      </div>
+                                  
+                                     
+                                  </div>
+                                  
+                              </div>
+                                 </div>
+                                 
+
+                              <div *ngIf="userDetails.usaAccountDetails.length != 0">
+                                <h5 class="textSpace"><strong>USA Account Details</strong></h5>
+                                <div class="row">
+                                    <div class="col-md-4 col-6">
+                                        <div class="mb-4" >
+                                            <p class="text-primary mb-1">
+                                                <i class="i-Face-Style-4 text-16 mr-1"></i>
+                                                 Account holder Name</p>
+                                            <span>{{usaAccounts.accountHolderName | titlecase}}</span>
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                       
+                                        <div class="mb-4">
+                                            <p class="text-primary mb-1">
+                                                <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                                 Account Number</p>
+                                            <span>{{usaAccounts.accountNumber }}</span>
+                                        </div>
+                                    
+                                       
+                                    </div>
+                                    <div class="col-md-4 col-6">
+        
+                                    
+                                        <div class="mb-4">
+                                            <p class="text-primary mb-1"><i class="i-Home1 text-16 mr-1"></i> Routing Number</p>
+                                            <span>{{usaAccounts.routingNumber}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-6">
+                                        <div class="mb-4" >
+                                            <p class="text-primary mb-1">
+                                                <i class="fa fa-university" aria-hidden="true"></i>
+                                                Address</p>
+                                            <span>{{usaAccounts.address }}</span>
+                                        </div>
+                                       
+                                    </div>
+                                   
+                                    
+                                </div>
+                            </div>
+                                 <!-- <hr> -->
+                                 <!-- <h4>My  Hobbies</h4>
+                                
+                                 <div class="row mt-5">
+                                     <div class="col-md-2 col-sm-4 col-6 text-center">
+                                         <i class="i-Plane text-32 text-primary"></i>
+                                         <p class="text-16 mt-1">Travelling</p>
+                                     </div>
+                                     <div class="col-md-2 col-sm-4 col-6 text-center">
+                                         <i class="i-Camera text-32 text-primary"></i>
+                                         <p class="text-16 mt-1">Photography</p>
+                                     </div>
+                                     <div class="col-md-2 col-sm-4 col-6 text-center">
+                                         <i class="i-Car-3 text-32 text-primary"></i>
+                                         <p class="text-16 mt-1">Driving</p>
+                                     </div>
+                                    
+                                     <div class="col-md-2 col-sm-4 col-6 text-center">
+                                         <i class="i-Music-Note-2 text-32 text-primary"></i>
+                                         <p class="text-16 mt-1">Music</p>
+                                     </div>
+                              
+                                 </div> -->
+             
+                             
+             
+                              
+                             </div>
+             
+                             <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+                                 <div class="row">
+                                     <div class="col-md-3" >
+                                        
+                                         <div class="card card-profile-1 mb-4">
+                                             <div class="card-body text-center">
+                                                 <div class="cardData">
+                                                     <img src="../../../assets//images/Certificates/3.png" style="height: 360px;width: 100%;">
+                                             
+                                                    
+                                                     <div class="overlay">
+                                                         <div class="text">
+                                                             <strong> certificate - 1</strong><br/>
+                                                           <a href="">
+                                                             <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                           </a> 
+                                                           
+                                                           <a href="">
+                                                             <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+             
+                                                           </a>
+                                                         </div>
+                                                         
+                                                       </div>
+                                                 </div>
+             
+                                             </div>
+                                         </div>
+                                     </div>
+             
+                                     <div class="col-md-3">
+                                         <div class="card card-profile-1 mb-4">
+                                             <div class="card-body text-center">
+                                                 <div class="cardData">
+                                                     <img src="../../../assets//images/Certificates/5.jpg" style="height: 360px;width: 100%;">
+                                                     <div class="overlay">
+                                                         <div class="text">
+                                                             <strong> certificate - 1</strong><br/>
+                                                           <a href="">
+                                                             <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                           </a> 
+                                                           
+                                                           <a href="">
+                                                             <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+             
+                                                           </a>
+                                                         </div>
+                                                         
+                                                       </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+             
+                                     <div class="col-md-3">
+                                         <div class="card card-profile-1 mb-4">
+                                             <div class="card-body text-center">
+                                                 <div class="cardData">
+                                                     <img src="../../../assets//images/Certificates/7.jpeg" style="height: 360px;width: 100%;">
+                                                     <div class="overlay">
+                                                         <div class="text">
+                                                             <strong> certificate - 1</strong><br/>
+                                                           <a href="">
+                                                             <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                           </a> 
+                                                           
+                                                           <a href="">
+                                                             <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+             
+                                                           </a>
+                                                         </div>
+                                                         
+                                                       </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+             
+                                     </div>
+             
+                                     <div class="col-md-3">
+                                         <div class="card card-profile-1 mb-4">
+                                             <div class="card-body text-center">
+                                                 <div class="cardData">
+                                                     <img src="../../../assets//images/Certificates/4.jpg" style="height: 360px;width: 100%;">
+                                                     <div class="overlay">
+                                                         <div class="text">
+                                                             <strong> certificate - 1</strong><br/>
+                                                           <a href="">
+                                                             <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                           </a> 
+                                                           
+                                                           <a href="">
+                                                             <i class="nav-icon i-Download font-weight-bold"  aria-hidden="true"></i>
+             
+                                                           </a>
+                                                         </div>
+                                                         
+                                                       </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+             
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+                                 <div class="row">
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/youth1.jpg" alt="" >
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/women &Rural employment.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Youth empowerment/youth2.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/DIGITAL.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/digital class room.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img img-fluid" src="assets/images/projectimages/Digital Class rooms/5.IMG-20171201-WA0021.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img" src="assets/images/organic.jpg" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+             
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img" src="assets/images/physically_1(1).JPG" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-md-4">
+                                         <div class="card text-white o-hidden mb-3">
+                                             <img class="card-img" src="assets/images/physically_1(2).JPG" alt="">
+                                             <div class="card-img-overlay">
+                                                 <div class="p-1 text-left card-footer font-weight-light d-flex">
+                                                     <span class="mr-3 d-flex align-items-center"><i class="i-Speach-Bubble-6 mr-1"></i>
+                                                         12 </span>
+                                                     <span class="d-flex align-items-center"><i class="i-Calendar-4 mr-2"></i>03.12.2018</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>     
+         </div>
+         
+        </div>
+        <div class="modal-footer">
+         <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Close</button>
+       </div>
+        </div>
+    <!-- <div class="modal-body pt-0">
+        <div class="row">
+            <div class="col-md-6">
+                <label>User Id : </label>
+                <strong> {{singleUserDetails.userId}}</strong>
+            </div>
+            <div class="col-md-6">
+                <label>Email : </label>
+                <strong> {{singleUserDetails.email}}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Role: </label>
+                <strong > {{singleUserDetails.role.roleName | titlecase}} </strong>
+            </div>
+            <div class="col-md-6">
+                <label>Phone Number: </label>
+                <strong> {{singleUserDetails.phone.phoneNumber}}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button> 
+    </div> -->
+ </ng-template>

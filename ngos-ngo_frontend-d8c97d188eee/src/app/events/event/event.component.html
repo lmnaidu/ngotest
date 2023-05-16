@@ -1,0 +1,489 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+     <!-- Pre Loader Strat  -->
+     <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Events</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-12">
+           
+            <div class="card o-hidden mb-4">
+                <div class="row card-header">
+                    <div class="col-md-6">
+                        <div class=" d-flex align-items-center border-0">
+                            <h3 class="w-50 float-left card-title m-0">Events List 
+                                <button *ngIf="eventPermissions.write" class="btn btn-sm btn-primary" (click)="openModel(addData)">+ Add Event</button>
+                            </h3>
+                           
+                            <!-- <input type="checkbox"  (click)="changeevents($event)"  name="read">
+                            <h3 class="text-muted mb-0 text-20">My Events</h3> -->
+                            
+                        </div>  
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+                    <div class="col-md-2">
+                       <!-- <h5 class="w-50 float-right card-title m-1" style="text-align: end;"> Search</h5> -->
+                    </div>
+                    <div class="col-md-3">
+                        <div class=" d-flex align-items-center border-0">
+                            <input type="text" placeholder="Search Event Name" name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                        </div>
+
+                    </div>
+                </div>
+               
+
+                <div class="" *ngIf="!myEvents">
+                    <div class="table-responsive">
+                        <table id="user_table" class="table  text-left" >
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Event name</th>
+                                    <th scope="col">Project Name</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col" >Action</th>
+                                </tr>
+                            </thead> 
+                            <tbody>
+                                <ng-container *ngIf="availableEventsRecords; else noData">
+                                    <tr *ngFor="let event of allEvents  | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                                    <td>{{event.index}}</td>
+    
+                                        <td  style="width: 35%;">{{event.note | titlecase}}</td>
+                                        <td  style="width: 25%;">{{event.projectName | titlecase}}</td>
+                                        <td  style="width: 15%;">{{event.location  | titlecase}}</td>
+                                        <td  style="width: 15%;">{{event.date | date:'MM-dd-yyyy'}}</td>
+                                        <td    style="width: 10%;">
+                                            <a  (click)="updateModel(updateData,event._id)" class="text-success mr-2" title="edit Event"> <i class="nav-icon i-Pen-2 font-weight-bold" *ngIf="eventPermissions.update"></i>
+                                            </a>
+                                            <a  class="text-danger mr3" (click)="viewEventData(viewEventesData,event._id)" title="View Event" *ngIf="eventPermissions.read">
+                                                <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                </a>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noData>
+                                    <tr>
+                                        <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                          No Records Found 
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                               
+                            </tbody>
+                            <tfoot>
+                                <tr *ngIf="allEvents.length > pageSize">
+                                    <td colspan="12">
+                                      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="allEvents.length" [boundaryLinks]="true">
+                                      </ngb-pagination>
+                                    </td>
+                                </tr>
+                            
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div  *ngIf="myEvents">
+                    <h1>My Events</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- add event Form start -->
+
+
+<ng-template #addData let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Add Event</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="registerForm" >
+    <div class="modal-body">
+        
+            <div class="row">           
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Project <span class="text-danger">*</span> </label>
+                            <select class="form-control mb-10" formControlName="projectId" class="form-control form-control-rounded" id="addGender" >
+                                <option value="" disabled selected>Select Project</option>
+                                <option *ngFor="let x of projectsData.Projects" value="{{x._id}}">{{x.projectName}}</option>
+                            </select>
+                            <div class="error-block text-danger"
+                            *ngIf="registerForm.get('projectId').errors && (registerForm.get('projectId').touched || registerForm.get('projectId').dirty)">
+                            <span *ngIf="registerForm.get('projectId').errors.required">Project Name is required.
+                            </span>
+                           
+                           </div> 
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Location <span class="text-danger">*</span> </label>
+                            <input type="text" formControlName="location" class="form-control form-control-rounded" />
+                            <div class="error-block text-danger"
+                            *ngIf="registerForm.get('location').errors && (registerForm.get('location').touched || registerForm.get('location').dirty)">
+                            <span *ngIf="registerForm.get('location').errors.required">Location is required.
+                            </span>
+                           
+                           </div> 
+                        </div>
+                        
+                    </div>
+                    <!-- </div> -->
+            </div>
+        
+            <div class="row">
+                <div  class="col-md-6">
+                  
+                    <div class="form-group">
+                        <label>Event Name <span class="text-danger">*</span> </label>
+                        <input type="text" formControlName="note" class="form-control form-control-rounded" />
+                        <div class="error-block text-danger"
+                        *ngIf="registerForm.get('note').errors && (registerForm.get('note').touched || registerForm.get('note').dirty)">
+                        <span *ngIf="registerForm.get('note').errors.required">Event Name is required.
+                        </span>
+                        <span *ngIf="registerForm.get('note').errors && registerForm.get('note').errors.pattern">
+                            Enter valid name.
+                        </span>
+                       </div>
+                    </div>
+                </div>
+                
+                <div  class="col-md-6">
+                    <div class="form-group">
+                        <label>Select Member <span class="text-danger">*</span> </label>
+                        <ng-multiselect-dropdown formControlName="memberId" class="form-control-rounded" [placeholder]="'Select Members'" [settings]="memberSettings"  [data]="memberData" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)"></ng-multiselect-dropdown>
+
+                        <div class="error-block text-danger"
+                        *ngIf="registerForm.get('memberId').errors && (registerForm.get('memberId').touched || registerForm.get('memberId').dirty)">
+                        <span *ngIf="registerForm.get('memberId').errors.required">Member is required.
+                        </span>
+                       
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="date"z>Date <span class="text-danger">*</span> </label>
+                        <!-- <input type="date" formControlName="date" class="form-control form-control-rounded" /> -->
+                        <div class="input-group">
+                            <input class="form-control" [owlDateTime]="date" placeholder="Date Time" formControlName="date" [owlDateTimeTrigger]="date" >
+                            <div class="input-group-append datePicker">
+                                <button class="btn btn-secondary" [owlDateTimeTrigger]="date" type="button">
+                                    <i class="icon-regular i-Calendar-4"></i>
+                                </button>
+                            </div>
+                            <owl-date-time #date [pickerType]="'calendar'"></owl-date-time>
+                          
+                        </div>
+                        <div class="error-block text-danger"
+                        *ngIf="registerForm.get('date').errors && (registerForm.get('date').touched || registerForm.get('date').dirty)">
+                        <span *ngIf="registerForm.get('date').errors.required">Date is required.
+                        </span>
+                       
+                       </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Description <span class="text-danger">*</span> </label>
+                       <textarea formControlName="desc" rows="4" class="form-control form-control-rounded"></textarea>
+                       <div class="error-block text-danger"
+                       *ngIf="registerForm.get('desc').errors && (registerForm.get('desc').touched || registerForm.get('desc').dirty)">
+                       <span *ngIf="registerForm.get('desc').errors.required">Description is required.
+                       </span>
+                      
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Image <span class="text-danger">*</span> </label>
+                        <input type="file" class="form-control form-control-rounded" formControlName="image" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" class="form-control mb-10">
+                        <!-- <input type="file" formControlName="image" class="form-control form-control-rounded"  /> -->
+                        <div class="error-block text-danger"
+                        *ngIf="registerForm.get('image').errors && (registerForm.get('image').touched || registerForm.get('image').dirty)">
+                        <span *ngIf="registerForm.get('image').errors.required">Image is required.
+                        </span>
+                       
+                       </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-8">
+                    <img [src]="image" *ngIf="image != null || image == ''" alt="profile pic" class="picture" />
+                </div>
+                
+            </div>
+            <div class="col-md-6" style="margin-bottom: 40px">
+                <image-cropper [imageChangedEvent]="imageChangedEvent" id="imageCropper" [maintainAspectRatio]="true" [aspectRatio]="1/1" [resizeToWidth]="128" format="png" outputType="both" autoCrop="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+            </div>
+            </div>
+        
+    </div>
+        <div class="modal-footer form-group" >
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-success" [disabled] = "!registerForm.valid" (click)="addevent(resultModal)" >Save</button>
+        </div>
+    </form>
+         <!-- Pre Loader Strat  -->
+         <div class='loadscreen' *ngIf="loading">
+
+          <div class="loader spinner-bubble spinner-bubble-primary">
+          </div>
+      </div>
+      <!-- Pre Loader end  -->
+  </ng-template>
+
+  <!-- add event Form end-->
+
+
+  <!-- edit Event Start -->
+  <ng-template #updateData let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Edit Event</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup] = "updateEventForm"  id="updateEventForm">
+    <div class="modal-body">
+        
+       
+           
+               <div class="row">           
+                   <div class="col-md-6 form-group mb-3"> 
+                       <label>Project<span class="text-danger">*</span></label>
+                       <select class="form-control mb-10" formControlName="projectId" class="form-control form-control-rounded"  >
+                        <option>Select Project</option>
+                        <option *ngFor="let x of projectsData.Projects" value="{{x._id}}">{{x.projectName}}</option>
+                        <div class="error-block text-danger"
+                        *ngIf="updateEventForm.get('projectId').errors && (updateEventForm.get('projectId').touched || updateEventForm.get('projectId').dirty)">
+                        <span *ngIf="updateEventForm.get('projectId').errors.required">Project Name is required.
+                        </span>
+                       
+                       </div>
+                    </select>
+                      
+                    </div>
+                    <div class="col-md-6 form-group mb-3"> 
+                       <label>Location<span class="text-danger">*</span></label>
+                       <input type="text"  class="form-control" value={{singleEventData.location}}  formControlName="location" class="form-control form-control-rounded" />
+                       <div class="error-block text-danger"
+                       *ngIf="updateEventForm.get('location').errors && (updateEventForm.get('location').touched || updateEventForm.get('location').dirty)">
+                       <span *ngIf="updateEventForm.get('location').errors.required">Location is required.
+                       </span>
+                      
+                      </div>
+                    </div>
+               </div>
+            
+               <div class="row">           
+                   <div class="col-md-6 form-group mb-3"> 
+                       <label>Event Name<span class="text-danger">*</span></label>
+                       <input type="text"  class="form-control"  formControlName="note" class="form-control form-control-rounded" />
+                       <div class="error-block text-danger"
+                       *ngIf="updateEventForm.get('note').errors && (updateEventForm.get('note').touched || updateEventForm.get('note').dirty)">
+                            <span *ngIf="updateEventForm.get('note').errors.required">Event Name is required.
+                            </span>
+                      
+                      </div>
+                    </div>
+                    <div class="col-md-6 form-group mb-3"> 
+                       <label>Select Member<span class="text-danger">*</span></label>
+                       <ng-multiselect-dropdown  formControlName="memberId" class="form-control-rounded" [placeholder]="'Select Members'" [settings]="editmemberSettings"  [data]="memberData" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)" ></ng-multiselect-dropdown>
+
+                       <div class="error-block text-danger"
+                       *ngIf="updateEventForm.get('memberId').errors && (updateEventForm.get('memberId').touched || updateEventForm.get('memberId').dirty)">
+                            <span *ngIf="updateEventForm.get('memberId').errors.required">Member is required.
+                            </span>
+                      
+                      </div>
+                    </div>
+               </div>
+
+             
+
+
+               <div class="row">           
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>Date<span class="text-danger">*</span></label>
+                    <!-- <input type="date"  class="form-control"  formControlName="date" class="form-control form-control-rounded" /> -->
+                    <div class="input-group">
+                        <input class="form-control" [owlDateTime]="date" placeholder="Date Time" formControlName="date" [owlDateTimeTrigger]="date" >
+                        <div class="input-group-append datePicker">
+                            <button class="btn btn-secondary" [owlDateTimeTrigger]="date" type="button">
+                                <i class="icon-regular i-Calendar-4"></i>
+                            </button>
+                        </div>
+                        <owl-date-time #date [pickerType]="'calendar'"></owl-date-time>
+                    </div>
+                    <div class="error-block text-danger"
+                    *ngIf="updateEventForm.get('date').errors && (updateEventForm.get('date').touched || updateEventForm.get('date').dirty)">
+                         <span *ngIf="updateEventForm.get('date').errors.required">Date is required.
+                         </span>
+                   
+                   </div>
+                 </div>
+                 <div class="col-md-6 form-group mb-3"> 
+                    <label>Description<span class="text-danger">*</span></label>
+                    <textarea value={{singleEventData.desc}} formControlName="desc" rows="4" class="form-control form-control-rounded"></textarea>
+
+                    <div class="error-block text-danger"
+                    *ngIf="updateEventForm.get('desc').errors && (updateEventForm.get('desc').touched || updateEventForm.get('desc').dirty)">
+                         <span *ngIf="updateEventForm.get('desc').errors.required">Description is required.
+                         </span>
+                   
+                   </div>
+                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group mb-3"> 
+                    <label>Image<span class="text-danger">*</span></label>
+                    <input  type="file" formControlName="image" class="form-control form-control-rounded mb-10" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" >
+                 </div>
+                <!-- <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" class="form-control form-control-rounded" formControlName="image" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" class="form-control mb-10">
+                       
+                        
+                    </div>
+                </div> -->
+            </div>
+          
+               <div class="row">
+                   <div  class="col-md-4" *ngIf="singleEventData.getimage">
+                    <img src="{{singleEventData.getimage}}" alt="profile pic" *ngIf="image != ''" style="width: 50%;">
+                   </div>
+                    <div class="col-md-4  form-group">
+                        <div class="col-md-8">
+                            <img [src]="image" *ngIf="image != null || image == ''" alt="profile pic" class="picture" />
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-4  form-group" style="margin-bottom: 40px">
+                        <image-cropper [imageChangedEvent]="imageChangedEvent" id="imageCropper" [maintainAspectRatio]="true" [aspectRatio]="1/1" [resizeToWidth]="128" format="png" outputType="both" autoCrop="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+                    </div>
+                </div>
+          
+           
+    </div>
+    <div class="modal-footer form-group">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      <button type="button" class="btn btn-success"   (click)="updateEvent(resultModal)" >Update</button>
+    </div>
+    <!-- [disabled] = "!updateEventForm.valid" -->
+</form>
+        <!-- Pre Loader Strat  -->
+        <div class='loadscreen' *ngIf="loading">
+
+          <div class="loader spinner-bubble spinner-bubble-primary">
+          </div>
+      </div>
+      <!-- Pre Loader end  -->
+  </ng-template>
+
+ 
+   <!-- edit Event End --> 
+   <!-- result modal -->
+ <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+ </ng-template>
+ <!-- result modal end -->
+
+
+ <!-- view events Data -->
+
+ <ng-template #viewEventesData let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Event Details</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Event Name : </label>
+                <strong> {{singleEventData.note}}</strong>
+            </div>
+            <div class="col-md-6">
+                <label>Project : </label>
+                <strong> {{singleEventData.projectId.projectName}}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Location: </label>
+                <strong> {{singleEventData.location}}</strong>
+            </div>
+            <div class="col-md-6">
+                <label>Date : </label>
+                <strong> {{singleEventData.date | date:'MM-dd-yyyy'}}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Members: </label>
+                    <strong *ngFor="let member of singleEventData.memberId"> {{member.firstName}} {{member.lastName}} , </strong>        
+            </div>
+          
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div>
+                    <label>Description: </label>
+                </div>
+                <div>
+                    <strong> {{singleEventData.desc}}</strong>
+                </div>             
+                
+            </div>
+            <div class="col-md-4" *ngIf="singleEventData.getimage">
+               <img src="{{singleEventData.getimage}}" class="img-thumbnail" alt="eventImagr"> 
+            </div>
+        </div> 
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>

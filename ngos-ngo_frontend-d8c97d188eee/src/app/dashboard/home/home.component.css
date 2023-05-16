@@ -1,0 +1,27 @@
+ng-marquee {
+    /* border: 2px solid #38b734; */
+    display: block;
+}
+
+h2 {
+    margin-top: 3rem;
+    color: brown;
+    font-family: monospace;
+}
+
+h3 {
+    color: blue;
+    font-family: monospace;
+}
+
+.marqueeMargin{
+    margin-top: 10px !important;
+}
+
+.textColor {
+    color: white !important;
+}
+
+.markColor {
+    background-color: #1b4758 !important;
+}

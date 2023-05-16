@@ -1,0 +1,1 @@
+{"statusCode": { "code": "200", "message": "Ok" }, "errorMessages": null, "data":{ "token": "","username": "Member","email": "","permission": {"profile": true,"events": true,"projects": false}}}

@@ -1,0 +1,11 @@
+.cert{
+    height: 360px;
+    width: 100%;
+}
+.m-a{
+    margin: auto
+}
+
+.justify-content-end {
+    justify-content: flex-end !important;
+ }

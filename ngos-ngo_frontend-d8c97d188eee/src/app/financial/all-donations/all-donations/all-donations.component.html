@@ -1,0 +1,180 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0" >
+              <!-- Pre Loader Strat  -->
+              <div class='loadscreen' *ngIf="loading">
+
+                <div class="loader spinner-bubble spinner-bubble-primary">
+                </div>
+            </div>
+            <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Member Donations</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+
+        </ul>
+     </div>
+
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="card o-hidden mb-4">
+                <div class="row card-header">
+                    <div class="col-md-6">
+                    <div class="card-title mb-3">Member Donations </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        
+                        <input type="text" placeholder="Search Member Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                    </div>
+
+                </div> 
+              
+                    <!-- <h4 class="card-title mb-3">Member Donations  </h4> -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Member Name</th>
+                                    <th scope="col">Project Name</th>
+                                    <th scope="col">Donation</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="availableRecords; else noData">
+                                <tr *ngFor = "let list of donationsList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                    <th scope="row"> {{list.index}}</th>
+                                    <td> {{list.memberName}} </td>
+                                    <td> {{list.projectName}} </td>
+                                    <td> &#8377;{{list.amount}} </td>
+                                    <td> {{list.dateAdded | date:'MM-dd-yyy'}} </td>
+                                    <td>
+                                        <a (click) = "openViewModal(viewDonation,list)" class="text-danger mr-2">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                              </ng-container>
+                              <ng-template #noData> 
+                                <tr>
+                                    <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                      No Records Found 
+                                    </td>
+                                </tr>
+                              </ng-template>
+                            </tbody>
+                        </table>
+                        <div *ngIf="donationsLength > pageSize ">
+                            <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="donationsLength" [boundaryLinks]="true">
+                            </ngb-pagination>
+                         </div>
+                    </div>
+
+
+              
+            </div>
+        </div>
+
+    </div>
+</div>
+<ng-template #viewDonation let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">Donated by {{viewDonationData.memberName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+           <div class="col-md-6">
+             <strong>Project :</strong><span> {{viewDonationData.projectName}}</span>
+           </div>
+           <div class="col-md-6">
+             <strong>Activities : </strong><span  *ngIf="showAct" class="text-primary pointer underlineOnHover" (click)="openActivity(donatedActivities)">{{viewDonationData.activities.length}} Activities</span>
+             <span *ngIf="!showAct" >null</span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Amount: </strong><span>&#8377;{{viewDonationData.amount}} </span>
+            </div>
+            <div class="col-md-6">
+              <strong>Description :</strong><span style="word-break: break-word;">{{viewDonationData.description}}</span>
+            </div>
+         </div>
+    </div>
+ </ng-template>
+ <ng-template #donatedActivities let-modal>
+    <div class=" overflow-y-scroll">
+       <div class="modal-header">
+           <div class="row ">
+               <div class="col-md-12 align-items-center  d-flex">
+                   <div class="ml-2 ">
+                       <a href="dashboard/home">
+                           <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                       </a>
+                       <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}}</span>
+                   </div>
+               </div>
+           </div>
+           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+               <span aria-hidden="true">&times;</span>
+           </button>
+
+       </div>
+
+
+       <div class="modal-body ">
+               <div>
+                   <span class = "project-Title-donations pl-2">{{viewDonationData.projectName}} Activities</span>
+               </div>
+
+                   <div class = "row justify-content-center align-items-center mt-2">
+                      <div class="table-responsive">
+                         <table class="table">
+                            <thead>
+                               <tr>
+                                  <th scope="col">S.No</th>
+                            <th scope="col">Activity Name</th>
+                               </tr>
+                            </thead>
+                            <tbody>
+                               <tr *ngFor="let activity of viewDonationData.activities;let i=index">
+                                  <th scope="row">{{i+1}}</th>
+                                  <td>{{activity.activityName}}</td>
+
+                               </tr>
+                            </tbody>
+                         </table>
+                      </div>
+                   </div>
+
+           <div class="modal-footer">
+
+               <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">close</button>
+           </div>
+       </div>
+       <div class="container p-0">
+           <div class="flex-grow-1"></div>
+           <div class="app-footer p-2">
+
+               <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                   <span class="flex-grow-1"></span>
+                   <div class="d-flex align-items-center">
+                       <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                       <div>
+                           <p class="m-0">&copy; 2020 DNF</p>
+                           <p class="m-0">All rights reserved</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+ </ng-template>

@@ -1,0 +1,640 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0" >
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+     <div class="loader spinner-bubble spinner-bubble-primary">
+     </div>
+ </div>
+ <!-- Pre Loader end  -->
+   <div class="breadcrumb justify-content-end">
+       <ul>
+           <li><a> Manual Donations</a></li>
+          <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+
+       </ul>
+    </div>
+
+   <!-- <div class="separator-breadcrumb border-top"></div> -->
+   <div class="row">
+       <div class="col-md-12 ">
+           <div class="card o-hidden mb-4">
+            <div class="row card-header">
+                <div class="col-md-6">
+                <div class="card-title mb-3">Manual Donations <button
+                    class="btn btn-primary" title="Add Donations" (click) = "openLgModal(addManulaDonation)"> + Add</button> </div>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    
+                    <input type="text" placeholder="Search Member Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                </div>
+
+            </div> 
+
+                   <!-- <h4 class="card-title mb-3">Manual Donations  <button
+                       class="btn btn-primary" title="Add Donations" (click) = "openLgModal(addManulaDonation)"> + Add</button> </h4> -->
+                   <div class="table-responsive">
+                       <table class="table">
+                           <thead>
+                               <tr>
+                                   <th scope="col">#</th>
+                                   <th scope="col">Member Name</th>
+                                   <th scope="col">Project Name</th>
+                                   <th scope="col">Donation</th>
+                                   <th scope="col">Mode of Donation</th>
+                                   <th scope="col">Date</th>
+                                   <th scope="col">Action</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                            <ng-container *ngIf="availableRecords; else noData">
+                               <tr *ngFor = "let list of manualDonationsList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                   <th scope="row"> {{list.index}}</th>
+                                   <td> {{list.memberName}} </td>
+                                   <td> {{list.projectName}} </td>
+                                   <td> &#8377;{{list.amount}} </td>
+                                   <td> <span class="badge badge-success" *ngIf="list.modeOfDonations=='1'">Cheque</span>
+                                       <span class="badge badge-success" *ngIf="list.modeOfDonations=='2'">Online Payment</span>
+                                       <span class="badge badge-success" *ngIf="list.modeOfDonations=='3'">Bank Transfer</span>
+                                       <span class="badge badge-success" *ngIf="list.modeOfDonations=='4'">Hand Cash</span>
+                                       <span class="badge badge-success" *ngIf="list.modeOfDonations=='5'">Others</span>
+                                   </td>
+
+                                   <td> {{list.dateAdded | date:'MM-dd-yyy'}} </td>
+                                   <td>
+                                       <!-- <a (click) = "openEditModal(editManulaDonation,list)" class="text-success mr-2">
+                                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                       </a> -->
+                                       <a (click) = "openViewModal(viewManulaDonation,list)" class="text-danger mr-2">
+                                           <i class="nav-icon i-Eye font-weight-bold"></i>
+                                       </a>
+                                   </td>
+                               </tr>
+                            </ng-container>
+                            <ng-template #noData> 
+                                <tr>
+                                    <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                      No Records Found 
+                                    </td>
+                                </tr>
+                              </ng-template>
+
+                           </tbody>
+                       </table>
+                       <div *ngIf="donationsLength > pageSize ">
+                           <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="donationsLength" [boundaryLinks]="true">
+                           </ngb-pagination>
+                        </div>
+                   </div>
+
+
+           </div>
+       </div>
+
+   </div>
+</div>
+<!-- add manual donation pop-up -->
+<ng-template #addManulaDonation let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+          <div class="row ">
+              <div class="col-md-12 align-items-center  d-flex">
+                  <div class=" ml-2 ">
+                      <a href="dashboard/home">
+                          <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                      </a>
+                      <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}} - Add Manual Donations</span>
+                  </div>
+                  <div class="ml-2">
+                  </div>
+              </div>
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+
+      </div>
+
+
+      <div class="modal-body ">
+          <form [formGroup] = "manualDonationForm">
+              <div class="row mt-5" style="margin: auto;">
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> User <span class="text-danger"> *</span></label>
+                   <!-- <select class="form-control" id="name" formControlName = "userName">
+                       <option value="" disabled selected>Select Name</option>
+                       <option *ngFor = "let members of membersList" value = "{{members.id}}"> {{members.name}}</option>
+                   </select> -->
+                   <ng-multiselect-dropdown formControlName="userName" class="form-control-rounded" [placeholder]="'Select user'" [settings]="userSettings"  [data]="usersList" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)"></ng-multiselect-dropdown>
+                   <div class="error-block text-danger"
+                       *ngIf="manualDonationForm.get('userName').errors && (manualDonationForm.get('userName').touched || manualDonationForm.get('userName').dirty)">
+                       <span *ngIf="manualDonationForm.get('userName').errors.required">
+                           {{errorMessageName}}
+                       </span>
+                   </div>
+
+               </div>
+               <div class="col-md-6 form-group mb-3">
+                   <label for="" class = "mb-2"> Project Name <span class="text-danger"> *</span></label>
+                   <select class="form-control" id="projectId" formControlName = "projectId" required (change)="addActivities(mySelect.value)" #mySelect>
+                       <option value="" disabled selected>Select Project</option>
+                       <option *ngFor = "let projects of projectsList.Projects" value = "{{projects._id}}"> {{projects.projectName}}</option>
+                   </select>
+                   <div class="error-block text-danger"
+                       *ngIf="manualDonationForm.get('projectId').errors && (manualDonationForm.get('projectId').touched || manualDonationForm.get('projectId').dirty)">
+                       <span *ngIf="manualDonationForm.get('projectId').errors.required">
+                           {{errorMessageProjectNameReq}}
+                       </span>
+                   </div>
+               </div>
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> Activities </label>
+                   <ng-multiselect-dropdown formControlName="selectedActivities" class="form-control-rounded" [placeholder]="'Select Activities'" [settings]="activitySettings"  [data]="activityList" (onSelect)="onactivitySelect($event)" (onDeSelect)="onactivityDeSelect($event)"></ng-multiselect-dropdown>
+               </div>
+
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> Mode of Donations <span class="text-danger"> *</span></label>
+                   <select class="form-control" id="modeOfDonations" formControlName = "modeOfDonations">
+                       <option value="" disabled selected>Select Mode of Donations</option>
+                       <option *ngFor = "let types of modeOfDonaitons" value = "{{types.id}}"> {{types.name}}</option>
+                   </select>
+                   <div class="error-block text-danger"
+                       *ngIf="manualDonationForm.get('modeOfDonations').errors && (manualDonationForm.get('modeOfDonations').touched || manualDonationForm.get('modeOfDonations').dirty)">
+                       <span *ngIf="manualDonationForm.get('modeOfDonations').errors.required">
+                           {{errorMessageModeOfDonations}}
+
+                       </span>
+                   </div>
+
+               </div>
+
+                   <div class="col-md-6 form-group ">
+                       <label for="exampleInputEmail1">Amount(&#8377;)<span class="text-danger">*</span></label>
+                       <input type="number" min = "1" class="form-control"  placeholder="Enter Amount" formControlName="amount">
+                       <div class="error-block text-danger"
+                           *ngIf="manualDonationForm.get('amount').errors && (manualDonationForm.get('amount').touched || manualDonationForm.get('amount').dirty)">
+                           <span *ngIf="manualDonationForm.get('amount').errors.required">
+                               {{errorMessageAmountReq}}
+
+                           </span>
+                           <span *ngIf="manualDonationForm.get('amount').errors.pattern">
+                               {{errorMessageAmountInvalid}}
+
+                           </span>
+                       </div>
+
+
+                   </div>
+                   <div class="col-md-6 form-group ">
+                       <label for="exampleInputEmail1">Cheque/D D No</label>
+                       <input type="number" class="form-control"  placeholder="Enter the cheque or D D no" formControlName="checqueNo">
+
+                   </div>
+
+           </div>
+           <h4> Description Information</h4>
+           <div class="row ">
+               <div class="col-md-10 form-group mb-3">
+                   <label for="">Description</label>
+                   <textarea class="form-control" id="description" placeholder="Enter the description" formControlName= "description" minlength="3"
+                       ></textarea>
+                       <div class="error-block text-danger"
+                           *ngIf="manualDonationForm.get('description').errors && (manualDonationForm.get('description').touched || manualDonationForm.get('description').dirty)">
+                           <span *ngIf="manualDonationForm.get('description').errors.minlength">
+                               {{errorMessageDescriptionMinMax}}
+
+                           </span>
+                           <span *ngIf="manualDonationForm.get('description').errors.pattern">
+                               {{errorMessageDescriptionInvalid}}
+
+                           </span>
+                       </div>
+
+               </div>
+           </div>
+
+
+
+          </form>
+
+
+          <div class="modal-footer">
+              <button type = "submit" class = "btn btn-primary" [disabled] = "!manualDonationForm.valid" (click) = "onManualDonate(resultModal)"> Submit</button>
+
+
+              <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+      <!-- Pre Loader Strat  -->
+      <div class='loadscreen' *ngIf="loading">
+
+        <div class="loader spinner-bubble spinner-bubble-primary">
+        </div>
+    </div>
+    <!-- Pre Loader end  -->
+</ng-template>
+<ng-template #editManulaDonation let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+          <div class="row ">
+              <div class="col-md-12 align-items-center  d-flex">
+                  <div class=" ml-2 ">
+                      <a href="dashboard/home">
+                          <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                      </a>
+                      <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}} - Edit Manual Donations</span>
+                  </div>
+                  <div class="ml-2">
+                  </div>
+              </div>
+
+
+
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body ">
+          <form [formGroup] = "editDonationForm">
+              <div class="row mt-5" style="margin: auto;">
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> User <span class="text-danger"> *</span></label>
+                   <ng-multiselect-dropdown formControlName="userName" class="form-control-rounded" [placeholder]="'Select user'" [settings]="userSettings"  [data]="usersList" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)"></ng-multiselect-dropdown>
+                   <div class="error-block text-danger"
+                       *ngIf="editDonationForm.get('userName').errors && (editDonationForm.get('userName').touched || editDonationForm.get('userName').dirty)">
+                       <span *ngIf="editDonationForm.get('userName').errors.required">
+                           {{errorMessageName}}
+                       </span>
+                   </div>
+
+               </div>
+               <div class="col-md-6 form-group mb-3">
+                   <label for="" class = "mb-2"> Project Name <span class="text-danger"> *</span></label>
+                   <select class="form-control" id="projectId" formControlName = "projectId" required (change)="editActivities(mySelect.value)" #mySelect>
+                       <option value="" disabled selected>Select Project</option>
+                       <option *ngFor = "let projects of projectsList.Projects" value = "{{projects._id}}"> {{projects.projectName}}</option>
+                   </select>
+                   <div class="error-block text-danger"
+                       *ngIf="editDonationForm.get('projectId').errors && (editDonationForm.get('projectId').touched || editDonationForm.get('projectId').dirty)">
+                       <span *ngIf="editDonationForm.get('projectId').errors.required">
+                           {{errorMessageProjectNameReq}}
+                       </span>
+                   </div>
+               </div>
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> Activities </label>
+                   <ng-multiselect-dropdown formControlName="selectedActivities" class="form-control-rounded" [placeholder]="'Select Activities'" [settings]="activitySettings"  [data]="activityList" (onSelect)="onactivitySelect($event)" (onDeSelect)="onactivityDeSelect($event)"></ng-multiselect-dropdown>
+               </div>
+
+               <div class="col-md-6 form-group mb-3">
+                   <label for=""> Mode of Donations <span class="text-danger"> *</span></label>
+                   <select class="form-control" id="modeOfDonations" formControlName = "modeOfDonations">
+                       <option value="" disabled selected>Select Mode of Donations</option>
+                       <option *ngFor = "let types of modeOfDonaitons" value = "{{types.id}}"> {{types.name}}</option>
+                   </select>
+                   <div class="error-block text-danger"
+                       *ngIf="editDonationForm.get('modeOfDonations').errors && (editDonationForm.get('modeOfDonations').touched || editDonationForm.get('modeOfDonations').dirty)">
+                       <span *ngIf="editDonationForm.get('modeOfDonations').errors.required">
+                           {{errorMessageModeOfDonations}}
+
+                       </span>
+                   </div>
+
+               </div>
+
+                   <div class="col-md-6 form-group ">
+                       <label for="exampleInputEmail1">Amount(&#8377;)<span class="text-danger">*</span></label>
+                       <input type="number" min = "1" class="form-control"  placeholder="Enter Amount" formControlName="amount">
+                       <div class="error-block text-danger"
+                           *ngIf="editDonationForm.get('amount').errors && (editDonationForm.get('amount').touched || editDonationForm.get('amount').dirty)">
+                           <span *ngIf="editDonationForm.get('amount').errors.required">
+                               {{errorMessageAmountReq}}
+
+                           </span>
+                           <span *ngIf="editDonationForm.get('amount').errors.pattern">
+                               {{errorMessageAmountInvalid}}
+
+                           </span>
+                       </div>
+
+
+                   </div>
+
+           </div>
+           <h4> Description Information</h4>
+           <div class="row ">
+               <div class="col-md-10 form-group mb-3">
+                   <label for="">Description</label>
+                   <textarea class="form-control" id="description" placeholder="Enter the description" formControlName= "description"  minlength="3"
+                       ></textarea>
+                       <div class="error-block text-danger"
+                           *ngIf="editDonationForm.get('description').errors && (editDonationForm.get('description').touched || editDonationForm.get('description').dirty)">
+                           <span *ngIf="editDonationForm.get('description').errors.minlength">
+                               {{errorMessageDescriptionMinMax}}
+
+                           </span>
+                           <span *ngIf="editDonationForm.get('description').errors.pattern">
+                               {{errorMessageDescriptionInvalid}}
+
+                           </span>
+                       </div>
+               </div>
+           </div>
+          </form>
+          <div class="modal-footer">
+              <button type = "submit" class = "btn btn-primary" [disabled] = "!editDonationForm.valid" (click) = "editManualDonate(resultModal)"> Submit</button>
+
+
+              <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>
+
+<!-- result Modal -->
+<ng-template #resultModal let-modal>
+   <div class="modal-header border-0 pt-2 pb-2 pr-2">
+
+   </div>
+   <div class="modal-body pt-0" *ngIf="addSuccess">
+       <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+       </p>
+     </div>
+     <div class="modal-body pt-0" *ngIf="addDanger">
+         <p class="text-error-message mb-0"><strong><span> Error! </span></strong> {{message}}
+         </p>
+       </div>
+   <div class="modal-footer p-2">
+      <!-- <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewMembers()">Next</button> -->
+    <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Close</button>
+   </div>
+</ng-template>
+
+
+<!-- <ng-template #addName let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+          <div class="row ">
+              <div class="col-md-12 align-items-center  d-flex">
+                  <div class="ml-2 ">
+                      <a href="dashboard/home">
+                          <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                      </a>
+                      <span class="modal-title DNF-title" id="modal-basic-title "> DNF - Add Name</span>
+                  </div>
+              </div>
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+
+      </div>
+
+
+      <div class="modal-body ">
+       <form [formGroup] = "addNameForm">
+           <div class="row mt-5" style="margin: auto;">
+            <div class="col-md-6 form-group mb-3">
+                <label for=""> First Name <span class="text-danger"> *</span> </label>
+                <input type="text" class= "form-control" placeholder="Enter First Name" formControlName = "firstName">
+               <div class="error-block text-danger"
+                   *ngIf="addNameForm.get('firstName').errors && (addNameForm.get('firstName').touched || addNameForm.get('firstName').dirty)">
+                   <span *ngIf="addNameForm.get('firstName').errors.required">
+                       {{ errorMessageFirstNameReq }}
+                   </span>
+                   <span *ngIf="addNameForm.get('firstName').errors.pattern">
+                       {{ errorMessageFirstNameInvalid }}
+                   </span>
+
+                   <span
+                       *ngIf="addNameForm.get('firstName').errors.minlength || addNameForm.get('firstName').errors.maxlength">
+                       {{ errorMessageFirstNameMinMax}}
+
+                   </span>
+
+
+               </div>
+
+
+            </div>
+            <div class="col-md-6 form-group mb-3">
+               <label for=""> Last Name <span class="text-danger"> *</span> </label>
+               <input type="text" class= "form-control" placeholder="Enter Last Name" formControlName = "lastName">
+               <div class="error-block text-danger"
+                   *ngIf="addNameForm.get('lastName').errors && (addNameForm.get('lastName').touched || addNameForm.get('lastName').dirty)">
+                   <span *ngIf="addNameForm.get('lastName').errors.required">
+                       {{ errorMessagelastNameReq }}
+                   </span>
+                   <span *ngIf="addNameForm.get('lastName').errors.pattern">
+                       {{ errorMessagelastNameInvalid }}
+                   </span>
+
+                   <span
+                       *ngIf="addNameForm.get('lastName').errors.minlength || addNameForm.get('lastName').errors.maxlength">
+                       {{ errorMessagelastNameMinMax}}
+
+                   </span>
+
+
+               </div>
+           </div>
+           <div class="col-md-6 form-group mb-3">
+               <label for=""> Phone Number <span class="text-danger"> *</span> </label>
+               <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber"
+               pattern="([+]?\d{1,3}[-])?\d{10}" placeholder="Enter Phone Number">
+               <div class="error-block text-danger"
+                   *ngIf="addNameForm.get('phoneNumber').errors && (addNameForm.get('phoneNumber').touched || addNameForm.get('phoneNumber').dirty)">
+                   <span *ngIf="addNameForm.get('phoneNumber').errors.required">
+                       {{errorMessagePhnoReq}}
+                   </span>
+                   <span *ngIf="addNameForm.get('phoneNumber').errors.pattern">
+                       {{errorMessagePhnoInvalid}}
+                   </span>
+
+               </div>
+           </div>
+
+           <div class="col-md-6 form-group mb-3">
+               <label for=""> Email <span class="text-danger"> *</span> </label>
+               <input type="text" class="form-control" id="email" formControlName="email" placeholder="Enter Email"
+               pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})">
+               <div class="error-block text-danger"
+                   *ngIf="addNameForm.get('email').errors && (addNameForm.get('email').touched || addNameForm.get('email').dirty)">
+                   <span *ngIf="addNameForm.get('email').errors.required">
+                       {{errorMessageEmailReq}}
+                   </span>
+                   <span *ngIf="addNameForm.get('email').errors.pattern">
+                       {{errorMessageEmailInvalid}}
+                   </span>
+               </div>
+           </div>
+
+        </div>
+       </form>
+
+
+          <div class="modal-footer">
+              <button type = "submit" class = "btn btn-primary" [disabled] = "!addNameForm.valid" (click) = "addNameManually(resultModal)"> Submit</button>
+
+
+              <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template> -->
+<ng-template #viewManulaDonation let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Donated by {{viewDonationData.memberName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+       <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+       <div class="row">
+          <div class="col-md-6">
+            <strong>Project :</strong><span> {{viewDonationData.projectName}}</span>
+          </div>
+          <div class="col-md-6">
+            <strong>Activities : </strong><span  *ngIf="viewDonationData.activities[0].activityName" class="text-primary pointer underlineOnHover" (click)="openActivity(donatedActivities)">{{viewDonationData.activities.length}} Activities</span>
+            <span *ngIf="!viewDonationData.activities[0].activityName" >0 Activities</span>
+         </div>
+       </div>
+       <div class="row">
+           <div class="col-md-6">
+               <strong>Amount: </strong><span>&#8377;{{viewDonationData.amount}} </span>
+           </div>
+           <div class="col-md-6">
+             <strong>Description :</strong><span style="word-break: break-word;">{{viewDonationData.description}}</span>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-md-6" *ngIf="viewDonationData.checqueNo">
+               <strong>Cheque / D D No: </strong><span>{{viewDonationData.checqueNo}} </span>
+           </div>
+
+        </div>
+   </div>
+</ng-template>
+<ng-template #donatedActivities let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+          <div class="row ">
+              <div class="col-md-12 align-items-center  d-flex">
+                  <div class="ml-2 ">
+                      <a href="dashboard/home">
+                          <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                      </a>
+                      <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}}</span>
+                  </div>
+              </div>
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+
+      </div>
+
+
+      <div class="modal-body ">
+              <div>
+                  <span class = "project-Title-donations pl-2">{{viewDonationData.projectId.projectName}} Activities</span>
+              </div>
+
+                  <div class = "row justify-content-center align-items-center mt-2">
+                     <div class="table-responsive">
+                        <table class="table">
+                           <thead>
+                              <tr>
+                                 <th scope="col">S.No</th>
+                           <th scope="col">Activity Name</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr *ngFor="let activity of viewDonationData.activities;let i=index">
+                                 <th scope="row">{{i+1}}</th>
+                                 <td>{{activity.activityName}}</td>
+
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+
+          <div class="modal-footer">
+
+              <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">close</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>

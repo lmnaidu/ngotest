@@ -1,0 +1,990 @@
+<div class="container">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+        <div class="breadcrumb justify-content-end">
+            <ul>
+                <li><a> Magazines</a></li>
+               <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+            
+            </ul>
+         </div>
+        <div class="row">
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-6 pull-right" *ngIf="id != '1'">
+                <button *ngIf="magazinePermissions.update" class="btn btn-sm btn-primary pull-right" (click)="editMagazine(editingMagazine)">+Edit Magazine</button>
+            </div>
+        </div>
+        <div class="page" size="A4" *ngIf="id != '1'">
+            
+            <div class="row header" >
+                <div class="card">
+                    <div class="row banner" >
+                        <div class="col-md-4 card-header banner-1">
+                          
+                            <p class="text-center" style="font-weight: bold;"> NGO ELITE</p>
+                                 
+                         </div>
+                         <div class="col-md-8 card-header banner-2">
+                        
+                            <p class="text-center" style="font-weight: bold;"> DISTRICT NRI FOUNDATION</p>
+                                 
+                          </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-md-2" style="padding: 0px 0px 0px 21px;">
+                    <div class="row " style="background-color: #0020dc;">
+                        <h5 style="color: white;">ADVERTISEMENTS</h5>
+                    </div>
+                    <div class="row" style="padding-bottom: 5px;">
+                        <img src="../../../assets/images/add-1.jpg" style="width: 180px;height: 230px;">
+                    </div>
+                    <div class="row">
+                        <img src="../../../assets/images/add-4.jpg" style="width: 180px;height: 230px;">
+                    </div>
+                    <div class="row">
+                        <div class="card">
+                            <h5 class="card-header" style="background-color: #0020dc;color: white; text-align: center;">NEWS</h5>
+                            <div class="card-body overflow-y-scroll" style="height: 525px;">
+                                <div class="newsBorder" *ngFor="let news of magazinesData.newsId" >
+                                    <div>
+                                        <p>{{news.discription |slice:0:100}}</p>
+                                     </div>
+                                     <div style="text-align: right;" z>
+                                         <a style="cursor: pointer;" (click)="openNewsModal(newsModel,news._id)">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                     </div>
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                       <div class="logo">
+                            <img src="../../../assets/images/logo1.jpg" style="width: 700px;height: 123px;">
+                       </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-8" style="height: 500px;">
+                            <div class="col-md-12 text-center" style="margin:-0px -10px -10px 10px;">
+                                <h3 class="text-color"> PROJECTS</h3>
+                            </div>
+                            <div *ngIf="projectLength === 1" >
+                                <div class="row rowData border" *ngFor="let project of magazinesData.projectId">
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                            <span class="projectName">{{project.projectName}} </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- <img  src="../../../assets/images/digital_class_2.jpg" class="img-thumbnail"> -->
+                                            <img  src="{{project.projectImage}}" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                
+                                                <p >{{project.projectDescription |slice:0:600}}</p>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <a (click)="openExpModal(expModal,project._id)" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div>
+                            <div *ngIf="projectLength === 2" >
+                                <div class="row rowData1 border" *ngFor="let project of magazinesData.projectId">
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                            <span class="projectName">{{project.projectName}} </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img  src="{{project.projectImage}}" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                
+                                                <p >{{project.projectDescription |slice:0:100}}</p>
+                                            </div>
+                                            <div style="text-align: right;">
+                                            <a (click)="openExpModal(expModal,project._id)" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div *ngIf="projectLength === 3" class=" card overflow-y-scroll" style="height: 95%;">
+                                <div *ngFor="let project of magazinesData.projectId">
+                                    <div class=" rowData3 border " style="margin-bottom: 0px;">
+                                        <div class="row " style="margin:auto;">
+                                            <div class="col-md-6">
+                                                <span class="projectName">{{project.projectName}} </span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <img  src="{{project.projectImage}}" class="img-thumbnail">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row" style="margin:auto;">
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <p>{{project.projectDescription |slice:0:100}} </p>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                <a (click)="openExpModal(expModal,project._id)" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="projectLength >= 4" class="card  overflow-y-scroll" style="height:493px">
+                              
+                                <div class=" card-body row rowData" >
+                                    <div class="col-md-6 border" *ngFor="let project of magazinesData.projectId">
+                                        <div class="row ">
+                                            <div class="col-md-6">
+                                                <span class="projectName"> {{project.projectName}}</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <img  src="{{project.projectImage}}" class="img-thumbnail">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                               <div>
+                                                   <span>{{project.projectDescription |slice:0:200}}</span>
+                                                    
+                                               </div>
+                                              <div style="text-align: right;">
+                                                <a (click)="openExpModal(expModal,project._id)" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                              </div>
+                                            </div>
+                                        </div>       
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                                                    
+                          
+                        </div>
+                        <!-- |slice:0:200 -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h5 class="card-header" style="background-color: #0020dc;color: white; text-align: center;">EVENTS</h5>
+                                <div class="card-body overflow-y-scroll" style="height: 467px;" >
+                                    <div class="newsBorder" *ngFor="let event of magazinesData.event">
+                              
+                                        <div>
+                                            <p>{{event.desc |slice:0:200}} </p>
+                                         </div>
+                                         <div style="text-align: right;">
+                                             <a  (click)="openEventsModal(eventsModel,event._id)" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                         </div>
+                                    </div>
+                                  
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 10px;">
+                        <div class="card">
+                            <h5 class="text-center text-color">SPONSORS</h5>
+                            <div class="card-body" style="width:685px; height:135px">
+                                <swiper [config]="config"  style="height: 614px; width: 645px;">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Globex Corporation</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Umbrella Corporation</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Vehement Capital Partners </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </swiper>
+                            </div>
+                        </div>
+                       
+                    </div>
+                   
+                    <div class="row">
+                        <!-- <div class="col-md-12 text-center" style="margin: -10px;">
+                            <h3 class="text-color">GALLERY</h3>
+                        </div>
+                        <div class="row" style="margin: 10px;">
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/oldage_home.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/digital_class_1.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/youth_2.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/physically_1(1).JPG" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/youth_3.jpeg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/plant.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/organic.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                            <div class="col-md-3">
+                                <img  src="../../../assets/images/helth.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                            </div>
+                        </div> -->
+                        <div class="card row" style="margin: 5px 27px 5px 27px;">
+                            <div  class="card-body overflow-y-scroll" style="width: 690px; height: 250px;">
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <h3 class="text-color ">Top Three Donors</h3>
+                                        <div *ngFor="let doners of finalResult | slice :0:3">
+                                            <div class="card" style="height: 60px; margin: 5px;">
+                                                <div class="card-body row">
+                                                    <div class="col-sm-3 text-center">
+                                                        <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 22px"></i>  
+                                                    </div>
+                                                    <div class="col-sm-8" style="text-align: left;">
+                                                       <h6>{{doners.name}}</h6>
+                                                    </div>
+                                                   
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <h3 class="text-color">GALLERY</h3>
+                                       <div class="row ">
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/oldage_home.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/digital_class_1.jpg" class="img-thumbnail" >
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/plant.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/youth_2.jpg" class="img-thumbnail">
+                                            </div>
+                                       </div>
+                                    </div>
+                               </div>
+                              
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+     
+              
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-footer bg-transparent border-success">
+                          <div class="row">
+                            <div class="col-md-4 text-center">
+                                <span style="font-weight: bold;">Gen. Date : {{date | date:'MM/dd/yyyy'}}</span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <span class="socalIcon">
+                                  <a href="">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                  </a>
+                                </span>
+                                <span class="socalIcon">
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                </span>
+                                <span class="socalIcon">
+                                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                                </span>
+                                <span class="socalIcon">
+                                    <i class="fa fa-google-plus" aria-hidden="true"></i>
+                                </span>
+                                
+                            </div>  
+                            <div class="col-md-4 text-center">
+                                <span style="font-weight: bold;">Gen. By : BA Solutions</span>
+                            </div>
+                          </div>
+                            
+                        </div>
+                    </div>
+                </div>
+              </div>
+            
+          
+        </div>
+        
+        <div class="page" size="A4" *ngIf="id === '1'">
+            <div class="row header" >
+                <div class="card">
+                    <div class="row banner" >
+                        <div class="col-md-4 card-header banner-1">
+                          
+                            <p class="text-center" style="font-weight: bold;"> NGO ELITE</p>
+                                 
+                         </div>
+                         <div class="col-md-8 card-header banner-2">
+                        
+                            <p class="text-center" style="font-weight: bold;"> DISTRICT NRI FOUNDATION</p>
+                                 
+                          </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-md-2" style="padding: 0px 0px 0px 21px;">
+                    <div class="row " style="background-color: #0020dc;">
+                        <h5 style="color: white;">ADVERTISEMENTS</h5>
+                    </div>
+                    <div class="row" style="padding-bottom: 5px;">
+                        <img src="../../../assets/images/add-1.jpg" style="width: 180px;height: 230px;">
+                    </div>
+                    <div class="row">
+                        <img src="../../../assets/images/add-4.jpg" style="width: 180px;height: 230px;">
+                    </div>
+                    <div class="row">
+                        <div class="card">
+                            <h5 class="card-header" style="background-color: #0020dc;color: white; text-align: center;">NEWS</h5>
+                            <div class="card-body" style="height: 525px;">
+                                <div class="newsBorder">
+                                    <div>
+                                        <p>Redemption Research for Health and Educational Development Society (RRHEDS)</p>
+                                     </div>
+                                     <div style="text-align: right;">
+                                         <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                     </div>
+                                </div>
+                                <div class="newsBorder">
+                                    <div>
+                                        <p>Improve education through Digital lessons</p>
+                                     </div>
+                                     <div style="text-align: right;">
+                                         <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                     </div>
+                                </div>
+                                <div class="newsBorder">
+                                    <div>
+                                        <p>Indian Women and Child Welfare Trust organizes awareness programs.</p>
+                                     </div>
+                                     <div style="text-align: right;">
+                                         <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                     </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                       <div class="logo">
+                            <img src="../../../assets/images/logo1.jpg" style="width: 700px;height: 123px;">
+                       </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="col-md-12 text-center" style="margin:-10px -10px -10px 10px;">
+                                <h3 class="text-color"> PROJECTS</h3>
+                            </div>
+                           
+                            <div class="row rowData">
+                                <div class="col-md-6 border" >
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                            <span class="projectName"> Digital Class Room</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img  src="../../../assets/images/digital_class_2.jpg" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                           <div>
+                                                <p>Digital classroom is a new revolutionary technology for educational industries having intractive power to communicate with students remotly.</p>
+                                           </div>
+                                          <div style="text-align: right;">
+                                            <a  style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                          </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                                <div class="col-md-6 border" >
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                            <span class="projectName">Good Will</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img  src="../../../assets/images/youth_2.jpg" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                 <p>Youth empowerment is pursued by promoting youth rights, youth activism and in community decision making.</p>
+                                            </div>
+                                           <div style="text-align: right;">
+                                             <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                           </div>
+                                         </div>
+                                    </div>       
+                                </div>
+                                <div class="col-md-6 border" >
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                           <span class="projectName">Cheyutha</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img  src="../../../assets/images/physically_1(2).JPG" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                 <p>A physical disability is a limitation on a person's physical functioning, mobility, dexterity or stamina. Other physical disabilities include impairments </p>
+                                            </div>
+                                           <div style="text-align: right;">
+                                             <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                           </div>
+                                         </div>
+                                    </div>       
+                                </div>
+                                <div class="col-md-6 border" >
+                                    <div class="row ">
+                                        <div class="col-md-6">
+                                            <span class="projectName">Book distribution for children </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img  src="../../../assets/images/distribution.jpg" class="img-thumbnail">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                 <p>Old age homes are meant for senior citizens who suffer with a problem in staying with their children at home or are destitute. </p>
+                                            </div>
+                                           <div style="text-align: right;">
+                                             <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                           </div>
+                                         </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h5 class="card-header" style="background-color: #0020dc;color: white; text-align: center;">EVENTS</h5>
+                                <div class="card-body" style="height: 467px;">
+                                    <div class="newsBorder">
+                                        <div>
+                                            <p>A health check-up camp was organized on the 30 of March 2019 for school children from a school in Telengana. The school serves as a remedial educational centre for Mission Education. </p>
+                                         </div>
+                                         <div style="text-align: right;">
+                                             <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                         </div>
+                                    </div>
+                                    <div class="newsBorder">
+                                        <div>
+                                            <p>As pollution levels are on an all time high it is time for us as individuals and as a society to curb the menace by adopting practices which will lead to cleaner and greener environment.</p>
+                                         </div>
+                                         <div style="text-align: right;">
+                                             <a href="" style="cursor: pointer;">Read More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                         </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 10px;">
+                        <div class="card">
+                            <h5 class="text-center text-color">SPONSORS</h5>
+                            <div class="card-body" style="width:685px; height:135px">
+                                <swiper [config]="config"  style="height: 614px; width: 645px;">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Globex Corporation</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Umbrella Corporation</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Vehement Capital Partners </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="card-body">Telecom Company</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </swiper>
+                            </div>
+                        </div>
+                       
+                    </div>
+                   
+                    <div class="row">
+                        <!-- <div class="col-md-6 text-center" style="margin: -10px;">
+                            <h3 class="text-color">Top Three Doners</h3>
+                        </div>
+                        <div class="col-md-6 text-center" style="margin: -10px;">
+                            <h3 class="text-color">GALLERY</h3>
+                        </div> -->
+                        <div class="card row" style="margin: 5px 27px 5px 27px;">
+                            <div  class="card-body overflow-y-scroll" style="width: 690px; height: 250px;">
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <h3 class="text-color ">Top Three Donors</h3>
+                                        <div >
+                                            <div class="card" style="height: 55px; margin: 5px;">
+                                                <div class="card-body row">
+                                                    <div class="col-sm-3 text-center">
+                                                        <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 22px"></i>  
+                                                    </div>
+                                                    <div class="col-sm-8" style="text-align: left;">
+                                                        <h5>Sandeep Bandi</h5>
+                                                    </div>
+                                                   
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="card" style="height: 55px; margin: 5px;">
+                                                <div class="card-body row">
+                                                    <div class="col-sm-3 text-center">
+                                                        <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 22px"></i>  
+                                                    </div>
+                                                    <div class="col-sm-8" style="text-align: left;">
+                                                        <h5>Sunitha S</h5>
+                                                    </div>
+                                                   
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="card" style="height: 55px; margin: 5px;">
+                                                <div class="card-body row">
+                                                    <div class="col-sm-3 text-center">
+                                                        <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 22px"></i>  
+                                                    </div>
+                                                    <div class="col-sm-8" style="text-align: left;">
+                                                        <h5>Rajeswari B</h5>
+                                                    </div>
+                                                   
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <h3 class="text-color">GALLERY</h3>
+                                       <div class="row ">
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/oldage_home.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/digital_class_1.jpg" class="img-thumbnail" >
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/plant.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img  src="../../../assets/images/youth_2.jpg" class="img-thumbnail">
+                                            </div>
+                                       </div>
+                                    </div>
+                               </div>
+                              
+                                
+                            </div>
+                        </div>
+                        
+                      
+                    </div>
+                </div>
+              
+                <!-- <div class="col-md-6">
+                    <h3 class="text-color">Top Three Doners</h3>
+                    <div class="col-md-12" style="margin: 10px;">
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/oldage_home.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/digital_class_1.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/youth_2.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/physically_1(1).JPG" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/youth_3.jpeg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/plant.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/organic.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                            <img  src="../../../assets/images/helth.jpg" class="img-thumbnail" style="    width: 660px;height: auto;">
+                        </div>
+                    </div>
+                </div> -->
+              
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-footer bg-transparent border-success">
+                          <div class="row">
+                            <div class="col-md-4 text-center">
+                                <span style="font-weight: bold;">Gen. Date : {{date | date:'MM/dd/yyyy'}}</span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <span class="socalIcon">
+                                    <a href="">
+                                      <i class="fa fa-facebook" aria-hidden="true"></i>
+                                    </a>
+                                  </span>
+                                  <span class="socalIcon">
+                                      <i class="fa fa-twitter" aria-hidden="true"></i>
+                                  </span>
+                                  <span class="socalIcon">
+                                      <i class="fa fa-instagram" aria-hidden="true"></i>
+                                  </span>
+                                  <span class="socalIcon">
+                                      <i class="fa fa-google-plus" aria-hidden="true"></i>
+                                  </span>
+                            </div>   
+                            <div class="col-md-4 text-center">
+                                <span style="font-weight: bold;">Gen. By : BA Solutions</span>
+                            </div>
+                          </div>
+                            
+                        </div>
+                    </div>
+                </div>
+              </div>
+            
+          
+        </div>
+        
+        <div class="padding-20 " style="position: fixed;bottom: 3px;width: 100%;background-color: #f2f4f8;height: 50px;">
+            <button (click)="cancel()" class="btn btn-success mlr-10" style="float: right;margin-right: 10%;">Back</button>
+          </div>
+    </div>
+   
+</div>
+<!-- view projects -->
+
+  <ng-template #expModal let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">{{projects.projectName}}  </h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        <div class="row">
+            <div class="col-md-6">
+                <div *ngIf="projects.projectType[0] === '1' ">
+                    <label ><strong>Project Type : </strong></label> Educational
+                </div>
+                <div *ngIf="projects.projectType[0] === '2' ">
+                    <label ><strong>Project Type : </strong></label> Health
+                </div>
+                <div *ngIf="projects.projectType[0] === '3' ">
+                    <label ><strong>Project Type : </strong></label> Social
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label><strong>Location : </strong></label> {{projects.projectLocation}}
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div>
+                    <label><strong>Description :</strong></label>
+                </div>
+                <div>
+                    <p>{{projects.projectDescription}} </p>
+                </div>
+                
+            </div>
+            <div class="col-md-4">
+                <img  src="{{projects.projectImage}}" class="img-thumbnail">
+            </div>
+        </div>
+            
+     
+    </div>
+ </ng-template>
+<!-- view news -->
+ <ng-template #newsModel let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">{{singleNewsData.title}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        
+        <div class="row">
+            <div class="col-md-4">
+                <img  src="{{singleNewsData.image}}" class="img-thumbnail" alt="newImage">
+            </div>
+            <div class="col-md-8">
+                <p>{{singleNewsData.discription}} </p>
+            </div>
+        </div>
+            
+     
+    </div>
+ </ng-template>
+
+ <!-- view events -->
+ <ng-template #eventsModel let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">{{singleEvent.note}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body overflow-y-scroll"> 
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div>
+                    <strong>Location : {{singleEvent.location}}</strong>
+                  
+                </div>
+                <div>
+                    <strong>Date : {{singleEvent.date | date:'MM-dd-yyyy'}}</strong>
+                </div><br/>
+                <div>
+                    <div>
+                        <label><strong>Description :</strong></label>
+                    </div>
+                    <div>
+                        <p>{{singleEvent.desc}}</p>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img  src="{{singleEvent.image}}" class="img-thumbnail">
+            </div>
+        </div>
+            
+     
+    </div>
+ </ng-template>
+
+<!-- edit magazine -->
+
+ <ng-template #editingMagazine let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Magazine </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body"> 
+        <form [formGroup]="updatedMagazineForm" id="updatedMagazineForm">
+                    
+            <div class="row"> 
+                 <div class="form-group col-md-6">
+                     <label>Project <span class="text-danger"> *</span></label>               
+                      <ng-multiselect-dropdown  formControlName="projectId"  class="form-control-rounded" [placeholder]="'Select Project'" [settings]="projectSettings"  [data]="projectsData" (onDeSelect)="onItemDeSelect($event)" (onSelect)="onItemSelect($event)"></ng-multiselect-dropdown>
+                      <div class="error-block text-danger"
+                            *ngIf="updatedMagazineForm.get('projectId').errors && (updatedMagazineForm.get('projectId').touched || updatedMagazineForm.get('projectId').dirty)">
+                            <span *ngIf="updatedMagazineForm.get('projectId').errors.required">Project Data is required.
+                            </span>
+                            
+                        </div>
+                 </div>
+                 <div class="form-group col-md-6">
+                         <label>News <span class="text-danger"> *</span></label>                    
+                          <ng-multiselect-dropdown formControlName="newsId" class="form-control-rounded" [placeholder]="'Select News'" [settings]="newsSettings"  [data]="newsesData" (onSelect)="onItemNewsSelect($event)" (onDeSelect)="onNewsDeSelect($event)"></ng-multiselect-dropdown>
+
+                          <div class="error-block text-danger"
+                          *ngIf="updatedMagazineForm.get('newsId').errors && (updatedMagazineForm.get('newsId').touched || updatedMagazineForm.get('newsId').dirty)">
+                              <span *ngIf="updatedMagazineForm.get('newsId').errors.required">News Data is required.
+                              </span>
+                       
+                          </div>
+                 </div>
+            </div>
+            <div class="row">
+                 <div class="form-group col-md-6">
+                     <label>Events <span class="text-danger"> *</span></label>                 
+                      <ng-multiselect-dropdown  formControlName="event" class="form-control-rounded" [placeholder]="'Select Event'" [settings]="eventSettings"  [data]="eventsData" (onSelect)="onItemEventSelect($event)" (onDeSelect)="onEventsDeSelect($event)"></ng-multiselect-dropdown>
+                      <div class="error-block text-danger"
+                        *ngIf="updatedMagazineForm.get('event').errors && (updatedMagazineForm.get('event').touched || updatedMagazineForm.get('event').dirty)">
+                            <span *ngIf="updatedMagazineForm.get('event').errors.required">Events Data is required.
+                            </span>
+                    
+                        </div>
+                 </div>
+                 <!-- <div class="form-group col-md-6">
+                         <label>Ads</label>
+                         <input type="text" formControlName="adds" class="form-control form-control-rounded" />
+                 </div> -->
+             </div>        
+             <div class="clearfix"></div>
+         </form>   
+
+    </div>
+    <div class="modal-footer p-2">
+     
+        <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button> 
+        
+        <button type="button" class="btn btn-success btn-rounded" [disabled]="!updatedMagazineForm.valid"(click)="updateMagazine(resultModal)" id="updateMagazine" >Update</button>
+      </div>
+                      <!-- Pre Loader Strat  -->
+                      <div class='loadscreen' *ngIf="loading">
+
+                        <div class="loader spinner-bubble spinner-bubble-primary">
+                        </div>
+                    </div>
+                    <!-- Pre Loader end  -->
+ </ng-template>
+
+ 
+   <!-- result modal -->
+   <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+ </ng-template>
+ <!-- result modal end -->

@@ -1,0 +1,1466 @@
+<!-- <div class="container min-height" *ngIf="currentUser.activeUser != 'member'">
+    <div class="breadcrumb">
+        <h1 class="mr-2">Admin</h1>
+        <ul>
+            <li><a href="/dashboard/home">Dashboard</a></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="separator-breadcrumb border-top"></div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="card text-left">
+
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Member Donations </h4>
+
+                 
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Member Name</th>
+                                    <th scope="col">Project</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+
+
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Techno Soft</td>
+                                    <td>Adopt a school in Khammam</td>
+                                    <td>$450 </td>
+                                    <td>04-03-2020</td>
+                                    <td>
+                                        <a href="edit_member_list.html" class="text-success mr-2">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+                                        <a href="#" class="text-danger mr-2">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Soft Solutions</td>
+                                    <td>Constructing a building for old age people</td>
+                                    <td>$500</td>
+                                    <td> 04-12-2020 </td>
+                                    <td>
+                                        <a href="#" class="text-success mr-2">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+                                        <a href="#" class="text-danger mr-2">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Techno Sol</td>
+                                    <td>Constructing a building for old age people</td>
+                                    <td>$650 </td>
+                                    <td> 06-05-2019</td>
+                                    <td>
+                                        <a href="#" class="text-success mr-2">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+                                        <a href="#" class="text-danger mr-2">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div> -->
+
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0" *ngIf="donationPermissions.update">
+    <div class="breadcrumb justify-content-end">
+        <ul>
+          
+            <li><a> Donations</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="col-md-12  mt-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    <ul ngbNav #nav="ngbNav" class="nav-pills">
+                     <li ngbNavItem class = "text-size-15">
+                        <a ngbNavLink>
+                                        <span class="" style="font-size: 15px"> Projects</span>
+                        </a> 
+                       <ng-template ngbNavContent>
+                           <div>
+                               <div class="row ">
+                                   <div class="col-md-12">
+                                      <div class="">
+                                         <div class="card-body">
+                                            <div class="row card-title mb-3">
+                                                <div class="col-md-6">
+                                                   Projects List
+                                                </div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-3 text-right">
+                                                   <input type="text" id = "searchDontions" class = "search-filter form-control" placeholder="  Search Project" (keyup)="search($event.target.value)" > 
+                                               </div>
+                                           </div>
+                                            <div class="row">
+                                               <div class="col-md-12">
+                                                  <div class="text-left">
+                                                     <div class="card-body">
+                                                        <div class="table-responsive">
+                                                           <table class="table text-size-15" >
+                                                              <thead>
+                                                                 <tr>
+                                                                    <th scope="col">S.No</th>
+                                                                    <th scope="col">Project Name</th>
+                                                                    <th scope="col">Start Date</th>
+                                                                    <th scope="col">End Date</th>
+                                                                    <th scope="col">Target</th>
+                                                                    <th scope="col">Status</th>
+                                                                    <th scope="col">Action</th>
+                                                                 </tr>
+                                                              </thead>
+                                                              <tbody>
+                                                                 <tr *ngFor="let project of allProjects | filter:term | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; " >
+                                                                    <th scope="row">{{project.index}}</th>
+                                                                    <td>{{project.projectName}}</td>
+                                                                    <td>
+                                                                      {{project.projectStartDate  | date: 'MM/dd/yyyy'}}
+                                                                    </td>
+                                                                    <td>
+                                                                      {{project.projectEndDate  | date: 'MM/dd/yyyy'}}
+                                                                    </td>
+                                                                    <td>&#8377;{{project.projectGoal}}</td>
+                                                                    <td><span class="badge badge-success" *ngIf="project.projectStage=='1'">Proposal</span>
+                                                                      <span class="badge badge-success" *ngIf="project.projectStage=='2'">Open</span>
+                                                                      <span class="badge badge-success" *ngIf="project.projectStage=='3'">Close</span>
+                                                                   </td>
+                                                                    <td>
+
+                                                                       <button class= "btn btn-warning text-dark" (click)="openModal(donate,project._id,project.projectName,project.projectActivities)" 
+                                                                       > Donate </button>
+                                                                       
+                                                                       <!-- <button class= "btn btn-info ml-1" (click)="openViewModal(viewProject, project._id)"> View More </button> -->
+                                                                       <!-- <a (click)="openEditModal(editProject,project.id)"class="text-success mr-2">
+                                                                       <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                                       </a> -->
+                                                                       <!-- <a (click)="openViewModal(viewProject,project.id)" class="text-danger mr-2">
+                                                                       <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                                       </a> -->
+                                                                    </td>
+                                                                 </tr>
+                                                              </tbody>
+                                                              <tr *ngIf="allProjects.length==0">
+                                                               <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                                                 No Records Found 
+                                                               </td>
+                                                              </tr>
+                                                           </table>
+                                                           <div *ngIf="projectsLength > pageSize ">
+                                                             <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="projectsLength" [boundaryLinks]="true">
+                                                             </ngb-pagination>
+                                                          </div>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                           </div>
+
+                       </ng-template>
+
+                   </li>
+                        
+                        <li ngbNavItem class = "text-size-15">
+                          <a ngbNavLink (click)="onClick()">My Donations</a>
+                          
+
+                          <ng-template ngbNavContent>
+                           <div class="row card-title mb-3">
+                              <div class="col-md-6">
+                                 Donations List
+                              </div>
+                              <div class="col-md-3"></div>
+                              <div class="col-md-3 text-right">
+                                 <input type="text" id = "searchDontions" class = "search-filter form-control" placeholder="  Search Project" (keyup)="search2($event.target.value)" > 
+                             </div>
+                         </div>  
+                           <input type="checkbox"  (click)="changeAmountCurrency($event)"  name="read"> Amount in Dollars
+                              <div>
+                                <div class="col-md-12 mb-3">
+                                    <div class=" text-left text-size-15">
+                        
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Project Name</th>
+                                                            <th scope="col">Date and Time</th>
+                                                            <th scope="col"> Amount</th>
+                                                            
+                                                            <!-- <th scope="col">Action</th> -->
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let donations of memberDonationsData| slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                                            <th scope="row">{{donations.index}}</th>
+                                                            <td> {{donations.projectName}} </td>
+                                                            <td> {{donations.dateadded | date:'MM-dd-yyy HH:mm:ss'}} </td>
+                                                            <td *ngIf="!showAmountInDollars"> &#8377; {{donations.amount}} </td>
+                                                            <td *ngIf="showAmountInDollars"> &#36; {{donations.valInDollars}} </td>
+                                                             <!-- <td>
+                                                                <a  class="text-danger mr-2 cursor-pointer" (click)="openViewModal(viewModal, donations._id)">
+                                                                    <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                                </a>
+                                                            </td> -->
+                                                        </tr>
+                                                    </tbody>
+                                                    <tr *ngIf="memberDonationsLength==0">
+                                                      <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                                        No Records Found 
+                                                      </td>
+                                                     </tr>
+                                                </table>
+                                                <div *ngIf="memberDonationsLength > pageSize">
+                                                   <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="memberDonationsLength" [boundaryLinks]="true">
+                                                   </ngb-pagination>
+                                                </div>
+                                               
+                                            </div>
+                        
+                        
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                          </ng-template>
+                        </li>
+
+                          
+                      </ul>
+                      <div [ngbNavOutlet]="nav"></div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- view projects in donations starts -->
+<ng-template #viewProjectModal let-modal>
+    <div class="member-modal-content overflow-y-scroll">
+        <div class="modal-header">
+            <div class="row align-items-center">
+                <div class="modal-logo ml-2">
+                    <a href="dashboard/home">
+                        <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class="modal-logo">
+                    </a>
+                </div>
+                <div class= "ml-2">
+                    <h4 class="modal-title" id="modal-basic-title ">Project - {{projects[projectIndex].projectName}}</h4>
+                </div>
+              
+               
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+        </div>
+   
+
+    <div class="modal-body ">
+        <div class= "">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 >Description</h4>
+                    <div>
+                        <p>{{projects[projectIndex].description}} </p>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+               <div class="card-body">
+          
+                  <div class="row">
+                      <!-- <div class="col-md-4 align-items-center d-flex justify-content-center"  >
+                        <img src="{{projects[projectIndex].image}}" alt="" class="img-fluid" style = "height: 200px; border-radius: 30px;">
+                      </div> -->
+                      <div class="col-md-6  align-items-center d-flex" >
+                       
+                        
+
+                      </div>
+
+                     <div class="col-md-6 border-left align-items-center d-flex" >
+                        <div class="text-left">
+                           <div class="card-body">
+                            <h4>Activities</h4>
+                              <div class="table-responsive">
+                                 <table class="table">
+                                    <thead>
+                                       <tr>
+                                          <th scope="col">#</th>
+                                    <th scope="col">Activity name</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">Expected Expendture</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr *ngFor="let activity of projects[projectIndex].activities">
+                                          <th scope="row">{{activity.id}}</th>
+                                          <td>{{activity.activityName}}</td>
+                                          <td>
+                                          {{activity.startDate}}
+                                          </td>
+                                          <td>
+                                          {{activity.endDate}}
+                                          </td>
+                                          <td>
+                                             {{activity.expExpenditure}}
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     
+                  </div>
+                  <div class="row">
+                    <!-- <div class="col-md-4 align-items-center d-flex justify-content-center"  >
+                      <img src="{{projects[projectIndex].image}}" alt="" class="img-fluid" style = "height: 200px; border-radius: 30px;">
+                    </div> -->
+                    <div class="col-md-6  align-items-center d-flex" >
+                     
+                      
+
+                    </div>
+
+                   <div class="col-md-6 border-left align-items-center d-flex" >
+                    <div class="text-left">
+                        <div class="card-body">
+                         <h4>Events</h4>
+                         <div class="">
+                            <div class="table-responsive">
+                                <table id="user_table" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Event name</th>
+                                            <th scope="col">Project Name</th>
+                                            <th scope="col">Place</th>
+                                            <!-- <th scope="col">Status</th> -->
+                                            <th scope="col">Date</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>NRI Youth Club Artfical Limbs Distribution</td>
+                                            <td>Sanitation</td>
+                                            <td>Khammam</td>
+                                            <!-- <td><span class="badge badge-success">Active</span> 
+                                            </td>-->
+                                            <td>02-07-2020</td>
+                                          
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Women's College Shelter Opening</td>
+                                            <td>Disaster Risk Reduction and Response</td>
+                                            <td>Vizag</td>
+                                            <!-- <td><span class="badge badge-info">Pending</span> 
+                                            </td>-->
+                                            <td>25-07-2020</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>Youth awareness program by sri Laxmi Narayana</td>
+                                            <td>Offerings Agriculture</td>
+                                            <td>Khammam</td>
+                                            <!-- <td><span class="badge badge-warning">Not Active</span> 
+                                            </td>-->
+                                            <td>02-87-2020</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">4</th>
+                                            <td>Happy Home Shelter Inauguration by Sri Thummala garu</td>
+                                            <td>Sanitation</td>
+                                            <td>Vizag</td>
+                                            <!-- <td><span class="badge badge-success">Active</span> 
+                                            </td>-->
+                                            <td>02-09-2020</td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                   </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Cross click')">Close</button>
+                </div>
+               </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+    <div class="container">
+        <div class="flex-grow-1"></div>
+        <div class="app-footer">
+        
+            <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
+                
+                <span class="flex-grow-1"></span>
+                <div class="d-flex align-items-center">
+                    <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                    <div>
+                        <p class="m-0">&copy; 2020 DNF</p>
+                        <p class="m-0">All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</ng-template>
+<!-- view projects in donations Ends -->
+
+
+<ng-template #donate let-modal>
+    <div class=" overflow-y-scroll">
+      <div class="modal-header">
+         <div class="row align-items-center">
+             <div class="modal-logo ml-2">
+                 <a href="dashboard/home">
+                     <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                 </a>
+             </div>
+             <div class= "ml-2">
+                 <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+             </div>
+         </div>
+         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+    
+    
+        <div class="modal-body ">
+            <form [formGroup] = "addDonations">
+                <div>
+                    <span class = "project-Title-donations pl-2">Donate - {{projectName}}</span>
+                </div>
+                <div >
+                   
+                    <label class = "cursor-pointer mt-4">
+                        <input type="checkbox" class = "cursor-pointer" value ="" (click) = isCheckedSpecifiActivity()> Dontate to a Specific Activity...?
+                    </label>
+                    
+                </div>
+                <div class="form-group" *ngIf = "isCheckedSpecifiActivityBtn">
+                    <label>Select Activities</label>
+                    <!-- <select class="form-control" formControlName = "selectedActivities">
+                        <option  selected value = "">Select All</option>
+                        <option *ngFor="let activity of projectActivities" value="{{activity.id}}" > {{activity.activityName}}</option>
+                        
+                    </select> -->
+                    
+                  <ng-multiselect-dropdown class="form-control-rounded" [placeholder]="'Select Activities'" [settings]="dropdownSettings" formControlName = "selectedActivities"
+                     [data]="projectActivities" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+                  </ng-multiselect-dropdown>
+
+                </div>
+
+              
+                    <div class = "row justify-content-center align-items-center mt-2">
+                        <div class="col-md-6 form-group ">
+                            <label *ngIf="currentUserCurrency=='INR'"> Amount(&#8377;)</label>
+                            <label *ngIf="currentUserCurrency!='INR'"> Amount(&#36;)</label>
+                            <input type="number" placeholder="Amount" class=" ml-2 amount-field" formControlName = "donationAmount" (blur)="getConfigDetails()">
+                            <div class="error-block text-danger"
+                              *ngIf="addDonations.get('donationAmount').errors && (addDonations.get('donationAmount').touched || addDonations.get('donationAmount').dirty)">
+                              <span *ngIf="addDonations.get('donationAmount').errors.required">Amount is required
+                              </span>
+                              <span *ngIf="addDonations.get('donationAmount').errors.pattern">
+                                 Enter a valid number, Only two digits after decimal is accepted.
+                              </span>
+                           </div>
+                        </div>
+                       
+                    </div>
+                    <div  class="row justify-content-center align-items-center" >
+                     <button type="button" class="btn btn-primary" (click)="openPayement(addPayement)" [disabled] = "!addDonations.valid" >Pay</button>
+                     <!-- <button type="button" class="btn btn-outline-danger m-2" (click)="modal.dismiss('Cross click')">Cancel</button> -->
+                    </div>
+                   
+                    <!-- <div class = "row justify-content-center align-items-center d-flex">
+    
+                        <div class="form-group col-md-12 cursor-pointer" >
+                            <div class="form-group col-md-12 bg-dark text-white  text-center align-items-center d-flex justify-content-center" style = "height:50px;">
+                                <a href="https://www.paypal.com/us/signin" target="_blank" class = "text-white">
+                                 <p class= "mt-3" style = "font-size: 16px;"> Debit or Credit Card </p>   </a>
+                            </div>
+                            
+                        </div>
+                    </div> -->
+    
+             
+
+            </form>
+           
+    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+        <div class="container p-0">
+            <div class="flex-grow-1"></div>
+            <div class="app-footer p-2">
+            
+                <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+                    
+                    <span class="flex-grow-1"></span>
+                    <div class="d-flex align-items-center">
+                        <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                        <div>
+                            <p class="m-0">&copy; 2020 DNF</p>
+                            <p class="m-0">All rights reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addPayement let-modal>
+   <div class=" overflow-y-scroll">
+     <div class="modal-header">
+        <div class="row align-items-center">
+            <div class="modal-logo ml-2">
+                <a href="dashboard/home">
+                    <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                </a>
+            </div>
+            <div class= "ml-2">
+                <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+            </div>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<div class="modal-body ">
+       <div>
+           <span class = "project-Title-donations pl-2">Donate - {{projectName}}</span>
+       </div>
+     
+           <div class = "row justify-content-center align-items-center mt-2">
+               <div class="col-md-6 form-group ">
+                   <label><strong> Amount</strong></label>
+                   <!-- <input type="number" placeholder="$ Amount" class=" ml-2 amount-field" formControlName = "donationAmount" (blur)="getConfigDetails()" required> -->
+                   : <span *ngIf="currentUserCurrency=='INR'">&#8377;</span><span *ngIf="currentUserCurrency!='INR'">&#36;</span> {{addDonations.value.donationAmount}}
+
+               </div>
+           </div>
+            <div class = "row justify-content-center align-items-center">
+               <ngx-paypal [config]="payPalConfig" ></ngx-paypal>
+                 
+              </div>
+  
+
+   <div class="modal-footer">
+       <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">Cancel</button>
+   </div>
+</div>
+<div class="container p-0">
+   <div class="flex-grow-1"></div>
+   <div class="app-footer p-2">
+   
+       <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+           
+           <span class="flex-grow-1"></span>
+           <div class="d-flex align-items-center">
+               <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+               <div>
+                   <p class="m-0">&copy; 2020 DNF</p>
+                   <p class="m-0">All rights reserved</p>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+</div>
+</ng-template>
+
+<ng-template #viewProject let-modal>
+    <!-- <div class="modal-content modal-content-height" > -->
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">View project - {{projects[projectIndex].projectName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+ 
+      <div class="modal-body overflow-y-scroll"> 
+      <div calss="row" >
+         <!-- <div class="col-md-4"></div>
+         <div class="col-md-4"></div> -->
+         <div class="col-md-12">
+            <div class="row">
+             <div class="col-md-6" >
+                <div class="row">
+                   <!-- ICON BG -->
+                   <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 labl">
+                         <div class="card-body text-center">
+                               <i class="i-Money-2 text-42"></i>
+                               <div class="content labl">
+                                  <input type="radio" name="radioname" value="donationTimeLine" checked="checked"  (change)="changetimeline('donationTimeLine')"/>
+                                  <p class="text-muted mb-0 text-12">Donations</p>
+                                  <p class="text-primary text-24 line-height-1 font-weight-bold mb-0">$30,200</p>
+                               </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="col-lg-6 col-md-6 col-sm-6 labl">
+                      <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                         <div class="card-body text-center">
+                            <i class="i-Data-Settings text-42"></i>
+                            <div class="content labl">
+                               <input type="radio" name="radioname" value="activityTimeLine" (change)="changetimeline('activityTimeLine')"/>
+                                  <p class="text-muted mb-0 text-12">Activities</p>
+                                  <p class="text-primary text-24 line-height-1 font-weight-bold mb-0">4 Acivities</p>
+                            </div>
+                         </div>
+                      </div>
+                </div>
+                </div>
+                   <div style="overflow-y: scroll;height: 500px;" *ngIf="donationTimeLine">
+                      <ul class="timeline clearfix" >
+                         <li class="timeline-line"></li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                               "></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Geeta</strong> pledged 300$
+                                        <p class="text-muted">3 hour ago</p>
+                                     </div>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                               "></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">BA solutions</strong> donated 1000$
+                                        <p class="text-muted">2 hours ago</p>
+                                     </div>
+                                     <!-- <p>BA solutions Has donated 
+                                     </p> -->
+                                     
+                               </div>
+                            </div>
+                         </li>
+                        
+                        
+                        
+                   </ul>
+                   <ul class="timeline clearfix" >
+                      <li class="timeline-line"></li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                            "></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Shanti</strong> donated 500$
+                                     <p class="text-muted">3 hours ago</p>
+                                  </div>
+                                  
+                            </div>
+                         </div>
+                      </li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                            "></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Techno Sol</strong> pledged 600$
+                                     <p class="text-muted">16 hours ago</p>
+                                  </div>
+                                  <!-- <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                                  </p> -->
+                                  
+                            </div>
+                         </div>
+                      </li>
+                     
+                     
+                     
+                </ul>
+                   </div>
+                   <div style="overflow-y: scroll;height: 500px;" *ngIf="activityTimeLine">
+                      <ul class="timeline clearfix" >
+                         <li class="timeline-line"></li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Nageswar</strong> added an activity
+                                        <p class="text-muted">3 hour ago</p>
+                                     </div>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Nageswar</strong> added an event
+                                        <p class="text-muted">2 hours ago</p>
+                                     </div>
+                                     <p>In addition to gifting books and libraries, we will also. Conduct book reading sessions by children's authors; Facilitate workshops for NGO staff on reading skills ...For many children living in marginalized communities in India, owning a set of books is a distant dream. We believe that every child should have the opportunity to discover the wonder and joy of books.
+                                     </p>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                        
+                        
+                        
+                   </ul>
+                   <ul class="timeline clearfix" >
+                      <li class="timeline-line"></li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Shanti</strong> added an activity
+                                     <p class="text-muted">3 hours ago</p>
+                                  </div>
+                                  
+                            </div>
+                         </div>
+                      </li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Nageswar</strong> added and event
+                                     <p class="text-muted">16 hours ago</p>
+                                  </div>
+                                  <!-- <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                                  </p> -->
+                                  
+                            </div>
+                         </div>
+                      </li>
+                </ul>
+                   </div>
+             </div>  
+             <div class="col-md-6">
+                   <div class="row">
+                      <div class="col-md-6">
+                         <h4 >Description</h4>
+                      </div>
+                   </div>
+                   <p>{{projects[projectIndex].description}}
+                   </p>
+                   <hr>
+                   <div class="row">
+                      <div class="col-md-4 col-6">
+                            <div class="mb-4">
+                               <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Proposed Date</p>
+                               <span>{{projects[projectIndex].proposedDate}}</span>
+                            </div>
+                            
+                           
+                            <!-- <div class="mb-4">
+                               <p class="text-primary mb-1"><i class="i-Globe text-16 mr-1"></i> Branch</p>
+                               <span>Hyderabad</span>
+                            </div> -->
+                      </div>
+                      <div class="col-md-4 col-6">
+                         <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Start Date</p>
+                            <span>{{projects[projectIndex].startDate}}</span>
+                         </div>
+                      </div>
+                      <div class="col-md-4 col-6">
+                         <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Money1 text-16 mr-1"></i>Goal</p>
+                            <span>{{projects[projectIndex].target}}</span>
+                         </div>
+                          
+                      </div>
+                   </div>
+                   <hr>
+                   <h4>Activities</h4>
+                   <div class="card mb-4">
+                      <div class="card-body">
+                   
+                         <div class="row">
+                            <div class="col-md-12">
+                               <div class="text-left">
+                                  <div class="card-body">
+                                     <div class="table-responsive">
+                                        <table class="table">
+                                           <thead>
+                                              <tr>
+                                                 <th scope="col">#</th>
+                                           <th scope="col">Activity name</th>
+                                           <th scope="col">Start Date</th>
+                                           <th scope="col">End Date</th>
+                                           <th scope="col">Expected Expendture</th>
+                                              </tr>
+                                           </thead>
+                                           <tbody>
+                                              <tr *ngFor="let activity of projects[projectIndex].activities">
+                                                 <th scope="row">{{activity.id}}</th>
+                                                 <td>{{activity.activityName}}</td>
+                                                 <td>
+                                                 {{activity.startDate}}
+                                                 </td>
+                                                 <td>
+                                                 {{activity.endDate}}
+                                                 </td>
+                                                 <td>
+                                                    {{activity.expExpenditure}}
+                                                 </td>
+                                              </tr>
+                                           </tbody>
+                                        </table>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+    
+             </div>
+ 
+            </div>
+       </div>
+      </div>  
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Close</button>
+       <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+     </div>
+     <!-- </div> -->
+    
+    
+    <!-- </div> -->
+ </ng-template>
+
+ <ng-template #viewDonatedProjects let-modal>
+    <!-- <div class="modal-content modal-content-height" > -->
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">View project - {{donatedProjectsList[projectIndex].projectName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+ 
+      <div class="modal-body overflow-y-scroll"> 
+      <div calss="row" >
+         <!-- <div class="col-md-4"></div>
+         <div class="col-md-4"></div> -->
+         <div class="col-md-12">
+            <div class="row">
+             <div class="col-md-6" >
+                <div class="row">
+                   <!-- ICON BG -->
+                   <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 labl">
+                         <div class="card-body text-center">
+                               <i class="i-Money-2 text-42"></i>
+                               <div class="content labl">
+                                  <input type="radio" name="radioname" value="donationTimeLine" checked="checked"  (change)="changetimeline('donationTimeLine')"/>
+                                  <p class="text-muted mb-0 text-12">Donations</p>
+                                  <p class="text-primary text-24 line-height-1 font-weight-bold mb-0">{{donatedProjectsList[projectIndex].amount}}</p>
+                               </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="col-lg-6 col-md-6 col-sm-6 labl">
+                      <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                         <div class="card-body text-center">
+                            <i class="i-Data-Settings text-42"></i>
+                            <div class="content labl">
+                               <input type="radio" name="radioname" value="activityTimeLine" (change)="changetimeline('activityTimeLine')"/>
+                                  <p class="text-muted mb-0 text-12">Activities</p>
+                                  <p class="text-primary text-24 line-height-1 font-weight-bold mb-0">3 Acivities</p>
+                            </div>
+                         </div>
+                      </div>
+                </div>
+                </div>
+                   <div style="overflow-y: scroll;height: 500px;" *ngIf="donationTimeLine">
+                      <ul class="timeline clearfix" >
+                         <li class="timeline-line"></li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                               "></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Geeta</strong> pledged 300$
+                                        <p class="text-muted">3 hour ago</p>
+                                     </div>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                               "></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">BA solutions</strong> donated 1000$
+                                        <p class="text-muted">2 hours ago</p>
+                                     </div>
+                                     <!-- <p>BA solutions Has donated 
+                                     </p> -->
+                                     
+                               </div>
+                            </div>
+                         </li>
+                        
+                        
+                        
+                   </ul>
+                   <ul class="timeline clearfix" >
+                      <li class="timeline-line"></li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                            "></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Shanti</strong> donated 500$
+                                     <p class="text-muted">3 hours ago</p>
+                                  </div>
+                                  
+                            </div>
+                         </div>
+                      </li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Money-2
+ 
+                            "></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Techno Sol</strong> pledged 600$
+                                     <p class="text-muted">16 hours ago</p>
+                                  </div>
+                                  <!-- <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                                  </p> -->
+                                  
+                            </div>
+                         </div>
+                      </li>
+                     
+                     
+                     
+                </ul>
+                   </div>
+                   <div style="overflow-y: scroll;height: 500px;" *ngIf="activityTimeLine">
+                      <ul class="timeline clearfix" >
+                         <li class="timeline-line"></li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Nageswar</strong> added an activity
+                                        <p class="text-muted">3 hour ago</p>
+                                     </div>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                         <li class="timeline-item">
+                            <div class="timeline-badge">
+                               <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                            </div>
+                            <div class="timeline-card card">
+                               <div class="card-body">
+                                     <div class="mb-1">
+                                        <strong class="mr-1">Nageswar</strong> added an event
+                                        <p class="text-muted">2 hours ago</p>
+                                     </div>
+                                     <p>In addition to gifting books and libraries, we will also. Conduct book reading sessions by children's authors; Facilitate workshops for NGO staff on reading skills ...For many children living in marginalized communities in India, owning a set of books is a distant dream. We believe that every child should have the opportunity to discover the wonder and joy of books.
+                                     </p>
+                                     
+                               </div>
+                            </div>
+                         </li>
+                        
+                        
+                        
+                   </ul>
+                   <ul class="timeline clearfix" >
+                      <li class="timeline-line"></li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Shanti</strong> added an activity
+                                     <p class="text-muted">3 hours ago</p>
+                                  </div>
+                                  
+                            </div>
+                         </div>
+                      </li>
+                      <li class="timeline-item">
+                         <div class="timeline-badge">
+                            <i class="badge-icon bg-primary text-white i-Data-Settings"></i>
+                         </div>
+                         <div class="timeline-card card">
+                            <div class="card-body">
+                                  <div class="mb-1">
+                                     <strong class="mr-1">Nageswar</strong> added and event
+                                     <p class="text-muted">16 hours ago</p>
+                                  </div>
+                                  <!-- <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                                  </p> -->
+                                  
+                            </div>
+                         </div>
+                      </li>
+                </ul>
+                   </div>
+             </div>  
+             <div class="col-md-6">
+                   <div class="row">
+                      <div class="col-md-6">
+                         <h4 >Description</h4>
+                      </div>
+                   </div>
+                   <p>THE STATE Education department is all set to throw open its basic and primary schools for adoption by private agencies and voluntary organisations. This is, perhaps, for the first time that the department has resolved to formally sign MoU with private organisations that would ?addresses the major area of cooperation/activities necessary to fully implement the objectives of Sarva Siksha Abhiyaan?.
+                   </p>
+                   <hr>
+                   <div class="row">
+                      <div class="col-md-4 col-6">
+                            <div class="mb-4">
+                               <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Proposed Date</p>
+                               <span>1 Jan, 2020</span>
+                            </div>
+                            
+                           
+                            <!-- <div class="mb-4">
+                               <p class="text-primary mb-1"><i class="i-Globe text-16 mr-1"></i> Branch</p>
+                               <span>Hyderabad</span>
+                            </div> -->
+                      </div>
+                      <div class="col-md-4 col-6">
+                         <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Start Date</p>
+                            <span>1 May, 2020</span>
+                         </div>
+                      </div>
+                      <div class="col-md-4 col-6">
+                         <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Money1 text-16 mr-1"></i>Goal</p>
+                            <span>50000$</span>
+                         </div>
+                          
+                      </div>
+                   </div>
+                   <hr>
+                   <h4>Activities</h4>
+                   <div class="card mb-4">
+                      <div class="card-body">
+                   
+                         <div class="row">
+                            <div class="col-md-12">
+                               <div class="text-left">
+                                  <div class="card-body">
+                                     <div class="table-responsive">
+                                        <table class="table">
+                                           <thead>
+                                              <tr>
+                                                 <th scope="col">#</th>
+                                           <th scope="col">Activity name</th>
+                                           <th scope="col">Start Date</th>
+                                           <th scope="col">End Date</th>
+                                           <th scope="col">Expected Expendture</th>
+                                              </tr>
+                                           </thead>
+                                           <tbody>
+                                              <tr *ngFor="let activity of donatedProjectsList[projectIndex].activities">
+                                                 <th scope="row">{{activity.id}}</th>
+                                                 <td>{{activity.activityName}}</td>
+                                                 <td>
+                                                 {{activity.startDate}}
+                                                 </td>
+                                                 <td>
+                                                 {{activity.endDate}}
+                                                 </td>
+                                                 <td>
+                                                    {{activity.expExpenditure}}
+                                                 </td>
+                                              </tr>
+                                           </tbody>
+                                        </table>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+    
+             </div>
+ 
+            </div>
+       </div>
+      </div>  
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Close</button>
+       <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+     </div>
+     <!-- </div> -->
+    
+    
+    <!-- </div> -->
+ </ng-template>
+
+
+
+ 
+ <ng-template #viewModal let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{donationDetails.projectId.projectName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+       <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body overflow-y-scroll"> 
+       
+       <div class="row">
+          <div class="col-md-6">
+            <strong>Amount : <span>{{donationDetails.amount}}</span></strong>
+          </div>
+          <div class="col-md-6">
+            <strong>Donated On : <span>{{donationDetails.dateAdded |  date:'MM-dd-yyy HH:mm:ss'}}</span></strong>
+         </div>
+          
+       </div>
+       <div class="row">
+         <div class="col-md-12">
+           <strong>project Description : </strong>
+           <span>{{donationDetails.projectId.projectDescription}}</span>
+         </div>
+       
+         
+      </div>
+      <div class="row" >
+         <div class="col-md-12">
+           <strong>projectActivities : </strong>
+           <div *ngFor="let act of donationDetails.projectId.projectActivities">
+              <div>
+                  <span >ActivityName :{{act.activityName}}</span>
+              </div>
+              <div>
+                  <span >ActivityEstExpenditure : {{act.activityEstExpenditure}}</span>
+              </div>
+          
+           </div>
+             
+         </div>
+       
+         
+      </div>
+           
+    
+   </div>
+</ng-template>
+
+
+<ng-template #organizationDonation let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+         <div class="row align-items-center">
+             <div class="modal-logo ml-2">
+                 <a href="dashboard/home">
+                     <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                 </a>
+             </div>
+             <div class= "ml-2">
+                 <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+             </div>
+         </div>
+         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+  
+  
+      <div class="modal-body ">
+          <form [formGroup] = "orgnazationDonateForm">
+              <div>
+                  <span class = "project-Title-donations pl-2">Donate to DNF - Organization</span>
+              </div>
+
+                  <div class = "row justify-content-center align-items-center mt-2">
+                      <div class="col-md-6 form-group ">
+                          <label> Amount</label>
+                          <input type="number" placeholder="$ Amount" class=" ml-2 amount-field" formControlName = "orgDonationAmount">
+  
+                      </div>
+                  </div>
+                  <div class = "row justify-content-center align-items-center">
+  
+                      <div class="form-group col-md-12 " >
+                        <div class="form-group col-md-12 bg-warning text-center cursor-pointer mt-2">
+                           <a href="https://www.paypal.com/us/signin" target="_blank" (click)="onOrganizationDonate()" >
+                              <img src="../../../../assets/images/paypal-logo1.png" alt="" class="img-fluid"
+                                 style="height:35px; width:134px; margin: 6px;">
+                           </a>
+                        
+                        
+                        </div>
+                         
+                      </div>
+                  </div>
+                  <div class = "row justify-content-center align-items-center d-flex">
+  
+                      <div class="form-group col-md-12 cursor-pointer" >
+                          <div class="form-group col-md-12 bg-dark text-white  text-center align-items-center d-flex justify-content-center" style = "height:50px;">
+                              <a href="https://www.paypal.com/us/signin" target="_blank" class = "text-white">
+                               <p class= "mt-3" style = "font-size: 16px;"> Debit or Credit Card </p>   </a>
+                          </div>
+                          
+                      </div>
+                  </div>
+  
+                  
+          </form>
+         
+          
+          <div class="modal-footer">
+        
+           
+              <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">Cancel</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+          
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+                  
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>
+<ng-template #chapterDonation let-modal>
+   <div class=" overflow-y-scroll">
+      <div class="modal-header">
+         <div class="row align-items-center">
+             <div class="modal-logo ml-2">
+                 <a href="dashboard/home">
+                     <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                 </a>
+             </div>
+             <div class= "ml-2">
+                 <h4 class="modal-title" id="modal-basic-title ">DNF</h4>
+             </div>
+         </div>
+         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+  
+  
+      <div class="modal-body ">
+          <form [formGroup] = "chapterDonateForm">
+              <div>
+                  <span class = "project-Title-donations pl-2">Donate - {{chapterName}}</span>
+              </div>
+
+                  <div class = "row justify-content-center align-items-center mt-2">
+                      <div class="col-md-6 form-group ">
+                          <label> Amount</label>
+                          <input type="number" placeholder="$ Amount" class="ml-2 amount-field" formControlName = "chapterDonationAmount"  (blur)="getConfigDetails()">
+  
+                      </div>
+                  </div>
+                  <div class = "row justify-content-center align-items-center">
+  
+                      <div class="form-group col-md-12 " >
+                        <div class="form-group col-md-12 bg-warning text-center cursor-pointer mt-2">
+                           <a href="https://www.paypal.com/us/signin" target="_blank" (click)="onChapterDonate()" >
+                              <img src="../../../../assets/images/paypal-logo1.png" alt="" class="img-fluid"
+                                 style="height:35px; width:134px; margin: 6px;">
+                           </a>
+                        
+                        
+                        </div>
+                         
+                      </div>
+                  </div>
+                  <div class = "row justify-content-center align-items-center d-flex">
+  
+                      <div class="form-group col-md-12 cursor-pointer" >
+                          <div class="form-group col-md-12 bg-dark text-white  text-center align-items-center d-flex justify-content-center" style = "height:50px;">
+                              <a href="https://www.paypal.com/us/signin" target="_blank" class = "text-white">
+                               <p class= "mt-3" style = "font-size: 16px;"> Debit or Credit Card </p>   </a>
+                          </div>
+                          
+                      </div>
+                  </div>
+  
+                  
+          </form>
+         
+          
+          <div class="modal-footer">
+        
+           
+              <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">Cancel</button>
+          </div>
+      </div>
+      <div class="container p-0">
+          <div class="flex-grow-1"></div>
+          <div class="app-footer p-2">
+          
+              <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+                  
+                  <span class="flex-grow-1"></span>
+                  <div class="d-flex align-items-center">
+                      <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                      <div>
+                          <p class="m-0">&copy; 2020 DNF</p>
+                          <p class="m-0">All rights reserved</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>
+
+<!-- <form>
+   <agm-map style="height: 300px;" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+   <agm-marker  [latitude]="lat" [longitude]="lng"></agm-marker>
+         </agm-map>
+ </form> -->
+
+ 

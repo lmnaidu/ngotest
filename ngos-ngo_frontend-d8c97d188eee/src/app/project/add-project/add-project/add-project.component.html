@@ -1,0 +1,2093 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+   <!-- Pre Loader Strat  -->
+   <div class='loadscreen' *ngIf="loading">
+
+    <div class="loader spinner-bubble spinner-bubble-primary">
+    </div>
+</div>
+<!-- Pre Loader end  -->
+ <div class="breadcrumb justify-content-end">
+    <ul>
+        <li><a> Projects </a></li>
+       <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+
+    </ul>
+ </div>
+  <!-- <div class="separator-breadcrumb border-top"></div> -->
+  <div class="row" >
+     <div class="col-md-12">
+        <div class="card mb-4">
+           <div class="card-body">
+             <div class="card-title mb-3">
+                <div class="row">
+                   <div class="col-md-2">
+                      Projects
+                      <button *ngIf="userPermissions.write" class="btn btn-sm btn-primary" (click)="openProjectModal(content)">+Add</button>
+                   </div>
+                   <div class="col-md-8" >
+
+                   </div>
+                   <div class="col-md-2" *ngIf="allFavProjectsLength != 0">
+                      <input type="checkbox"  (click)="changeevents($event)"  name="read">
+                         My Projects
+                   </div>
+                </div>
+
+             </div>
+
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="text-left">
+                       <div class="card-body">
+                          <div *ngIf="!myProjects">
+                           <div class="row">
+                              <div class="col-md-9"></div>
+                              <div class="col-md-3">
+                                 
+                                 <input type="text" placeholder="Search Project Name " name="search" (keyup)="search1($event.target.value)" class="search-filter form-control" >
+                              </div>
+                           </div>   
+                            <div class="table-responsive">
+                               <table class="table">
+                                  <thead>
+                                     <tr>
+                                        <th scope="col">S.No</th>
+                                        <th scope="col">Project name</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">End Date</th>
+                                        <th scope="col">Target</th>
+                                        <th scope="col">Stage</th>
+                                        <th scope="col">Action</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody>
+                                    <ng-container *ngIf="availableRecords; else noData">
+                                     <tr *ngFor="let project of allProjects | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                        <th scope="row">{{project.index}}</th>
+                                        <td>{{project.projectName}}</td>
+                                        <td>
+                                          {{project.projectStartDate  | date: 'MM/dd/yyyy'}}
+                                        </td>
+                                        <td>
+                                          {{project.projectEndDate  | date: 'MM/dd/yyyy'}}
+                                        </td>
+                                        <td>&#8377;{{project.projectGoal}}</td>
+                                        <td><span class="badge badge-success" *ngIf="project.projectStage=='1'">Proposal</span>
+                                          <span class="badge badge-success" *ngIf="project.projectStage=='2'">Open</span>
+                                          <span class="badge badge-success" *ngIf="project.projectStage=='3'">Close</span>
+                                       </td>
+                                        <td>
+                                           <a class="text-success mr-2 pointer" title="Edit Project" (click)="openEditModal(editProject,project._id)" *ngIf="userPermissions.update">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                           </a>
+                                           <a (click)="openViewModal(viewProject,project._id,project.projectName,project.projectDescription,project.projectProposedDate,project.projectGoal,project.projectStartDate,project.projectActivities,project.dateAdded)" class="text-danger mr-2 pointer" title="View Project" *ngIf="userPermissions.read">
+                                           <i class="nav-icon i-Eye font-weight-bold"></i>
+                                           </a>
+                                           <a class="text-danger mr-2 pointer" title="View Expenditure" (click) = "openExpModal(expModal,project.projectActivities,project._id,project.projectName)" *ngIf="userPermissions.update">
+                                             <i class="nav-icon i-Money1 font-weight-bold"></i>
+                                             </a>
+                                           <a class="text-success mr-2 pointer" title="add to favorite " (click) = "addFavorites(addFavorite,project._id,project.projectName)">
+                                              <i class="fa fa-plus" aria-hidden="true"></i>
+                                           </a>
+                                        </td>
+                                     </tr>
+                                     </ng-container>
+                                     <ng-template #noData> 
+                                       <tr>
+                                           <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                             No Records Found 
+                                           </td>
+                                       </tr>
+                                     </ng-template>
+                                  </tbody>
+                               </table>
+                              <div *ngIf="projectsLength > pageSize ">
+                                 <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="projectsLength" [boundaryLinks]="true">
+                                 </ngb-pagination>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="myProjects">
+                           <div class="row">
+                              <div class="col-md-9"></div>
+                              <div class="col-md-3">
+                                 
+                                 <input type="text" placeholder="Search Project Name " name="search" (keyup)="search2($event.target.value)" class="search-filter form-control" >
+                              </div>
+                           </div>
+                            <div class="table-responsive">
+                               <table class="table">
+                                  <thead>
+                                     <tr>
+                                        <th scope="col">S.No</th>
+                                        <th scope="col">Project name</th>
+                                        <th scope="col">Start Date</th>
+
+                                        <th scope="col">Action</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody>
+                                    <ng-container *ngIf="availableRecordsFav; else noDataFav">
+                                     <tr *ngFor="let projects of allFavProjects | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                        <th scope="row">{{projects.index}}</th>
+                                        <td>{{projects.projectName}}</td>
+                                        <td>
+                                          {{projects.projectStartDate  | date: 'MM/dd/yyyy'}}
+                                        </td>
+
+
+
+                                        <td>
+                                           <!-- <button  class="btn btn-sm btn-primary mr-5" [routerLink]="['/memberDonations']"> Donate
+                                           </button> -->
+                                           <a class="text-success mr-3 pointer" title="go to donation page" [routerLink]="['/memberDonations']">
+                                              <i class="fa fa-external-link" aria-hidden="true" style="font-size: 18px;"></i>
+                                              <!-- <i class="fa fa-hand-o-right" aria-hidden="true" style="font-size: 20px;"></i> -->
+                                             </a>
+                                           <a (click)="openViewModal(viewProject,projects._id,projects.projectName,projects.projectDescription,projects.projectProposedDate,projects.projectGoal,projects.projectStartDate,projects.projectActivities,projects.dateAdded)" class="text-danger mr-2 pointer" title="View Project">
+                                              <i class="nav-icon i-Eye font-weight-bold" style="font-size: 20px;"></i>
+                                              </a>
+
+
+                                           <!-- <a class="text-success mr-2 pointer" title="Edit Project" (click)="openEditModal(editProject,project._id)">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                           </a>
+                                           <a (click)="openViewModal(viewProject,project._id,project.projectName,project.projectDescription,project.projectProposedDate,project.projectGoal,project.projectStartDate,project.projectActivities,project.dateAdded)" class="text-danger mr-2 pointer" title="View Project">
+                                           <i class="nav-icon i-Eye font-weight-bold"></i>
+                                           </a>
+                                           <a class="text-danger mr-2 pointer" title="View Expenditure" (click) = "openExpModal(expModal,project.projectActivities,project._id)">
+                                             <i class="nav-icon i-Money1 font-weight-bold"></i>
+                                             </a>
+                                           <a class="text-success mr-2 pointer" title="add to favorite " (click) = "addFavorites(addFavorite,project._id,project.projectName)">
+                                              <i class="fa fa-plus" aria-hidden="true"></i>
+                                           </a> -->
+                                        </td>
+                                     </tr>
+                                     </ng-container>
+                                     <ng-template #noDataFav> 
+                                       <tr>
+                                           <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                             No Records Found 
+                                           </td>
+                                       </tr>
+                                     </ng-template>
+                                  </tbody>
+                               </table>
+                              <div *ngIf="allFavProjectsLength > pageSize ">
+                                 <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="allFavProjectsLength" [boundaryLinks]="true">
+                                 </ngb-pagination>
+                              </div>
+                            </div>
+                         </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<!-- modal start -->
+<ng-template #content let-modal>
+ <div class="modal-header">
+    <div class="row align-items-center">
+        <div class="ml-2">
+            <a href="dashboard/home">
+                <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+            </a>
+        </div>
+        <div class= "ml-2">
+            <h4 class="modal-title" id="modal-basic-title ">Add Project</h4>
+        </div>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+  <div class="modal-body overflow-y-scroll ">
+    <form [formGroup] = "projectAddForm" >
+      <ng-wizard [config]="config" (stepChanged)="stepChanged($event)" class="step-wizard" >
+          <ng-wizard-step [title]="'Project Details'" [description]="'Add the project details'" >
+             <div class= "modal-min-height">
+                  <div class="row"  style="margin: auto;">
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="exampleInputEmail1">Project name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter your project name" formControlName="projectName" (change)="checkProjectName()">
+                        <div class="error-block text-danger"
+                              *ngIf="projectAddForm.get('projectName').errors && (projectAddForm.get('projectName').touched || projectAddForm.get('projectName').dirty)">
+                              <span *ngIf="projectAddForm.get('projectName').errors.required">Project name is required.
+                              </span>
+                              <span *ngIf="projectAddForm.get('projectName').errors && projectAddForm.get('projectName').errors.pattern">
+                                  Enter valid project name.
+                              </span>
+                              <span *ngIf="projectAddForm.get('projectName').errors && (projectAddForm.get('projectName').errors.maxlength || projectAddForm.get('projectName').errors.minlength)">
+                              The minimum and maximum characters should be 2 and 55 respectively.
+                             </span>
+                        </div>
+                        <span *ngIf="dupProject" class="error-block text-danger">Project name already added</span>
+                     </div>
+                     <div class="col-md-3 form-group mb-3">
+                      <label for="picker1">Project type<span class="text-danger">*</span></label>
+                      <select class="form-control" formControlName="projectType">
+                         <option value="" disabled selected>Select the Project Type</option>
+                         <option *ngFor="let proType of projectTypes" value="{{proType.id}}">{{proType.name}}</option>
+                      </select>
+                         <div class="error-block text-danger"
+                               *ngIf="projectAddForm.get('projectType').errors && (projectAddForm.get('projectType').touched || projectAddForm.get('projectType').dirty)">
+                               <span *ngIf="projectAddForm.get('projectType').errors && projectAddForm.get('projectType').errors.required">Project type is required.
+                               </span>
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                          <label for="exampleInputEmail1">Goal(&#8377;)<span class="text-danger">*</span></label>
+                          <input type="goals" class="form-control" id="exampleInputEmail1" placeholder="Enter the project Goals"  formControlName="projectGoal">
+                          <div class="error-block text-danger"
+                            *ngIf="projectAddForm.get('projectGoal').errors && (projectAddForm.get('projectGoal').touched || projectAddForm.get('projectGoal').dirty)">
+                            <span *ngIf="projectAddForm.get('projectGoal').errors.required">Goal is required
+                            </span>
+                            <span *ngIf="projectAddForm.get('projectGoal').errors.pattern">
+                              Enter a valid number, Only two digits after decimal is accepted.
+                            </span>
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                          <label for="website">Location<span class="text-danger">*</span></label>
+                          <input class="form-control"  placeholder="Enter the Location" formControlName="projectLocation">
+                          <div class="error-block text-danger"
+                            *ngIf="projectAddForm.get('projectLocation').errors && (projectAddForm.get('projectLocation').touched || projectAddForm.get('projectLocation').dirty)">
+                            <span *ngIf="projectAddForm.get('projectLocation').errors && projectAddForm.get('projectLocation').errors.required">Location is required.
+                            </span>
+                            <span *ngIf="projectAddForm.get('projectLocation').errors && projectAddForm.get('projectLocation').errors.pattern">
+                              Enter valid location.
+                            </span>
+                         </div>
+                      </div>
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="proposer">Proposer<span class="text-danger">*</span></label>
+                        <ng-multiselect-dropdown   [placeholder]="'Select Proposer'" [settings]="proposerSettings"  [data]="proposers"  formControlName="projectProposer"></ng-multiselect-dropdown>
+                        <!-- <select class="form-control" formControlName="projectProposer">
+                         <option value="" disabled selected>Select the proposer</option>
+                         <option *ngFor="let proposer of proposers" value="{{proposer.id}}">{{proposer.name}}</option>
+                      </select> -->
+                         <div class="error-block text-danger"
+                            *ngIf="projectAddForm.get('projectProposer').errors && (projectAddForm.get('projectProposer').touched || projectAddForm.get('projectProposer').dirty)">
+                            <span *ngIf="projectAddForm.get('projectProposer').errors && projectAddForm.get('projectProposer').errors.required">Proposer is required.
+                            </span>
+                         </div>
+                     </div>
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="date">Proposed Date<span class="text-danger">*</span></label>
+                         <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="projectProposedDate" placeholder="Date Time" formControlName="projectProposedDate" [owlDateTimeTrigger]="projectProposedDate" (dateTimeInput)="dateValidate()">
+                                  <div class="input-group-append datePicker">
+                                      <button class="btn btn-secondary" [owlDateTimeTrigger]="projectProposedDate" type="button">
+                                          <i class="icon-regular i-Calendar-4"></i>
+                                      </button>
+                                  </div>
+                                  <owl-date-time #projectProposedDate [pickerType]="'calendar'"></owl-date-time>
+                         </div>
+                         <span class="error-block text-danger" *ngIf="dateError1">{{dateError1}}
+                         </span>
+                     </div>
+                     <div class="col-md-3 form-group mb-3">
+                      <label for="credit1">Start Date</label>
+                      <div class="input-group">
+                          <input class="form-control" [owlDateTime]="projectStartDate" placeholder="Date Time" formControlName="projectStartDate" [owlDateTimeTrigger]="projectStartDate" (dateTimeInput)="dateValidate()">
+                          <div class="input-group-append datePicker">
+                             <button class="btn btn-secondary " [owlDateTimeTrigger]="projectStartDate" type="button">
+                                <i class="icon-regular i-Calendar-4"></i>
+                             </button>
+                          </div>
+                          <owl-date-time #projectStartDate [pickerType]="'calendar'"></owl-date-time>
+                      </div>
+                      <span class="error-block text-danger" *ngIf="dateError2">{{dateError2}}
+                     </span>
+                   </div>
+                   <div class="col-md-3 form-group mb-3">
+                      <label for="credit1">End Date</label>
+                      <div class="input-group">
+                          <input class="form-control" [owlDateTime]="projectEndDate" placeholder="Date Time" formControlName="projectEndDate" [owlDateTimeTrigger]="projectEndDate" (dateTimeInput)="dateValidate()">
+                          <div class="input-group-append datePicker">
+                             <button class="btn btn-secondary" [owlDateTimeTrigger]="projectEndDate" type="button">
+                                <i class="icon-regular i-Calendar-4"></i>
+                             </button>
+                          </div>
+                          <owl-date-time #projectEndDate [pickerType]="'calendar'"></owl-date-time>
+                      </div>
+                      <span class="error-block text-danger" *ngIf="dateError2">{{dateError2}}</span>
+                   </div>
+                     <div class="col-md-3 form-group mb-3">
+                      <label for="credit1">Team</label>
+                            <!-- <select class="form-control" formControlName="projectTeam" (change)="addLeaders(null)">
+                               <option value="" disabled selected>Select the team</option>
+                               <option *ngFor="let team of teams" value="{{team.id}}"
+                               >{{team.name}}</option>
+                            </select> -->
+
+                          <ng-multiselect-dropdown   [placeholder]="'Select team'" [settings]="teamSettings"  [data]="team"  formControlName="projectTeam"></ng-multiselect-dropdown>
+
+                          <div class="error-block text-danger"
+                          *ngIf="projectAddForm.get('projectTeam').errors && (projectAddForm.get('projectTeam').touched || projectAddForm.get('projectTeam').dirty)">
+                          <span *ngIf="projectAddForm.get('projectTeam').errors && projectAddForm.get('projectTeam').errors.required">Team is required.
+                          </span>
+                          </div>
+                     </div>
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="phone">Team Leader</label>
+                        <ng-multiselect-dropdown   [placeholder]="'Select team leaders'" [settings]="teamLeaderSettings"  [data]="teamLeaders" formControlName="projectLeader"></ng-multiselect-dropdown>
+                        <!-- <select class="form-control" formControlName="projectLeader">
+                         <option value="" disabled selected>Select the Leader</option>
+                         <option *ngFor="let leader of leaders" value="{{leader.id}}"
+                         >{{leader.name}}</option>
+                      </select> -->
+                         <div class="error-block text-danger"
+                         *ngIf="projectAddForm.get('projectLeader').errors && (projectAddForm.get('projectLeader').touched || projectAddForm.get('projectLeader').dirty)">
+                         <span *ngIf="projectAddForm.get('projectLeader').errors && projectAddForm.get('projectLeader').errors.required">Leader is required.
+                         </span>
+                         </div>
+                     </div>
+                     <div class="col-md-3 form-group mb-3">
+                      <label for="credit1">Stage<span class="text-danger">*</span></label>
+                      <select class="form-control" formControlName="projectStage">
+                        <option value="" disabled selected>Select the stage</option>
+                        <option *ngFor="let stage of stages" value="{{stage.id}}"
+                        >{{stage.name}}</option>
+                      </select>
+                      <div class="error-block text-danger"
+                      *ngIf="projectAddForm.get('projectStage').errors && (projectAddForm.get('projectStage').touched || projectAddForm.get('projectStage').dirty)">
+                      <span *ngIf="projectAddForm.get('projectStage').errors && projectAddForm.get('projectStage').errors.required">Stage is required.
+                      </span>
+                      </div>
+                   </div>
+                   <div class="col-md-3 form-group mb-3">
+                      <label for="credit1">Chapters<span class="text-danger">*</span></label>
+                      <!-- <select class="form-control" formControlName="projectChapter">
+                        <option value="" disabled selected>Select the Branch</option>
+                        <option *ngFor="let branch of branches" value="{{branch.id}}"
+                        >{{branch.name}}</option>
+                      </select> -->
+                      <ng-multiselect-dropdown   [placeholder]=" 'Select the Chapter' " [settings]="chapterSettings"  [data]="branches" formControlName="projectChapter"></ng-multiselect-dropdown>
+                      <div class="error-block text-danger"
+                      *ngIf="projectAddForm.get('projectChapter').errors && (projectAddForm.get('projectChapter').touched || projectAddForm.get('projectChapter').dirty)">
+                      <span *ngIf="projectAddForm.get('projectChapter').errors && projectAddForm.get('projectChapter').errors.required">Chapter is required.
+                      </span>
+                      </div>
+                   </div>
+                      <div class="col-md-3 form-group mb-3">
+                          <label for="credit1">Description</label>
+                          <textarea class="form-control"  placeholder="Enter the description" formControlName="projectDescription"></textarea>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="credit1">Details</label>
+                         <textarea class="form-control"  placeholder="Enter the Details" formControlName="projectDetails"></textarea>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="credit1">Partners &nbsp;<button class="btn btn-sm btn-primary" (click)="openPartnersModal(partnerModal,'add')">+Others</button></label>
+                         <!-- <select class="form-control" formControlName="projectPatners">
+                           <option value="" disabled selected>Select the partners</option>
+                           <option *ngFor="let partner of partners" value="{{partner.id}}"
+                           >{{partner.name}}</option>
+                         </select> -->
+                         <ng-multiselect-dropdown   [placeholder]=" 'Select partners' " [settings]="partnerSettings"  [data]="partners" formControlName="projectPatners" (onSelect)="onItemSelect($event)"></ng-multiselect-dropdown>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                        <label for="credit1">Beneficiaries</label>
+                        <textarea class="form-control"  placeholder="Enter the Beneficiaries" formControlName="beneficiary"></textarea>
+                     </div>
+                      <div class="col-md-3 form-group mb-3" *ngIf = "selectedSingleOption">
+                         <label for="credit1">Add Partner</label>
+                         <input class="form-control"  placeholder="Enter Partner Name">
+                     </div>
+                     </div>
+
+                      <div class="row" style="margin: auto;">
+                         <!-- <div class="col-md-12"> -->
+                            <!-- <div class="row"> -->
+                               <!-- <div class="col-md-6 form-group mb-3">
+                                  <p >Matching Configuration</p>
+                                  <div formGroupName="projectMatchingConfig" class="row">
+                                     <div class="col-md-6">
+                                           <label for="credit1">Amount</label>
+                                           <input class="form-control" id="credit1" placeholder="Enter the amount" formControlName="amount" >
+                                              <div class="error-block text-danger"
+                                                 *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').touched && ( projectAddForm.get('projectMatchingConfig').get('amount').errors) || (projectAddForm.get('projectMatchingConfig').get('amount').dirty)">
+                                                 <span *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').errors && projectAddForm.get('projectMatchingConfig').get('amount').errors.pattern">
+                                                    Only numbers are accepted
+                                                 </span>
+                                           </div>
+                                     </div>
+                                     <div class="col-md-6">
+                                           <label for="credit1">Type</label>
+                                           <select class="form-control" formControlName="type">
+                                              <option value="" disabled selected>Select the Type</option>
+                                              <option *ngFor="let type of matConfigTypes" value="{{type.id}}"
+                                              >{{type.name}}</option>
+                                           </select>
+                                     </div>
+                                  </div>
+                               </div> -->
+                               <div class="col-md-6 form-group mb-3">
+                                  <p>Project Image</p>
+                                  <div class="row">
+                                        <div class="col-md-6 form-group mb-3">
+                                           <label >Select the image</label>
+                                           <input type="file" class="form-control" id="files"  (change)="detectProjectImage($event)" accept="image/x-png,image/jpeg">
+                                        </div>
+                                        <div class="col-md-6" *ngIf="projectAddForm.value.projectImage">
+                                           <img [src]="projectAddForm.value.projectImage">
+                                        </div>
+                                  </div>
+                               </div>
+                            <!-- </div>    -->
+                         <!-- </div>    -->
+                      </div>
+                   </div>
+                      <div class="modal-footer">
+                            <button class="btn btn-primary" [disabled]="!projectAddForm.valid"
+                            (click)="addProject(resultModal)" >Save</button>
+                            <button type="button" class="btn btn-outline-danger ml-2"
+                                  (click)="modal.dismiss('Cross click')">Cancel</button>
+                      </div>
+
+          </ng-wizard-step>
+          <ng-wizard-step [title]="'Activities'" [description]="'Add the activity details'" >
+             <div class= "modal-min-height " >
+                <div [formGroup] = "projectActivityForm"  id="projectActivityForm" >
+                   <div class="row" style="margin: auto;">
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="exampleInputEmail1">Chapter<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="chapter">
+                           <option *ngFor="let branch of branches" value="{{branch._id}}">{{branch.chapterName}}</option>
+                        </select>
+                     </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Activity name<span class="text-danger">*</span></label>
+                         <input type="text" class="form-control"  placeholder="Enter the activity name" formControlName="activityName">
+
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Estimated expenditure(&#8377;) <span class="text-danger">*</span></label>
+                         <input type="text" class="form-control"  placeholder="Enter the expenditure" formControlName="activityEstExpenditure">
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Start date</label>
+                         <div class="input-group">
+                            <input class="form-control" [owlDateTime]="activityStartDate" placeholder="Date Time" formControlName="activityStartDate" [owlDateTimeTrigger]="activityStartDate" (dateTimeInput)="activityDateValidate()">
+                            <div class="input-group-append datePicker">
+                               <button class="btn btn-secondary " [owlDateTimeTrigger]="activityStartDate" type="button">
+                                  <i class="icon-regular i-Calendar-4"></i>
+                               </button>
+                            </div>
+                            <owl-date-time #activityStartDate [pickerType]="'calendar'"></owl-date-time>
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">End date</label>
+                         <div class="input-group">
+                            <input class="form-control" [owlDateTime]="activityEndDate" placeholder="Date Time" formControlName="activityEndDate" [owlDateTimeTrigger]="activityEndDate" (dateTimeInput)="activityDateValidate()" >
+                            <div class="input-group-append datePicker">
+                               <button class="btn btn-secondary " [owlDateTimeTrigger]="activityEndDate" type="button">
+                                  <i class="icon-regular i-Calendar-4"></i>
+                               </button>
+                            </div>
+                            <owl-date-time #activityEndDate [pickerType]="'calendar'"></owl-date-time>
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Description</label>
+                         <textarea class="form-control" rows="3" placeholder="Enter the description" formControlName="activityDescription"></textarea>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Date Added<span class="text-danger">*</span></label>
+                         <div class="input-group">
+                            <input class="form-control" [owlDateTime]="addedDate" placeholder="Date Time" formControlName="addedDate" [owlDateTimeTrigger]="addedDate"  required>
+                            <div class="input-group-append datePicker">
+                               <button class="btn btn-secondary " [owlDateTimeTrigger]="addedDate" type="button">
+                                  <i class="icon-regular i-Calendar-4"></i>
+                               </button>
+                            </div>
+                            <owl-date-time #addedDate [pickerType]="'calendar'"></owl-date-time>
+
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label for="exampleInputEmail1">Status<span class="text-danger">*</span></label>
+                         <div class="input-group">
+                            <select class="form-control" formControlName="actStatus">
+                               <!-- <option value="" disabled selected>Select the Project Type</option> -->
+                               <option *ngFor="let status of activityStatus" value="{{status.id}}">{{status.name}}</option>
+                            </select>
+
+                         </div>
+                      </div>
+                   </div>
+                   <div class="row text-center" style="margin: auto;">
+                      <div class="col-md-4 form-group mb-3 ">
+
+                      </div>
+                      <div class="col-md-4 form-group mb-3 ">
+                         <p *ngIf="duplicateActivity" class="error-block text-danger">{{duplicateActivity}}</p>
+                        <p *ngIf="activityDateError" class="error-block text-danger">{{activityDateError}}</p>
+                      </div>
+                      <div class="col-md-4 form-group mb-3 ">
+                         <button (click)="addActivityRowTable()" [disabled]="!projectActivityForm.valid || activityDateError" class="btn-primary btn btn-sm"   >Add Activity</button>
+                         <!-- [disabled]="!ExpenditureDataForm.valid" -->
+                         <button  class="btn btn-dark btn btn-sm ml-2"  (click)="reset()" >Reset</button>
+                         <!-- <button class="btn btn-success btn btn-sm ml-2"  >Submit</button> -->
+                         <!-- (click)="updateExpenditure(resultModal)" *ngIf="addedExp" -->
+                      </div>
+                   </div>
+                </div>
+
+                <div class="row">
+                   <div class="table-responsive col-md-12">
+                      <table class="table table-bordered">
+                         <thead class="form-header">
+                            <tr>
+                               <th scope="col">Activity Name</th>
+                               <th scope="col">Estimated Expenditure</th>
+                               <th scope="col">Start Date</th>
+                               <th scope="col">End Date</th>
+                               <th scope="col">Description</th>
+                               <th scope="col">Added Date</th>
+                               <th scope="col">Actions</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of activityData" style="margin-bottom: 10px;">
+
+                               <td style="width: 20%;">{{item.activityName}}</td>
+                               <td style="width: 15%;">{{item.activityEstExpenditure}}</td>
+                               <td style="width: 10%;">{{item.activityStartDate | date:'MM-dd-yyyy'}}</td>
+                               <td style="width: 10%;">{{item.activityEndDate | date:'MM-dd-yyyy'}}</td>
+                               <td style="width: 25%;">{{item.activityDescription}}</td>
+                               <td  style="width: 10%;">{{item.addedDate | date:'MM-dd-yyyy'}}</td>
+                               <td style="width: 10%;">
+                                  <a class="text-success mr-2 pointer" id="editActivity"  (click)="editActrow(item)" title="edit Activity">
+                                     <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                  </a>
+                                  <a class="text-danger mr-2 pointer" id="removeActivity"  (click)="removeActrow(item)" title="delete Activity">
+                                     <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                  </a>
+
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+             <!-- <div class="row">
+                <div class="col-md-12">
+                   <div style="margin: auto;" formArrayName="projectActivities" *ngFor="let item of projectAddForm.get('projectActivities')['controls']; let i = index;">
+                      <div [formGroupName]="i" class="row">
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Activity name<span class="text-danger">*</span></label>
+                               <input type="text" class="form-control"  placeholder="Enter the activity name" formControlName="activityName">
+
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Estimated expenditure(&#8377;)</label>
+                               <input type="text" class="form-control"  placeholder="Enter the expenditure in dollars" formControlName="activityEstExpenditure">
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Start date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="activityStartDate" placeholder="Date Time" formControlName="activityStartDate" [owlDateTimeTrigger]="activityStartDate" >
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="activityStartDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #activityStartDate [pickerType]="'calendar'"></owl-date-time>
+                               </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">End date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="activityEndDate" placeholder="Date Time" formControlName="activityEndDate" [owlDateTimeTrigger]="activityEndDate" >
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="activityEndDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #activityEndDate [pickerType]="'calendar'"></owl-date-time>
+                            </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Description</label>
+                               <textarea class="form-control"  placeholder="Enter the description" formControlName="activityDescription"></textarea>
+                            </div>
+                      </div>
+                      <hr class="mt-0 mb-1">
+                   </div>
+                </div>
+             </div>    -->
+             <!-- <div class="col-md-3 form-group mb-3">
+                <button (click)="removeItem()" *ngIf="projectAddForm.value.projectActivities.length > 1" class="btn-danger btn btn-sm mt-5" >Remove Activity</button> &nbsp;
+                <button (click)="addItem()" class="btn-primary btn btn-sm mt-5" >Add another activity</button>
+              </div> -->
+             </div>
+             <div class="modal-footer">
+                <button class="btn btn-primary"  [disabled]="!projectAddForm.valid"
+                (click)="addActivities(resultModal)">Save</button>
+                <button type="button" class="btn btn-outline-danger ml-2"
+                                  (click)="modal.dismiss('Cross click')">Cancel</button>
+             </div>
+             <!-- <div class="error-block text-danger"
+                                  *ngIf="projectAddForm.get('projectName').errors && (projectAddForm.get('projectName').touched || projectAddForm.get('projectName').dirty)">
+                                  <span *ngIf="projectAddForm.get('projectName').errors.required">Project name is required.
+                                  </span>
+                                  <span *ngIf="projectAddForm.get('projectName').errors && projectAddForm.get('projectName').errors.pattern">
+                                     Enter valid project name.
+                                  </span>
+                                  <span *ngIf="projectAddForm.get('projectName').errors && (projectAddForm.get('projectName').errors.maxlength || projectAddForm.get('projectName').errors.minlength)">
+                                  The minimum and maximum characters should be 2 and 55 respectively.
+                                  </span>
+                               </div> -->
+
+
+          </ng-wizard-step>
+          <ng-wizard-step [title]="'Gallery'" [description]="'Add the images'" >
+             <div class= "modal-min-height">
+                <div [formGroup] = "projectGalleryForm"  id="projectGalleryForm" >
+                   <div class="row" style="margin: auto;">
+                      <div class="col-md-3 form-group mb-3">
+                         <label >Select the image<span class="text-danger">*</span></label>
+                         <input type="file" class="form-control" formControlName="image" (change)="detectFiles($event)"  accept="image/x-png,image/jpeg">
+                         <!-- formControlName="image" -->
+                         <!-- *ngIf="projectAddForm.value.photos[i].photo" -->
+                         <div *ngIf="galleryImage">
+                            <img [src]="galleryImage">
+                         </div>
+                      </div>
+                      <div class="col-md-3 form-group mb-3">
+                         <label >Description<span class="text-danger">*</span></label>
+                         <textarea type="text" class="form-control" placeholder="Enter the description for the image" formControlName="description"></textarea>
+                      </div>
+
+
+
+                   </div>
+                   <div class="row text-center" style="margin: auto;">
+                      <div class="col-md-4 form-group mb-3 ">
+
+                      </div>
+                      <div class="col-md-4 form-group mb-3 ">
+                         <p *ngIf="duplicateActivity" class="error-block text-danger">{{duplicateActivity}}</p>
+                        <p *ngIf="activityDateError" class="error-block text-danger">{{activityDateError}}</p>
+                      </div>
+                      <div class="col-md-4 form-group mb-3 ">
+                         <button (click)="addGalleryRowTable()" [disabled]="!projectGalleryForm.valid" class="btn-primary btn btn-sm"   >Add Image</button>
+                         <!-- [disabled]="!projectActivityForm.valid || activityDateError" -->
+                         <button  class="btn btn-dark btn btn-sm ml-2"  (click)="reset()" >Reset</button>
+                         <!-- <button class="btn btn-success btn btn-sm ml-2"  >Submit</button> -->
+                         <!-- (click)="updateExpenditure(resultModal)" *ngIf="addedExp" -->
+                      </div>
+                   </div>
+                </div>
+
+                <div class="row">
+                   <div class="col-md-2">
+
+                   </div>
+                   <div class="table-responsive col-md-8">
+                      <table class="table table-bordered">
+                         <thead class="form-header">
+                            <tr>
+                               <th scope="col">Image</th>
+                               <th scope="col">Description</th>
+                               <th scope="col">Actions</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of gallaryData" style="margin-bottom: 10px;">
+
+                               <td style="width: 25%;">
+                                  <div style="width: 90%;height: 10%;">
+                                     <img src="{{item.photo}}" >
+                                  </div>
+                               </td>
+                               <td style="width: 45%;">{{item.description}}</td>
+                               <td style="width: 10%;">
+                                  <!-- <a class="text-success mr-2 pointer" id="edit"  (click)="editGalrow(item)" title="edit">
+                                     <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                  </a> -->
+                                  <a class="text-danger mr-2 pointer" id="remove"  (click)="removeGalrow(item)" title="delete">
+                                     <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                  </a>
+
+                               </td>
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                   <div class="col-md-2">
+
+                   </div>
+
+                </div>
+             <!-- <div  formArrayName="photos" *ngFor="let item of projectAddForm.controls.photos['controls']; let i = index;">
+                <div [formGroupName]="i" class="row">
+                   <div class="col-md-3 form-group mb-3">
+                      <label >Select the image<span class="text-danger">*</span></label>
+                      <input type="file" class="form-control"   (change)="detectFiles($event,i)" accept="image/x-png,image/jpeg">
+                      <div *ngIf="projectAddForm.value.photos[i].photo">
+                         <img [src]="projectAddForm.value.photos[i].photo">
+                      </div>
+                   </div>
+                   <div class="col-md-3 form-group mb-3">
+                      <label >Description</label>
+                      <textarea type="text" class="form-control" placeholder="Enter the description for the image" formControlName="description"></textarea>
+                   </div>
+               </div>
+             </div> -->
+
+             <!-- <div class="images-preview mt-2 row" *ngIf="photos.length">
+                <div formArrayName="photos" class="col-md-3" *ngFor="let photo of photos.controls; let i = index;">
+                   <div  class="card mb-3" [formGroupName]="i">
+                        <button type="button" (click)="removePhoto(i)" class="btn btn-danger remove-btn">x</button>
+                         <img [src]="photo.controls.url.value" class="card-img-top" alt="Image Preview">
+                   </div>
+                </div>
+             </div> -->
+             <!-- <div class="col-md-3 form-group mb-3">
+                <button (click)="deletePhotoRow()" *ngIf="projectAddForm.value.photos.length > 1" class="btn-danger btn btn-sm mt-5" >Remove image</button> &nbsp;
+                <button (click)="addPhotoRow()" class="btn-primary btn btn-sm mt-5" >Add another image</button>
+              </div> -->
+             </div>
+             <div class="modal-footer">
+                <div class="" *ngIf="projectAddForm.value.photos.length">
+                   <button class="btn btn-primary" [disabled]="!projectAddForm.valid" (click)="addGallery(resultModal)"
+                      >Submit</button>
+                      <!--  -->
+                   <button type="button" class="btn btn-outline-danger ml-2" (click)="modal.dismiss('Cross click')">Cancel</button>
+                </div>
+             </div>
+          </ng-wizard-step>
+      </ng-wizard>
+    </form>
+
+  </div>
+  <div class="">
+    <div class="flex-grow-1"></div>
+    <div class="app-footer">
+
+        <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+
+            <span class="flex-grow-1"></span>
+            <div class="d-flex align-items-center">
+                <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                <div>
+                    <p class="m-0">&copy; 2020 DNF</p>
+                    <p class="m-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+   <!-- Pre Loader Strat  -->
+   <div class='loadscreen' *ngIf="loading">
+
+    <div class="loader spinner-bubble spinner-bubble-primary">
+    </div>
+</div>
+<!-- Pre Loader end  -->
+</ng-template>
+<!-- modal end -->
+<!-- result modal -->
+<ng-template #resultModal let-modal>
+ <div class="modal-header border-0 pt-2 pb-2 pr-2">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+
+ <div class="modal-body pt-0" *ngIf="addSuccess">
+   <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+   </p>
+ </div>
+ <div class="modal-body pt-0" *ngIf="addDanger">
+    <p class="text-error-message mb-0"><strong><span> Error! </span></strong>{{message}}
+    </p>
+  </div>
+ <div class="modal-footer p-2">
+    <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewNext()" *ngIf="!showFinish && !addDanger">Next</button>
+    <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewProjects()" *ngIf="showFinish ">View Projects</button>
+   <!-- <button type="button" *ngIf="showClode" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+ </div>
+</ng-template>
+<ng-template #editResultModal let-modal>
+ <div class="modal-header border-0 pt-2 pb-2 pr-2">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+ <div class="modal-body pt-0" *ngIf="editSuccess">
+   <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+   </p>
+ </div>
+ <div class="modal-body pt-0" *ngIf="editDanger">
+    <p class="text-error-message mb-0"><strong><span> Error! </span></strong>{{message}}
+    </p>
+  </div>
+ <div class="modal-footer p-2">
+    <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" *ngIf="!showEditFinish && !editDanger"(click)="viewNext()" >Next</button>
+    <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewProjects()">View Projects</button>
+   <!-- <button type="button" *ngIf="showClode" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+ </div>
+</ng-template>
+<!-- result modal end -->
+<ng-template #viewProject let-modal>
+ <!-- <div class="modal-content modal-content-height" > -->
+ <div class="modal-header">
+    <h4 class="modal-title" >View project - {{projectName}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+
+   <div class="modal-body overflow-y-scroll">
+   <div calss="row" >
+      <!-- <div class="col-md-4"></div>
+      <div class="col-md-4"></div> -->
+      <div class="col-md-12">
+         <div class="row">
+          <div class="col-md-6" >
+             <div class="row">
+                <!-- ICON BG -->
+                <div class="col-lg-4 col-md-4 col-sm-4 labl">
+                   <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 labl" >
+                      <div class="card-body text-center"  style="padding: 15px 10px;">
+                         <i class="i-Data-Settings text-42" style="font-size: 32px;" ></i>
+                         <div class="content labl">
+                            <input type="radio" name="radioname" class = "pointer" value="activityTimeLine" checked="checked" (change)="changetimeline('activityTimeLine')"/>
+                               <p class="text-muted mb-0 text-12">Activities</p>
+                               <p class="text-primary text-16 line-height-1 font-weight-bold mb-0">{{
+                                  projectActivitiesList.length}}</p>
+                         </div>
+                      </div>
+                   </div>
+             </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                   <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 labl">
+                      <div class="card-body text-center" style="padding: 15px 10px;">
+                            <i class="i-Money-2 text-42" style="font-size: 32px;"></i>
+                            <div class="content labl">
+                               <input type="radio" name="radioname" value="donationTimeLine"  class = "pointer" (change)="changetimeline('donationTimeLine')"/>
+                               <p class="text-muted mb-0 text-12">Donations</p>
+                               <p class="text-primary text-16 line-height-1 font-weight-bold mb-0">&#8377;{{donationAmount}}</p>
+                            </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                   <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 labl ">
+                      <div class="card-body text-center" style="padding: 15px 10px;">
+                            <i class="i-Money1 text-42 " style="font-size: 32px;"></i>
+                            <div class="content labl">
+                               <input type="radio" name="radioname" class = "pointer" value="expenditureTimeLine"  (change)="changetimeline('expenditureTimeLine')"/>
+                               <p class="text-muted mb-0 text-12">Expenditure</p>
+                               <p class="text-primary text-16 line-height-1 font-weight-bold mb-0">
+                                  &#8377;{{expAmount}}</p>
+                            </div>
+                      </div>
+                   </div>
+             </div>
+             </div>
+                <div style="overflow-y: scroll;height: 500px;" *ngIf="donationTimeLine">
+
+                   <ul class="timeline">
+                      <li *ngFor="let item of donationsList.donation; let i=index; let odd = odd" [ngClass]="{'timeline-inverted': 0 != i % 2}">
+                         <div class="timeline-badge bg-primary">
+                            <i class="badge-icon text-white i-Money-2"></i>
+                         </div>
+                         <div class="timeline-panel">
+                          <div class="timeline-heading">
+                            <h4 class="timeline-title mb-0">Donated</h4>
+                            <p class="mb-0"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{item.dateAdded | date: 'MM/dd/yyyy'}}</small></p>
+                          </div>
+                          <div class="timeline-body">
+                            <p>{{item.memberName}} has Donated &#8377; {{item.amount}} to<span *ngIf="item.activities[0]" class="text-primary pointer underlineOnHover" title ="view activities"(click) = "openMdModal(donatedActivities,item.activities)">{{item.activities.length}}activities.</span><span *ngIf="!item.activities[0]">the project</span></p>
+                          </div>
+                        </div>
+                      </li>
+                  </ul>
+                </div>
+                <div style="overflow-y: scroll;height: 500px;" *ngIf="activityTimeLine">
+                   <ul class="timeline">
+                      <li *ngFor="let item of projectActivitiesList; let i=index; let odd = odd" [ngClass]="{'timeline-inverted': 0 != i % 2}">
+                         <div class="timeline-badge bg-primary">
+                            <i class="badge-icon text-white i-Data-Settings"></i>
+                         </div>
+                         <div class="timeline-panel">
+                          <div class="timeline-heading">
+                            <h4 class="timeline-title mb-0">Activity </h4>
+                            <p class="mb-0"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{item.addedDate | date: 'MM/dd/yyyy'}}</small></p>
+                          </div>
+                          <div class="timeline-body">
+                            <p>{{item.activityName}} has added </p>
+                          </div>
+                        </div>
+                      </li>
+                  </ul>
+                </div>
+                <div style="overflow-y: scroll;height: 500px;" *ngIf="expenditureTimeLine">
+                   <ul class="timeline">
+                      <li *ngFor="let item of getExpList.expList; let i=index; let odd = odd"
+                         [ngClass]="{'timeline-inverted': 0 != i % 2}">
+                         <div class="timeline-badge bg-primary">
+                            <i class="badge-icon text-white i-Money1"></i>
+                         </div>
+
+                         <div class="timeline-panel">
+
+                            <div class="timeline-heading">
+                               <h4 class="timeline-title mb-0">Expenditure </h4>
+                               <p class="mb-0"><small class="text-muted"><i class="glyphicon glyphicon-time"></i>
+                                     {{item.expDate | date: 'MM/dd/yyyy'}}</small></p>
+                            </div>
+                            <div class="timeline-body">
+                               <p>&#8377;{{item.amount}} has been spent towards {{item.activityName}}</p>
+                            </div>
+
+                         </div>
+
+                      </li>
+                   </ul>
+                </div>
+          </div>
+          <div class="col-md-6">
+                <div class="row">
+                   <div class="col-md-6">
+                      <h4 >Description</h4>
+                   </div>
+                </div>
+                <p>{{description}}
+                </p>
+                <hr>
+                <div class="row">
+                   <div class="col-md-4 col-6">
+                         <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Proposed Date</p>
+                            <span>{{proposedDate  | date: 'MM/dd/yyyy' }}</span>
+                         </div>
+
+
+                         <!-- <div class="mb-4">
+                            <p class="text-primary mb-1"><i class="i-Globe text-16 mr-1"></i> Branch</p>
+                            <span>Hyderabad</span>
+                         </div> -->
+                   </div>
+                   <div class="col-md-4 col-6">
+                      <div class="mb-4">
+                         <p class="text-primary mb-1"><i class="i-Calendar text-16 mr-1"></i>Start Date</p>
+                         <span>{{startDate  | date: 'MM/dd/yyyy' }}</span>
+                      </div>
+                   </div>
+                   <div class="col-md-4 col-6">
+                      <div class="mb-4">
+                         <p class="text-primary mb-1"><i class="i-Money1 text-16 mr-1"></i>Goal</p>
+                         <span>&#8377;{{goal}}</span>
+                      </div>
+
+                   </div>
+                </div>
+                <hr>
+                <h4>Activities</h4>
+                <div class="card mb-4">
+                   <div class="card-body">
+
+                      <div class="row">
+                         <div class="col-md-12">
+                            <div class="text-left">
+                               <div class="card-body">
+                                  <div class="table-responsive">
+                                     <table class="table">
+                                        <thead>
+                                           <tr>
+                                              <th scope="col">#</th>
+                                        <th scope="col">Activity name</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">End Date</th>
+                                        <th scope="col">Expected Expenditure</th>
+                                           </tr>
+                                        </thead>
+                                        <tbody>
+                                           <tr *ngFor="let activity of projectActivitiesList, let i=index">
+                                              <th scope="row">{{i+1}}</th>
+                                              <td>{{activity.activityName}}</td>
+                                              <td>
+                                              {{activity.activityStartDate | date: 'MM/dd/yyyy' }}
+                                              </td>
+                                              <td>
+                                              {{activity.activityEndDate | date: 'MM/dd/yyyy' }}
+                                              </td>
+                                              <td>
+                                                 &#8377;{{activity.activityEstExpenditure}}
+                                              </td>
+                                           </tr>
+                                        </tbody>
+                                     </table>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+          </div>
+
+         </div>
+    </div>
+   </div>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Close</button>
+    <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+  </div>
+  <!-- </div> -->
+
+
+ <!-- </div> -->
+</ng-template>
+<ng-template #editProject let-modal>
+
+ <!-- <div class="modal-content modal-content-height" > -->
+    <div class="modal-header">
+       <div class="row align-items-center">
+           <div class="ml-2">
+               <a href="dashboard/home">
+                   <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+               </a>
+           </div>
+           <div class= "ml-2">
+               <h4 class="modal-title" id="modal-basic-title ">Edit project - {{editProjectData.projectName}}</h4>
+           </div>
+       </div>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+           <span aria-hidden="true">&times;</span>
+       </button>
+   </div>
+ <!-- <div class="modal-header">
+    <h4 class="modal-title" >Edit project - {{editProjectData.projectName}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div> -->
+
+
+   <div class="modal-body overflow-y-scroll">
+
+       <form [formGroup] = "projectEditForm"  >
+          <div class="row">
+             <div class="col-sm-12">
+                <ng-wizard [config]="config" (stepChanged)="stepEditChanged($event)" class="step-wizard" >
+                   <ng-wizard-step [title]="'Project Details'" [description]="'Edit the project details'">
+                            <div class="row" style="margin: auto;">
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="exampleInputEmail1">Project name<span class="text-danger">*</span></label>
+                                  <input type="text" class="form-control" placeholder="Enter your project name" formControlName="projectName">
+                                  <div class="error-block text-danger"
+                                        *ngIf="projectEditForm.get('projectName').errors && (projectEditForm.get('projectName').touched || projectEditForm.get('projectName').dirty)">
+                                        <span *ngIf="projectEditForm.get('projectName').errors.required">Project name is required.
+                                        </span>
+                                        <span *ngIf="projectEditForm.get('projectName').errors && projectEditForm.get('projectName').errors.pattern">
+                                           Enter valid project name.
+                                        </span>
+                                        <span *ngIf="projectEditForm.get('projectName').errors && (projectEditForm.get('projectName').errors.maxlength || projectEditForm.get('projectName').errors.minlength)">
+                                        The minimum and maximum characters should be 2 and 55 respectively.
+                                     </span>
+                                  </div>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                               <label for="picker1">Project type<span class="text-danger">*</span></label>
+                               <select class="form-control" formControlName="projectType">
+                                  <option value="" disabled selected>Select the Project Type</option>
+                                  <option *ngFor="let proType of projectTypes" value="{{proType.id}}">{{proType.name}}</option>
+                               </select>
+                                  <div class="error-block text-danger"
+                                        *ngIf="projectEditForm.get('projectType').errors && (projectEditForm.get('projectType').touched || projectEditForm.get('projectType').dirty)">
+                                        <span *ngIf="projectEditForm.get('projectType').errors && projectEditForm.get('projectType').errors.required">Project type is required.
+                                        </span>
+                                  </div>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="exampleInputEmail1">Goal(&#8377;)<span class="text-danger">*</span></label>
+                                  <input type="goals" class="form-control"  placeholder="Enter the project Goals"  formControlName="projectGoal">
+                                  <div class="error-block text-danger"
+                                     *ngIf="projectEditForm.get('projectGoal').errors && (projectEditForm.get('projectGoal').touched || projectEditForm.get('projectGoal').dirty)">
+                                     <span *ngIf="projectEditForm.get('projectGoal').errors.required">Goal is required
+                                     </span>
+                                     <span *ngIf="projectEditForm.get('projectGoal').errors.pattern">
+                                        Only numbers are accepted
+                                     </span>
+                                  </div>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="website">Location<span class="text-danger">*</span></label>
+                                  <input class="form-control" id="website" placeholder="Enter the Location" formControlName="projectLocation">
+                                  <div class="error-block text-danger"
+                                     *ngIf="projectEditForm.get('projectLocation').errors && (projectEditForm.get('projectLocation').touched || projectEditForm.get('projectLocation').dirty)">
+                                     <span *ngIf="projectEditForm.get('projectLocation').errors && projectEditForm.get('projectLocation').errors.required">Location is required.
+                                     </span>
+                                     <span *ngIf="projectEditForm.get('projectLocation').errors && projectEditForm.get('projectLocation').errors.pattern">
+                                        Enter valid location.
+                                     </span>
+                                  </div>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="proposer">Proposer<span class="text-danger">*</span></label>
+                                  <!-- <select class="form-control" formControlName="projectProposer">
+                                  <option value="" disabled selected>Select the proposer</option>
+                                  <option *ngFor="let proposer of proposers" value="{{proposer.id}}">{{proposer.name}}</option>
+                               </select> -->
+                               <ng-multiselect-dropdown   [placeholder]="'Select Proposer'" [settings]="proposerSettings"  [data]="proposers"  formControlName="projectProposer"></ng-multiselect-dropdown>
+                                  <div class="error-block text-danger"
+                                  *ngIf="projectEditForm.get('projectProposer').errors && (projectEditForm.get('projectProposer').touched || projectEditForm.get('projectProposer').dirty)">
+                                  <span *ngIf="projectEditForm.get('projectProposer').errors && projectEditForm.get('projectProposer').errors.required">Proposer is required.
+                                  </span>
+                               </div>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="date">Proposed Date<span class="text-danger">*</span></label>
+                                  <div class="input-group">
+                                           <input class="form-control" [owlDateTime]="projectProposedDate" placeholder="Date Time" formControlName="projectProposedDate" [owlDateTimeTrigger]="projectProposedDate" (dateTimeInput)="dateValidateEdit()">
+                                           <div class="input-group-append datePicker">
+                                              <button class="btn btn-secondary" [owlDateTimeTrigger]="projectProposedDate" type="button">
+                                                    <i class="icon-regular i-Calendar-4"></i>
+                                              </button>
+                                           </div>
+                                           <owl-date-time #projectProposedDate [pickerType]="'calendar'"></owl-date-time>
+                                  </div>
+                                  <span class="error-block text-danger" *ngIf="dateError3">{{dateError3}}
+                                  </span>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">Start Date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="projectStartDate" placeholder="Date Time" formControlName="projectStartDate" [owlDateTimeTrigger]="projectStartDate" (dateTimeInput)="dateValidateEdit()">
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="projectStartDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #projectStartDate [pickerType]="'calendar'"></owl-date-time>
+                               </div>
+                               <span class="error-block text-danger" *ngIf="dateError4">{{dateError4}}
+                               </span>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">End Date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="projectEndDate" placeholder="Date Time" formControlName="projectEndDate" [owlDateTimeTrigger]="projectEndDate" (dateTimeInput)="dateValidateEdit()">
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary" [owlDateTimeTrigger]="projectEndDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #projectEndDate [pickerType]="'calendar'"></owl-date-time>
+                               </div>
+                               <span class="error-block text-danger" *ngIf="dateError4">{{dateError4}}</span>
+                            </div>
+                               <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">Team</label>
+                                  <!-- <select class="form-control" formControlName="projectTeam" (change)="addLeaders(null)">
+                                     <option value="" disabled selected>Select the team</option>
+                                     <option *ngFor="let team of teams" value="{{team.id}}"
+                                     >{{team.name}}</option>
+                                  </select> -->
+                                  <ng-multiselect-dropdown   [placeholder]="'Select team'" [settings]="teamSettings"  [data]="team"  formControlName="projectTeam"></ng-multiselect-dropdown>
+
+                                  <!-- <div class="error-block text-danger"
+                                  *ngIf="projectAddForm.get('projectTeam').errors && (projectAddForm.get('projectTeam').touched || projectAddForm.get('projectTeam').dirty)">
+                                  <span *ngIf="projectAddForm.get('projectTeam').errors && projectAddForm.get('projectTeam').errors.required">Team is required.
+                                  </span>
+                                  </div> -->
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="phone">Leader<span class="text-danger">*</span></label>
+                                  <!-- <select class="form-control" formControlName="projectLeader">
+                                  <option value="" disabled selected>Select the Leader</option>
+                                  <option *ngFor="let leader of leaders" value="{{leader.id}}"
+                                  >{{leader.name}}</option>
+                               </select> -->
+                                 <ng-multiselect-dropdown   [placeholder]="'Select team leaders'" [settings]="teamLeaderSettings"  [data]="teamLeaders" formControlName="projectLeader"></ng-multiselect-dropdown>
+
+                                  <!-- <div class="error-block text-danger"
+                                  *ngIf="projectAddForm.get('projectLeader').errors && (projectAddForm.get('projectLeader').touched || projectAddForm.get('projectLeader').dirty)">
+                                  <span *ngIf="projectAddForm.get('projectLeader').errors && projectAddForm.get('projectLeader').errors.required">Leader is required.
+                                  </span>
+                                  </div> -->
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">Stage<span class="text-danger">*</span></label>
+                               <select class="form-control" formControlName="projectStage">
+                                  <option value="" disabled selected>Select the stage</option>
+                                  <option *ngFor="let stage of stages" value="{{stage.id}}"
+                                  >{{stage.name}}</option>
+                               </select>
+                               <div class="error-block text-danger"
+                               *ngIf="projectEditForm.get('projectStage').errors && (projectEditForm.get('projectStage').touched || projectEditForm.get('projectStage').dirty)">
+                               <span *ngIf="projectEditForm.get('projectStage').errors && projectEditForm.get('projectStage').errors.required">Stage is required.
+                               </span>
+                               </div>
+                            </div>
+
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">Partners&nbsp;<button class="btn btn-sm btn-primary" (click)="openPartnersModal(partnerModal,'edit')">+Others</button></label>
+                               <ng-multiselect-dropdown   [placeholder]=" 'Select partners' " [settings]="partnerSettings"  [data]="partners" formControlName="projectPatners"></ng-multiselect-dropdown>
+                               <!-- <select class="form-control" formControlName="projectPatners">
+                                  <option value="" disabled selected>Select the partners</option>
+                                  <option *ngFor="let partner of partners" value="{{partner.id}}"
+                                  >{{partner.name}}</option>
+                               </select> -->
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="credit1">Chapters<span class="text-danger">*</span></label>
+                               <ng-multiselect-dropdown   [placeholder]=" 'Select the Chapter' " [settings]="chapterSettings"  [data]="branches" formControlName="projectChapter"></ng-multiselect-dropdown>
+
+                               <!-- <select class="form-control" formControlName="projectBranch">
+                                  <option value="" disabled selected>Select the Branch</option>
+                                  <option *ngFor="let branch of branches" value="{{branch.id}}"
+                                  >{{branch.name}}</option>
+                               </select> -->
+                               <div class="error-block text-danger"
+                               *ngIf="projectEditForm.get('projectChapter').errors && (projectEditForm.get('projectChapter').touched || projectEditForm.get('projectChapter').dirty)">
+                               <span *ngIf="projectEditForm.get('projectChapter').errors && projectEditForm.get('projectChapter').errors.required">Chapter is required.
+                               </span>
+                               </div>
+                            </div>
+
+
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="credit1">Description</label>
+                                  <textarea class="form-control"  placeholder="Enter the description" formControlName="projectDescription"></textarea>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                  <label for="credit1">Details</label>
+                                  <textarea class="form-control"  placeholder="Enter the Details" formControlName="projectDetails"></textarea>
+                               </div>
+                               <div class="col-md-3 form-group mb-3">
+                                 <label for="credit1">Beneficiaries</label>
+                                 <textarea class="form-control"  placeholder="Enter the Beneficiaries" formControlName="beneficiary"></textarea>
+                              </div>
+                               </div>
+                               <div class="row" style="margin: auto;">
+                                  <!-- <div class="col-md-12"> -->
+                                     <!-- <div class="row"> -->
+                                        <!-- <div class="col-md-6 form-group mb-3">
+                                           <p >Matching Configuration</p>
+                                           <div formGroupName="projectMatchingConfig" class="row">
+                                              <div class="col-md-6">
+                                                    <label for="credit1">Amount</label>
+                                                    <input class="form-control" id="credit1" placeholder="Enter the amount" formControlName="amount" >
+                                                       <div class="error-block text-danger"
+                                                          *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').touched && ( projectAddForm.get('projectMatchingConfig').get('amount').errors) || (projectAddForm.get('projectMatchingConfig').get('amount').dirty)">
+                                                          <span *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').errors && projectAddForm.get('projectMatchingConfig').get('amount').errors.pattern">
+                                                             Only numbers are accepted
+                                                          </span>
+                                                    </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                    <label for="credit1">Type</label>
+                                                    <select class="form-control" formControlName="type">
+                                                       <option value="" disabled selected>Select the Type</option>
+                                                       <option *ngFor="let type of matConfigTypes" value="{{type.id}}"
+                                                       >{{type.name}}</option>
+                                                    </select>
+                                              </div>
+                                           </div>
+                                        </div> -->
+                                        <div class="col-md-6 form-group mb-3">
+                                           <p>Project Image</p>
+                                           <div class="row">
+                                                 <div class="col-md-6 form-group mb-3">
+                                                    <label >Select the image</label>
+                                                    <input type="file" class="form-control" id="files"  (change)="detectProjectImageEdit($event)" accept="image/x-png,image/jpeg">
+                                                 </div>
+                                                 <div class="col-md-6" *ngIf="projectEditForm.value.projectImage">
+                                                    <img [src]="projectEditForm.value.projectImage">
+                                                 </div>
+                                           </div>
+                                        </div>
+                                     <!-- </div>    -->
+                                  <!-- </div>    -->
+                               </div>
+                               <div class="row">
+                                  <!-- <div class="col-md-12">
+                                     <div class="col-md-6 form-group mb-3">
+                                        <p >Matching Configuration</p>
+                                        <div formGroupName="projectMatchingConfig" class="row">
+                                           <div class="col-md-6">
+                                                 <label for="credit1">Amount</label>
+                                                 <input class="form-control"  placeholder="Enter the amount" formControlName="amount" >
+                                                    <div class="error-block text-danger"
+                                                       *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').touched && ( projectAddForm.get('projectMatchingConfig').get('amount').errors) || (projectAddForm.get('projectMatchingConfig').get('amount').dirty)">
+                                                       <span *ngIf="projectAddForm.get('projectMatchingConfig').get('amount').errors && projectAddForm.get('projectMatchingConfig').get('amount').errors.pattern">
+                                                          Only numbers are accepted
+                                                       </span>
+                                                 </div>
+                                           </div>
+                                           <div class="col-md-6">
+                                                 <label for="credit1">Type</label>
+                                                 <select class="form-control" formControlName="type">
+                                                    <option value="" disabled selected>Select the Type</option>
+                                                    <option *ngFor="let type of matConfigTypes" value="{{type.id}}"
+                                                    >{{type.name}}</option>
+                                                 </select>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div> -->
+                               </div>
+                               <!-- <div class="row">
+                                  <div class="col-md-12 text-center">
+                                     <button class="btn btn-primary" [disabled]="!projectEditForm.valid"(click)="editProjectDetails(editResultModal,null)">Submit</button>
+                                  </div>
+                               </div> -->
+                               <div class="modal-footer">
+                                  <button class="btn btn-primary" [disabled]="!projectEditForm.valid"(click)="editProjectDetails(editResultModal,null)">Next</button>
+                                  <button type="button" class="btn btn-outline-danger" (click)="modal.close('ok')">Cancel</button>
+                                  <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+                                </div>
+
+                   </ng-wizard-step>
+                   <ng-wizard-step [title]="'Activities'" [description]="'Edit the activity details'">
+                      <div [formGroup] = "projectActivityEditForm"  id="projectActivityEditForm" >
+                         <div class="row" style="margin: auto;">
+                           <div class="col-md-3 form-group mb-3">
+                              <label for="exampleInputEmail1">Chapter<span class="text-danger">*</span></label>
+                              <select class="form-control" formControlName="chapter">
+                                 <option *ngFor="let branch of branches" value="{{branch._id}}">{{branch.chapterName}}</option>
+                              </select>
+                           </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Activity name<span class="text-danger">*</span></label>
+                               <input type="text" class="form-control"  placeholder="Enter the activity name" formControlName="activityName">
+
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Estimated expenditure(&#8377;)<span class="text-danger">*</span></label>
+                               <input type="text" class="form-control"  placeholder="Enter the expenditure" formControlName="activityEstExpenditure">
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Start date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="activityStartDate" placeholder="Date Time" formControlName="activityStartDate" [owlDateTimeTrigger]="activityStartDate" (dateTimeInput)="editactivityDateValidate()">
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="activityStartDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #activityStartDate [pickerType]="'calendar'"></owl-date-time>
+                               </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">End date</label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="activityEndDate" placeholder="Date Time" formControlName="activityEndDate" [owlDateTimeTrigger]="activityEndDate" (dateTimeInput)="editactivityDateValidate()" >
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="activityEndDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #activityEndDate [pickerType]="'calendar'"></owl-date-time>
+                            </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Description</label>
+                               <textarea class="form-control" rows="3" placeholder="Enter the description" formControlName="activityDescription"></textarea>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Date Added<span class="text-danger">*</span></label>
+                               <div class="input-group">
+                                  <input class="form-control" [owlDateTime]="addedDate" placeholder="Date Time" formControlName="addedDate" [owlDateTimeTrigger]="addedDate" required >
+                                  <div class="input-group-append datePicker">
+                                     <button class="btn btn-secondary " [owlDateTimeTrigger]="addedDate" type="button">
+                                        <i class="icon-regular i-Calendar-4"></i>
+                                     </button>
+                                  </div>
+                                  <owl-date-time #addedDate [pickerType]="'calendar'"></owl-date-time>
+                               </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label for="exampleInputEmail1">Status<span class="text-danger">*</span></label>
+                               <div class="input-group">
+                                  <select class="form-control" formControlName="actStatus">
+                                     <!-- <option value="" disabled selected>Select the Project Type</option> -->
+                                     <option *ngFor="let status of activityStatus" value="{{status.id}}">{{status.name}}</option>
+                                  </select>
+
+                               </div>
+                            </div>
+
+                         </div>
+                         <div class="row text-center" style="margin: auto;">
+                            <div class="col-md-4 form-group mb-3 ">
+
+                            </div>
+                            <div class="col-md-4 form-group mb-3 ">
+                               <p *ngIf="duplicateActivity" class="error-block text-danger">{{duplicateActivity}}</p>
+                              <p *ngIf="activityDateError" class="error-block text-danger">{{activityDateError}}</p>
+                            </div>
+                            <div class="col-md-4 form-group mb-3 ">
+                               <button (click)="addActivityEditRowTable()" [disabled]="!projectActivityEditForm.valid || activityDateError" class="btn-primary btn btn-sm"   >Add Activity</button>
+
+                               <button  class="btn btn-dark btn btn-sm ml-2"  (click)="reset()" >Reset</button>
+
+                            </div>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="table-responsive col-md-12">
+                            <table class="table table-bordered">
+                               <thead class="form-header">
+                                  <tr>
+                                     <th scope="col">Activity Name</th>
+                                     <th scope="col">Estimated Expenditure</th>
+                                     <th scope="col">Start Date</th>
+                                     <th scope="col">End Date</th>
+
+                                     <th scope="col">Description</th>
+                                     <th scope="col">Added Date</th>
+                                     <th scope="col">Actions</th>
+                                  </tr>
+                               </thead>
+                               <tbody>
+                                  <tr *ngFor="let item of activityEditData" style="margin-bottom: 10px;">
+                                     <td style="width: 20%;">{{item.activityName}}</td>
+                                     <td style="width: 15%;">{{item.activityEstExpenditure}}</td>
+                                     <td style="width: 10%;">{{item.activityStartDate | date:'MM-dd-yyyy'}}</td>
+                                     <td style="width: 10%;">{{item.activityEndDate | date:'MM-dd-yyyy'}}</td>
+
+                                     <td style="width: 25%;">{{item.activityDescription}}</td>
+                                     <td  style="width: 10%;">{{item.addedDate | date:'MM-dd-yyyy'}}</td>
+                                     <td style="width: 10%;">
+                                        <a class="text-success mr-2 pointer" id="editActivity"  (click)="editActEditrow(item)" title="edit Activity">
+                                           <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                        </a>
+                                        <a class="text-danger mr-2 pointer" id="removeActivity"  (click)="removeEditActrow(item)" title="delete Activity">
+                                           <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                        </a>
+
+                                     </td>
+                                  </tr>
+                               </tbody>
+                            </table>
+                         </div>
+                      </div>
+                      <!-- <div class="row">
+                       <div class="col-md-12">
+                            <div style="margin: auto;" formArrayName="projectActivities" *ngFor="let item of projectEditForm.controls.projectActivities['controls']; let i = index;">
+                               <div [formGroupName]="i" class="row">
+                                     <div class="col-md-3 form-group mb-3">
+                                        <label for="exampleInputEmail1">Activity name<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="firstName1" placeholder="Enter the activity name" formControlName="activityName">
+                                     </div>
+                                     <div class="col-md-3 form-group mb-3">
+                                        <label for="exampleInputEmail1">Estimated expenditure</label>
+                                        <input type="text" class="form-control"  placeholder="Enter the expenditure in dollars" formControlName="activityEstExpenditure">
+                                     </div>
+                                     <div class="col-md-3 form-group mb-3">
+                                        <label for="exampleInputEmail1">Start date<span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                           <input class="form-control" [owlDateTime]="activityStartDate" placeholder="Date Time" formControlName="activityStartDate" [owlDateTimeTrigger]="activityStartDate" (dateTimeInput)="dateValidate()">
+                                           <div class="input-group-append datePicker">
+                                              <button class="btn btn-secondary " [owlDateTimeTrigger]="activityStartDate" type="button">
+                                                 <i class="icon-regular i-Calendar-4"></i>
+                                              </button>
+                                           </div>
+                                           <owl-date-time #activityStartDate [pickerType]="'calendar'"></owl-date-time>
+                                        </div>
+                                     </div>
+                                     <div class="col-md-3 form-group mb-3">
+                                        <label for="exampleInputEmail1">End date</label>
+                                        <div class="input-group">
+                                           <input class="form-control" [owlDateTime]="activityEndDate" placeholder="Date Time" formControlName="activityEndDate" [owlDateTimeTrigger]="activityEndDate" (dateTimeInput)="dateValidate()">
+                                           <div class="input-group-append datePicker">
+                                              <button class="btn btn-secondary " [owlDateTimeTrigger]="activityEndDate" type="button">
+                                                 <i class="icon-regular i-Calendar-4"></i>
+                                              </button>
+                                           </div>
+                                           <owl-date-time #activityEndDate [pickerType]="'calendar'"></owl-date-time>
+                                        </div>
+                                     </div>
+                                     <div class="col-md-3 form-group mb-3">
+                                        <label for="exampleInputEmail1">Description</label>
+                                        <textarea class="form-control"  placeholder="Enter the description" formControlName="activityDescription"></textarea>
+                                     </div>
+                               </div>
+                               <hr class="mt-0 mb-1">
+                            </div>
+                         </div>
+                      </div> -->
+                      <!-- <div class="col-md-3 form-group mb-3">
+                         <button (click)="removeEditItem()" *ngIf="projectEditForm.value.projectActivities.length > 1" class="btn-danger btn btn-sm mt-5" >Remove Activity</button> &nbsp;
+                         <button (click)="addEditItem()" class="btn-primary btn btn-sm mt-5" >Add another activity</button>
+                      </div> -->
+
+                      <div class="modal-footer">
+                         <button class="btn btn-primary"  (click)="editProjectActivities(editResultModal,null)">Next</button>
+                         <button type="button" class="btn btn-outline-danger" (click)="modal.close('ok')">Cancel</button>
+
+                       </div>
+                   </ng-wizard-step>
+                   <ng-wizard-step [title]="'Gallery'" [description]="'Edit the images'">
+                      <div [formGroup] = "projectGalleryEditForm"  id="projectGalleryEditForm" >
+                         <div class="row" style="margin: auto;">
+                            <div class="col-md-3 form-group mb-3">
+                               <label >Select the image<span class="text-danger">*</span></label>
+                               <input type="file" class="form-control" formControlName="image" (change)="detectFilesData($event)"  accept="image/x-png,image/jpeg">
+                               <!-- formControlName="image" -->
+                               <!-- *ngIf="projectAddForm.value.photos[i].photo" -->
+                               <div *ngIf="editGalleryImage">
+                                  <img [src]="editGalleryImage">
+                               </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label >Description<span class="text-danger">*</span></label>
+                               <textarea type="text" class="form-control" placeholder="Enter the description for the image" formControlName="description"></textarea>
+                            </div>
+
+
+
+                         </div>
+                         <div class="row text-center" style="margin: auto;">
+                            <div class="col-md-4 form-group mb-3 ">
+
+                            </div>
+                            <div class="col-md-4 form-group mb-3 ">
+                               <p *ngIf="duplicateActivity" class="error-block text-danger">{{duplicateActivity}}</p>
+                              <p *ngIf="activityDateError" class="error-block text-danger">{{activityDateError}}</p>
+                            </div>
+                            <div class="col-md-4 form-group mb-3 ">
+                               <button (click)="addGalleryEditRowTable()" [disabled]="!projectGalleryEditForm.valid" class="btn-primary btn btn-sm"   >Add Image</button>
+                               <!-- [disabled]="!projectGalleryForm.valid" -->
+                               <!-- [disabled]="!projectActivityForm.valid || activityDateError" -->
+                               <button  class="btn btn-dark btn btn-sm ml-2"  (click)="reset()" >Reset</button>
+                               <!-- <button class="btn btn-success btn btn-sm ml-2"  >Submit</button> -->
+                               <!-- (click)="updateExpenditure(resultModal)" *ngIf="addedExp" -->
+                            </div>
+                         </div>
+                      </div>
+
+                      <div class="row">
+                         <div class="col-md-2">
+
+                         </div>
+                         <div class="table-responsive col-md-8">
+                            <table class="table table-bordered">
+                               <thead class="form-header">
+                                  <tr>
+                                     <th scope="col">Image</th>
+                                     <th scope="col">Description</th>
+                                     <th scope="col">Actions</th>
+                                  </tr>
+                               </thead>
+                               <tbody>
+                                  <tr *ngFor="let item of gallaryEditData" style="margin-bottom: 10px;">
+
+                                     <td style="width: 25%;">
+                                        <div style="width: 90%;height: 10%;">
+                                           <img src="{{item.photo}}" >
+                                        </div>
+                                     </td>
+                                     <td style="width: 45%;">{{item.description}}</td>
+                                     <td style="width: 10%;">
+                                        <!-- <a class="text-success mr-2 pointer" id="edit"  (click)="editGalrow(item)" title="edit">
+                                           <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                        </a> -->
+                                        <a class="text-danger mr-2 pointer" id="remove"  (click)="removeGalrow(item)" title="delete">
+                                           <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i>
+                                        </a>
+
+                                     </td>
+                                  </tr>
+                               </tbody>
+                            </table>
+                         </div>
+                         <div class="col-md-2">
+
+                         </div>
+
+                      </div>
+                      <!-- <div  formArrayName="photos" *ngFor="let item of projectEditForm.controls.photos['controls']; let i = index;">
+                         <div [formGroupName]="i" class="row">
+                            <div class="col-md-3 form-group mb-3">
+                               <label >Select the image<span class="text-danger">*</span></label>
+                               <input type="file" class="form-control" (change)="detectFilesData($event,i)" accept="image/x-png,image/jpeg"
+                              >
+                               <div *ngIf="projectEditForm.value.photos[i].photo">
+                                  <img [src]="projectEditForm.value.photos[i].photo">
+                               </div>
+                            </div>
+                            <div>
+
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                               <label >Description<span class="text-danger">*</span></label>
+                               <textarea type="text" class="form-control" placeholder="Enter the description for the image" formControlName="description"></textarea>
+                            </div>
+                         </div>
+                      </div> -->
+                      <!-- <div class="images-preview mt-2 row" *ngIf="photos.length">
+                         <div formArrayName="photos" class="col-md-3" *ngFor="let photo of photos.controls; let i = index;">
+                            <div  class="card mb-3" [formGroupName]="i">
+                                  <button type="button" (click)="removePhoto(i)" class="btn btn-danger remove-btn">x</button>
+                                  <img [src]="photo.controls.url.value" class="card-img-top" alt="Image Preview">
+                            </div>
+                         </div>
+                      </div> -->
+                      <!-- <div class="col-md-3 form-group mb-3">
+                         <button (click)="delPhotoRowEdit()" *ngIf="projectEditForm.value.photos.length > 1" class="btn-danger btn btn-sm mt-5" >Remove image</button> &nbsp;
+                         <button (click)="PhotoRowEdit()" class="btn-primary btn btn-sm mt-5" >Add another image</button>
+                      </div> -->
+
+                      <div class="col-md-12 text-center" *ngIf="projectAddForm.value.photos.length">
+
+                         <div class="modal-footer">
+                            <button class="btn btn-primary"  (click)="editGallery(editResultModal)">Submit</button>
+                            <button type="button" class="btn btn-outline-danger" (click)="modal.close('ok')">Cancel</button>
+                            <!-- <button type="button" class="btn btn-success m-1" type="submit">Save & New</button> -->
+                          </div>
+                      </div>
+
+                   </ng-wizard-step>
+                </ng-wizard>
+             </div>
+           </div>
+        </form>
+
+   </div>
+   <div class="">
+    <div class="flex-grow-1"></div>
+    <div class="app-footer">
+
+        <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+
+            <span class="flex-grow-1"></span>
+            <div class="d-flex align-items-center">
+                <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                <div>
+                    <p class="m-0">&copy; 2020 DNF</p>
+                    <p class="m-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- </div> -->
+
+
+ <!-- </div> -->
+
+<!-- Pre Loader Strat  -->
+<div class='loadscreen' *ngIf="loading">
+
+  <div class="loader spinner-bubble spinner-bubble-primary">
+  </div>
+</div>
+<!-- Pre Loader end  -->
+</ng-template>
+<ng-template #expModal let-modal>
+ <div class="modal-header">
+    <h4 class="modal-title" > {{expprojectName}} - Expenditure</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+ <div class="modal-body overflow-y-scroll">
+
+
+    <form  [formGroup] = "ExpenditureDataForm"  id="ExpenditureDataForm" >
+       <div class="row">
+         <div class="col-md-3 form-group mb-3">
+            <label for="exampleInputEmail1">Chapter<span class="text-danger">*</span></label>
+            <select class="form-control" formControlName="chapter" (change)="onChapterChange($event)">
+               <option *ngFor="let branch of branches" value="{{branch._id}}">{{branch.chapterName}}</option>
+            </select>
+         </div>
+          <div class="col-md-3 form-group mb-3">
+             <label for="">Activity<span class="text-danger">*</span></label>
+             <select class="form-control" formControlName="activity" >
+                <option value="" disabled selected>Select the activity</option>
+                <option *ngFor="let activity of newAct" value="{{activity.id}}"
+                >{{activity.activityName}}</option>
+              </select>
+          </div>
+          <div class="col-md-3 form-group mb-3">
+             <label for="">Amount( &#8377;)<span class="text-danger">*</span></label>
+             <input type="number" min = "1" class="form-control"  placeholder="Enter the amount" formControlName="amount">
+          </div>
+          <div class="col-md-3 form-group mb-3">
+             <label for="">Date<span class="text-danger">*</span></label>
+             <div class="input-group">
+                <input class="form-control" [owlDateTime]="expDate" placeholder="Date Time" formControlName="expDate" [owlDateTimeTrigger]="expDate" [max]="todayDate">
+                <div class="input-group-append datePicker">
+                      <button class="btn btn-secondary" [owlDateTimeTrigger]="expDate" type="button">
+                         <i class="icon-regular i-Calendar-4"></i>
+                      </button>
+                </div>
+                <owl-date-time #expDate [pickerType]="'calendar'"></owl-date-time>
+             </div>
+
+          </div>
+          <div class="col-md-3 form-group mb-3">
+             <label for="">Description<span class="text-danger">*</span></label>
+             <textarea type="text" rows="3" class="form-control"  placeholder="Enter the description" formControlName="description"></textarea>
+          </div>
+
+
+       </div>
+       <div class="row text-center" >
+          <div class="col-md-4 form-group mb-3 ">
+             <p class="error-block text-danger">{{duplicateExp}}</p>
+          </div>
+          <div class="col-md-4 form-group mb-3 ">
+             <button (click)="addExpRowTable()" class="btn-primary btn btn-sm"  [disabled]="!ExpenditureDataForm.valid" >Add expenditures</button>
+             <button  class="btn btn-dark btn btn-sm ml-2"  (click)="reset()" >Reset</button>
+          </div>
+          <div class="col-md-4 form-group mb-3 ">
+             <button class="btn btn-success btn btn-sm ml-2"  (click)="updateExpenditure(resultModal)" *ngIf="addedExp">Submit</button>
+          </div>
+       </div>
+
+    </form>
+
+    <div class="row">
+       <div class="table-responsive col-md-12">
+          <table class="table table-bordered">
+             <thead class="form-header">
+                <tr>
+                   <th scope="col">Activity</th>
+                   <th scope="col">Amount</th>
+                   <th scope="col">Description</th>
+                   <th scope="col">Date</th>
+                   <th scope="col">Actions</th>
+                </tr>
+             </thead>
+             <tbody>
+                <tr *ngFor="let item of expenditureData" style="margin-bottom: 10px;">
+
+                   <td style="width: 25%;">{{item.activityName}}</td>
+                   <td style="width: 15%;">{{item.amount}}</td>
+                   <td style="width: 40%;">{{item.description}}</td>
+                   <td style="width: 10%;">{{item.expDate | date:'MM-dd-yyyy'}}</td>
+
+                   <td style="width: 10%;">
+                      <a class="text-success mr-2 pointer" id="editExpenditure" (click)="editExp(item)" title="edit Expenditure">
+                         <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 20px;"></i>
+                      </a>
+                      <!-- <button type="button" class="btn btn-primary" id="editExpenditure" (click)="editExp(item)" title="edit education">
+
+                         <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                      </button> -->
+                      <a class="text-danger mr-2 pointer" id="removeExpenditure" (click)="removeExp(item)" title="delete Expenditure">
+                         <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 20px;"></i>
+                      </a>
+                      <!-- <button type="button" class="btn btn-danger" id="removeEducations" (click)="removeExp(item)" title="delete education"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </button> -->
+                   </td>
+                </tr>
+             </tbody>
+          </table>
+       </div>
+    </div>
+
+   <div class="row" style="display: none;">
+    <div class="col-md-12 mt-4">
+       <div class="card mb-4">
+          <div class="card-body">
+            <div class="card-title mb-3">Previous Expenditure</div>
+             <div class="row">
+                <div class="col-md-12">
+                   <div class="text-left">
+                      <div class="card-body">
+                         <div class="table-responsive">
+                            <table class="table">
+                               <thead>
+                                  <tr>
+                                     <th scope="col">#</th>
+                                     <th scope="col">Activity</th>
+                                     <th scope="col">Amount</th>
+
+                                     <th scope="col">Description</th>
+                                     <!-- <th scope="col">Action</th> -->
+                                  </tr>
+                               </thead>
+                               <tbody>
+                                  <!-- <tr *ngFor="let exp of projects[projectIndex].expList">
+                                     <th scope="row">{{exp.id}}</th>
+                                     <td>
+                                        {{exp.activityName}}
+                                        </td>
+                                     <td>{{exp.amount}}</td>
+
+                                     <td>
+                                     {{exp.description}}
+                                     </td>
+
+                                  </tr>
+                                  -->
+                               </tbody>
+                            </table>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ </div>
+</ng-template>
+
+<ng-template #donatedActivities let-modal>
+ <div class=" overflow-y-scroll">
+    <div class="modal-header">
+        <div class="row ">
+            <div class="col-md-12 align-items-center  d-flex">
+                <div class="ml-2 ">
+                    <a href="dashboard/home">
+                        <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class = "modal-logo">
+                    </a>
+                    <span class="modal-title DNF-title" id="modal-basic-title "> {{orgdataRes.orgInfo[0].title}}</span>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+
+    <div class="modal-body ">
+            <div>
+                <span class = "project-Title-donations pl-2">{{projectName}} Activities</span>
+            </div>
+
+                <div class = "row justify-content-center align-items-center mt-2">
+                   <div class="table-responsive">
+                      <table class="table">
+                         <thead>
+                            <tr>
+                               <th scope="col">S.No</th>
+                         <th scope="col">Activity Name</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let activity of donatedActivitieslist;let i=index">
+                               <th scope="row">{{i+1}}</th>
+                               <td>{{activity.activityName}}</td>
+
+                            </tr>
+                         </tbody>
+                      </table>
+                   </div>
+                </div>
+
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-outline-success" (click)="modal.dismiss('Cross click')">close</button>
+        </div>
+    </div>
+    <div class="container p-0">
+        <div class="flex-grow-1"></div>
+        <div class="app-footer p-2">
+
+            <div class="footer-bottom  d-flex flex-column flex-sm-row align-items-center">
+
+                <span class="flex-grow-1"></span>
+                <div class="d-flex align-items-center">
+                    <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                    <div>
+                        <p class="m-0">&copy; 2020 DNF</p>
+                        <p class="m-0">All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</ng-template>
+
+<!-- add to favorite projects form start -->
+<!-- <ng-template #addFavorite let-modal>
+ <div class="modal-header border-0 pt-2 pb-2 pr-2">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+ <div class="modal-body pt-0" >
+   <p class="text-success-message mb-0"><strong><span> Success! </span></strong>
+   </p>
+ </div>
+ <div class="modal-body pt-0" >
+    <p class="text-error-message mb-0"><strong><span> Error! </span></strong>
+    </p>
+  </div>
+ <div class="modal-footer p-2">
+
+ </div>
+</ng-template> -->
+
+
+
+<ng-template #addFavorite let-modal>
+ <div class="modal-header">
+     <h4 class="modal-title">Add To Favorite <strong></strong></h4>
+     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+     </button>
+ </div>
+ <div class="modal-body pt-0">
+    <strong> Project Name : {{favoriteProjects.ProjectName}}</strong>
+ </div>
+ <div *ngIf="error" class="text-center">
+    <strong class="text-error-message mb-0"> {{error}}</strong>
+
+ </div>
+ <div class="modal-footer p-2">
+
+   <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button>
+   <button type="button" class="btn btn-success btn-rounded"  (click)="addToFavoriteList(favoriteProjects.projectId,FavresultModal)">Add To Favorite</button>
+ </div>
+</ng-template>
+
+<!-- add to favorite projects form end -->
+
+<ng-template #FavresultModal let-modal>
+ <div class="modal-header border-0 pt-2 pb-2 pr-2">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+
+ <div class="modal-body pt-0" *ngIf="addSuccess">
+   <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+   </p>
+ </div>
+ <div class="modal-footer p-2">
+    <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button>
+ </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+<!--
+<form [formGroup] = "projectExpenditure"  id="projectExpenditure">
+ <div class="row">
+    <div class="col-md-12">
+       <div style="margin: auto;" formArrayName="expList" *ngFor="let item of projectExpenditure.get('expList')['controls']; let i = index;">
+          <div [formGroupName]="i" class="row">
+             <div class="col-md-3 form-group mb-3">
+                <label for="exampleInputEmail1">Activity<span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="activity" required>
+                   <option value="" disabled selected>Select the activity</option>
+                   <option *ngFor="let activity of projectExpAct" value="{{activity.id}}"
+                   >{{activity.activityName}}</option>
+                 </select>
+                 <div class="error-block text-danger" *ngIf="item.get('activity').errors && (item.get('amount').touched || item.get('amount').dirty)"
+                 >
+                   <span *ngIf="item.get('activity').errors?.required">
+                      {{errorMessageActivatyReq}}
+                   </span>
+                </div>
+             </div>
+             <div class="col-md-3 form-group mb-3">
+                <label for="exampleInputEmail1">Amount<span class="text-danger">*</span></label>
+                <input type="number" min = "1" class="form-control"  placeholder="Enter the amount" formControlName="amount">
+                <div class="error-block text-danger" *ngIf="item.get('amount').errors && (item.get('amount').touched || item.get('amount').dirty)"
+                   >
+                   <span *ngIf="item.get('amount').errors?.required">
+                      {{errorMessageAmountReq}}
+                   </span>
+                   <span *ngIf="item.get('amount').errors?.pattern">
+                      {{errorMessageAmountInvalid}}
+                   </span>
+                </div>
+             </div>
+             <div class="col-md-3 form-group mb-3">
+                <label for="exampleInputEmail1">Description<span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control"  placeholder="Enter the description" formControlName="description"></textarea>
+                <div class="error-block text-danger" *ngIf="item.get('description').errors && (item.get('description').touched || item.get('description').dirty)"
+                >
+                <span *ngIf="item.get('description').errors?.required">
+                   {{errorMessageDescriptionReq}}
+                </span>
+                <span *ngIf="item.get('description').errors.minlength || item.get('description').errors.maxlength">
+                  {{errorMessageDescriptionMinMax}}
+                </span>
+               </div>
+             </div>
+
+
+
+
+          </div>
+       </div>
+
+       <div class="col-md-3 form-group mb-3">
+          <button (click)="deleteExpRow()" *ngIf="projectExpenditure.value.expList.length > 1" class="btn-danger btn btn-sm" style="margin-top:0px">Remove expenditure</button> &nbsp;
+          <button (click)="addExpRow()" class="btn-primary btn btn-sm" >Add expenditure</button>
+
+
+       </div>
+    </div>
+    <div class="col-md-12 text-center">
+       <button class="btn btn-primary" (click)="addExpenditure(resultModal)" *ngIf="!addedExp" [disabled]="!projectExpenditure.valid">Submit</button>
+       <button class="btn btn-primary" [disabled]="!projectExpenditure.valid" (click)="updateExpenditure(resultModal)"  *ngIf="addedExp">Submit</button>
+    </div>
+ </div>
+
+
+</form> -->
+
+
+
+
+
+
+
+
+
+<ng-template #partnerModal let-modal>
+ <div class="modal-header border-0 pt-2 pb-2 pr-2">
+    <div class="row align-items-center">
+       <div class="ml-2">
+           <a href="dashboard/home">
+               <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+           </a>
+       </div>
+       <div class= "ml-2">
+           <h4 class="modal-title" id="modal-basic-title ">Add Partners</h4>
+       </div>
+   </div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+ </div>
+
+ <div class="modal-body pt-0">
+    <form [formGroup] = "addPartnerForm" >
+       <label for="exampleInputEmail1">Partner<span class="text-danger">*</span></label>
+       <input type="text" class="form-control" placeholder="Enter the partner name"  formControlName="partnerName">
+    </form>
+ </div>
+ <div class="modal-footer p-2">
+    <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="addPartner()"  [disabled]="!addPartnerForm.valid">Submit</button>
+
+   <!-- <button type="button" *ngIf="showClode" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+ </div>
+</ng-template>

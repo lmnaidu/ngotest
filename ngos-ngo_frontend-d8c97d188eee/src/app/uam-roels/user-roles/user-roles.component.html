@@ -1,0 +1,143 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+    </div>
+  <!-- Pre Loader end  -->
+   <div class="breadcrumb justify-content-end">
+      <ul>
+          <li>  <a>User Roles</a>  </li>
+         <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+      
+      </ul>
+   </div> 
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+       <div class="col-md-12">
+         <div class="card o-hidden mb-4">
+               <div class="row card-header">
+                  <div class="col-md-6">
+                     <div class="card-title mb-3">Users Roles <button *ngIf="userRolePermissions.write" class="btn btn-sm btn-primary" routerLink="/uam-roles/addRole"
+                        >+ Add User Role</button></div>
+                  </div>
+                  <div class="col-md-3"></div>
+                  <div class="col-md-3">
+                     <input type="text" placeholder="Search Role Name" name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                  </div>
+               </div>
+               <div class="">
+                  <div class="table-responsive">
+                     <table id="user_table" class="table  text-left" >
+                        <thead>
+                           <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">Role Name</th>
+                              <th scope="col">Description</th>
+                              <th scope="col">Actions</th>
+                           
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <ng-container *ngIf="availableRolesRecords; else noData">
+                              <tr *ngFor="let role of roles | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ">
+                                 <th scope="row">{{role.index}}</th>
+                                 <td>{{role.roleName | titlecase}}</td>
+                                 <td>{{role.description  |slice:0:100}}</td>
+                                    
+                                 <td >
+                                       <a *ngIf="userRolePermissions.update" class="text-success mr-3" title="Edit Role" [routerLink]="['/uam-roles/editRole',role._id]">
+                                          <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                       </a>
+                                       <a  class="text-danger mr3" (click)="viewRoleData(viewRolesData,role._id)" title="View Role">
+                                          <i class="nav-icon i-Eye font-weight-bold"></i>
+                                          </a>
+                                 </td>
+                              </tr>
+                           </ng-container>
+                           <ng-template #noData>
+                              <tr>
+                                    <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                    No Records Found 
+                                    </td>
+                              </tr>
+                           </ng-template>
+                        
+                        </tbody>
+                        <tfoot>
+                           <tr *ngIf="roles.length > pageSize">
+                                 <td colspan="12">
+                                 <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="roles.length" [boundaryLinks]="true">
+                                 </ngb-pagination>
+                                 </td>
+                           </tr>
+                        
+                        </tfoot>
+                     </table>
+                  </div>
+               </div>
+                     
+         </div>
+      </div>
+      
+    </div>
+ </div>
+
+         <!-- view Roles  -->
+<ng-template #viewRolesData let-modal style="max-width: 1000px;">
+   
+      <div class="modal-header">
+         <h4 class="modal-title">View {{singleRoleData.role | titlecase}} Roles</h4>
+         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+     <div class="modal-body pt-0">
+        <div>
+            <label> <strong>Description : </strong> </label>
+            <p  class="col-sm-12 textSpace"> {{singleRoleData.description}}</p>
+        </div>
+        <div  class="table-responsive">
+           <table class="table table-bordered" >
+              <thead>
+                 <tr>
+                    <th class="text-center">Permission Name</th>
+                    <th class="text-center"> Permissions</th>
+                    
+                 </tr>
+              </thead>
+              <tbody>
+                 <tr *ngFor="let singleRole of singleRoleData.finalResult">
+                    <td class="textSpace">{{singleRole.permissionDetails.permissionsName}}</td>
+                    <td>
+                       <span *ngIf="singleRole.permissionValue === '0'">
+                          <i class="fa fa-times" aria-hidden="true"></i> No Access
+                       </span>
+                       <span *ngIf="singleRole.permissionValue === '1'">
+                          <i class="fa fa-check" aria-hidden="true"></i> Read Permission 
+                       </span>
+                       <span *ngIf="singleRole.permissionValue === '3'">
+                          <i class="fa fa-check" aria-hidden="true"></i> Read Permission  &nbsp; &nbsp; &nbsp;
+                          <i class="fa fa-check" aria-hidden="true"></i> Write Permission 
+                       </span>
+                       <span *ngIf="singleRole.permissionValue === '7'">
+                          <i class="fa fa-check" aria-hidden="true"></i> Read Permission  &nbsp; &nbsp; &nbsp;
+                          <i class="fa fa-check" aria-hidden="true"></i> Write Permission  &nbsp; &nbsp; &nbsp;
+                          <i class="fa fa-check" aria-hidden="true"></i> Update Permission 
+                       </span>
+                    </td>
+                 </tr>
+              </tbody>
+           </table>
+        </div>
+        
+     </div>
+     <div class="modal-footer p-2">
+         
+         <button type="button" class="btn btn-light btn-rounded"  (click)="modal.dismiss('Cross click')">close</button> 
+         
+        
+     </div>
+  
+</ng-template>

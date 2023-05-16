@@ -1,0 +1,752 @@
+
+    <!-- Admin Navbar -->
+    <div class="main-header" >
+        <div class="logo">
+            <a href="dashboard/home">
+                <!-- <img src="{{orgdataRes.orgInfo[0].logo}}" alt=""> -->
+                <img src="{{orgdataRes.orgInfo[0].logo}}">
+            </a>
+        </div>       
+            
+        <div class="menu-toggle" (click)="toggleNavbar()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        <div class="d-flex align-items-center" style="margin-left: -21px;">
+            <nav class="navbar navbar-expand-md navbar-light main-navbar">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown" *ngIf="users.read || userRoles.read">
+                            <a class="nav-link dropdown clr" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-users" aria-hidden="true" style="font-size: 150%"></i>
+                                    <!-- <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i> -->
+                                    <span class="nav-text" style="font-size: 15px"> UAM</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li *ngIf="users.read">
+                                    <a class="dropdown-item" routerLink="/uam/all-users">Users</a>
+                                </li>
+                                <li *ngIf="userRoles.read">
+                                    <a class="dropdown-item" routerLink="/uam-roles/rolesList">User Roles</a>
+                                </li>
+                                <!-- <li>
+                                    <a class="dropdown-item" routerLink="/uam/userTypes">User Types</a>
+                                </li> -->
+                            </ul>
+                        </li>
+                        <li class="nav-item" *ngIf="chapters.read">
+                            <a class="nav-item-hold dropdown nav-link clr" routerLink="/chapters">
+                                <i class="nav-icon i-Bar-Chart text-20"></i>
+                                <span class="nav-text text-15"> Chapters</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="donations.read || pledges.read">
+                            <a class="nav-link dropdown clr"  id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="nav-icon i-Financial" style="font-size: 150%"></i>
+                                <span class="nav-text" style="font-size: 15px"> Donations</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li  *ngIf="donations.read">
+                                    <a class="dropdown-item" routerLink="/memberDonations">My Donations</a>
+                                </li>
+                                <li   *ngIf="pledges.read">
+                                    <a class="dropdown-item" routerLink="/member-pledges">
+                                        My Pledges 
+                                        
+                                    </a>
+                                </li>
+                        
+                            
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="generateCertificates.read || financial.read ">
+                            <a class="nav-link dropdown clr" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="nav-icon i-Suitcase" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> Financial</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li class="dropdown-submenu" *ngIf="generateCertificates.read ">
+                                    <a class="dropdown-item " routerLink="/member/generate-certficate">Generate certificate</a>
+                                 
+                                </li>
+                                <li class="dropdown-submenu" *ngIf=" financial.read ">
+                                    <a class="dropdown-item " routerLink="/all-donations" >Member Donations</a>
+                                  
+                                </li>
+                                <li class="dropdown-submenu"  *ngIf=" financial.read ">
+                                    <a class="dropdown-item" routerLink="/all-Pledges" >Member Pledges</a>
+                           
+                                </li>
+                                <li >
+                                    <a class="dropdown-item" routerLink="/manual-donations">Manual Donations</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="projects.read || requestforProposal.read"> 
+                            <a class="nav-link dropdown" href="" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-item-hold clr" >
+                                    <i class="nav-icon i-Library" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> Projects</span>
+                                </a>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li *ngIf="projects.read">
+                                    <a class="dropdown-item" routerLink="/projects">Projects List</a>
+                                </li>
+                                <li *ngIf="requestforProposal.read && requestforProposal.write">
+                                    <a class="dropdown-item" routerLink="/project-proposal">Propose Project</a>
+                                </li>
+                                <!-- *ngIf="requestforProposal.read" -->
+                                <li *ngIf="requestforProposal.update">
+                                    <a class="dropdown-item" routerLink="/project-request">
+                                        Project Proposals 
+                                        <sup> <span class="badge badge-primary badge-pill text-10">{{proposerProjectsLength}}</span></sup>
+                                    </a>
+                                </li>
+                                
+                            
+                            </ul>
+                        </li>
+                        <li class="nav-item" *ngIf="members.read">
+    
+                            <a class="nav-item-hold dropdown nav-link clr" routerLink="/member">
+                                <i class="nav-icon i-Administrator" style="font-size: 150%"></i>
+                                <span class="nav-text" style="font-size: 15px"> Member</span>
+                            </a>
+    
+    
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="events.read">
+                           
+                                <a class="nav-item-hold dropdown nav-link clr" routerLink="/events/events">
+                                    <i class="nav-icon i-File-Clipboard-File--Text" style="font-size: 150%"></i>
+                                    <span  class="nav-text" style="font-size: 15px"> Events List</span>
+                                </a>
+                          
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="magazines.read || news.read">
+                          
+                                <a class="nav-item-hold dropdown nav-link clr" >
+                                    <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> CMS</span>
+                                </a>
+                           
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li *ngIf="news.read">
+                                    <a class="dropdown-item" routerLink="/news/newsList">News</a>
+                                </li>
+                                <li  *ngIf="magazines.read">
+                                    <a class="dropdown-item" routerLink="/magazine/magazine-list">Magazine</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown" *ngIf="isAdmin">
+                           
+                                <a class="nav-item-hold dropdown nav-link clr" routerLink="/dashboard/org-info">
+                                    <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> Org-Info</span>
+                                </a>
+                           
+                        </li>
+                        <li class="nav-item" *ngIf="digitalConnect.read">
+                            <a class="nav-item-hold dropdown nav-link clr" routerLink="/digitalConnect">
+                                <i class="nav-icon i-Monitor-2" style="font-size: 150%"></i>
+                                <span class="nav-text" style="font-size: 15px"> Digital Connect</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" *ngIf="reports.read">
+                            <!-- <a class="nav-item-hold dropdown nav-link"  href="">
+                                <i class="fa fa-bookmark-o" aria-hidden="true" style="font-size: 150%"></i>
+                              
+                                <span class="nav-text" style="font-size: 15px"> Reports</span>
+                            </a> -->
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div style="margin: auto"></div>
+        <div class="header-part-right">
+            <!-- <button type="button" *ngIf="userToken.activeUser != 'volunteer'" class="btn btn-raised ripple btn-raised-primary">Receipt request</button> -->
+            <div class="dropdown">
+                <div class="badge-top-container" id="dropdownNotification" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <span class="badge badge-primary">{{notificationsList.length}}</span>
+                    <i class="i-Bell text-muted header-icon"></i>
+                </div>
+                <!-- Notification dropdown -->
+                <div class="dropdown-menu rtl-ps-none dropdown-menu-right notification-dropdown"
+                    aria-labelledby="dropdownNotification" data-perfect-scrollbar data-suppress-scroll-x="true">
+                    <div class="dropdown-item d-flex" *ngFor = "let notify of notificationsList | slice:0:3">
+                            <div class="notification-icon" *ngIf="notify.type=='Donation'">
+                                <i class="i-Money-2  text-primary mr-1"></i>
+                            </div>
+                            <div class="notification-icon" *ngIf="notify.type=='Activity'">
+                                <i class="i-Data-Settings  text-primary mr-1"></i>
+                            </div>
+                            <div class="notification-icon" *ngIf="notify.type=='Event'">
+                                <i class="i-File-Clipboard-File--Text  text-primary mr-1"></i>
+                            </div>
+                            <div class="notification-icon" *ngIf="notify.type=='Proposal'">
+                                <i class="i-Library  text-primary mr-1"></i>
+                            </div>
+                            <div class="notification-details flex-grow-1" >
+                                <a  routerLink={{notify.pageLink}} (click)="updateNot(notify._id)">
+                                <p class="m-0 d-flex align-items-center">
+                                    <span *ngIf="notify.type=='Donation'">Donation</span>
+                                    <span *ngIf="notify.type=='Activity'">Activity</span>
+                                    <span *ngIf="notify.type=='Event'">Event</span>
+                                    <span *ngIf="notify.type=='Proposal'">Project Proposal</span>
+                                    <span class="badge badge-pill badge-primary ml-1 mr-1" *ngIf="!notify.viewStatus">new</span>
+                                    <span class="flex-grow-1"></span>
+                                    <span class="text-small text-muted ml-auto">{{notify.dateAdded | date:'MM-dd-yyy'}}</span>
+                                </p>
+                                <p class="text-small text-muted m-0" style="white-space: normal;">{{notify.notString}}</p></a>
+                            </div>
+                    </div>
+    
+                    <div class="dropdown-item d-flex" style="height: 30px;">
+                        <div class="notification-details" style="text-align: center;width: 100%;">
+                            <a class="m-0 text-center" routerLink="/notification-list">View All</a>
+                        </div>
+                    </div>
+                    <!-- <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Library text-success mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>New Project Proposed</span>
+                                <span class="badge badge-pill badge-success ml-1 mr-1">new</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">2 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">Swetcha</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Statistic text-danger mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>Project Status</span>
+                                <span class="badge badge-pill badge-danger ml-1 mr-1">3</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">10 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">Accepted By Admin </p>
+                        </div>
+                    </div> -->
+                    <!-- <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Data-Power text-success mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>Server Up!</span>
+                                <span class="badge badge-pill badge-success ml-1 mr-1">3</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">14 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">Server rebooted successfully</p>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- Notificaiton End -->
+            <!-- User avatar dropdown -->
+            <div *ngIf="userDetails.profileImage">
+                <div class="dropdown" >
+                    <div class="user col align-self-end">
+                        <img src="{{userDetails.profileImage}}" id="userDropdown" alt="" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">				
+                        
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <div class="dropdown-header">
+                                <i class="i-Lock-User mr-1"></i> {{userToken.activeUser | titlecase}}
+        
+                            </div>
+                            <a href="/profile/profile-info" class="dropdown-item">My Profile</a>
+                            <a class="dropdown-item" (click)="changePassword(updatePassword)">Change Password</a>
+                            <a class="dropdown-item" (click)="signout()">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!userDetails.profileImage">
+                <div class="dropdown" >
+                    <div class="user col align-self-end">			
+                        <img   src="../../../assets/images/faces/avatar1.png" id="userDropdown" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <div class="dropdown-header">
+                                <i class="i-Lock-User mr-1"></i> {{userToken.activeUser | titlecase}}
+        
+                            </div>
+                            <a href="/profile/profile-info" class="dropdown-item">My Profile</a>
+                            <a class="dropdown-item" (click)="changePassword(updatePassword)">Change Password</a>
+                            <a class="dropdown-item" (click)="signout()">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="collapse navbar-collapse navigation-left" [ngClass]="{ 'show': navbarOpen }">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown" *ngIf="users.read || userRoles.read">
+                <a class="nav-link dropdown" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-users" aria-hidden="true" style="font-size: 150%"></i>
+                        <!-- <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i> -->
+                        <span class="nav-text" style="font-size: 15px"> UAM</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                    <li *ngIf="users.read">
+                        <a class="dropdown-item" routerLink="/uam/all-users">Users</a>
+                    </li>
+                    <li *ngIf="userRoles.read">
+                        <a class="dropdown-item" routerLink="/uam-roles/rolesList">User Roles</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item" *ngIf="chapters.read">
+                <a class="nav-item-hold dropdown nav-link" routerLink="/chapters">
+                    <i class="nav-icon i-Bar-Chart text-20"></i>
+                    <span class="nav-text text-15"> Chapters</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown" *ngIf="donations.read || pledges.read">
+                <a class="nav-link dropdown" href="" id="navbarDropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="nav-icon i-Financial" style="font-size: 150%"></i>
+                    <span class="nav-text" style="font-size: 15px"> Donations</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                    <li  *ngIf="donations.read">
+                        <a class="dropdown-item" routerLink="/memberDonations">My Donations</a>
+                    </li>
+                    <li   *ngIf="pledges.read">
+                        <a class="dropdown-item" routerLink="/member-pledges">
+                            My Pledges 
+                            
+                        </a>
+                    </li>                    
+                </ul>
+            </li>
+
+
+            <li class="nav-item dropdown" *ngIf="generateCertificates.read || financial.read ">
+                <a class="nav-link dropdown" id="navbarDropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="nav-icon i-Suitcase" style="font-size: 150%"></i>
+                    <span class="nav-text" style="font-size: 15px"> Financial</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                    <li class="dropdown-submenu" *ngIf="generateCertificates.read ">
+                        <a class="dropdown-item " routerLink="/member/generate-certficate">Generate certificate</a>
+                     
+                    </li>
+                    <li class="dropdown-submenu" *ngIf=" financial.read ">
+                        <a class="dropdown-item " routerLink="/all-donations" >Member Donations</a>
+                      
+                    </li>
+                    <li class="dropdown-submenu"  *ngIf=" financial.read ">
+                        <a class="dropdown-item" routerLink="/all-Pledges" >Member Pledges</a>
+               
+                    </li>
+                    <li >
+                        <a class="dropdown-item" routerLink="/manual-donations">Manual Donations</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown" *ngIf="projects.read || requestforProposal.read"> 
+                <a class="nav-link dropdown" href="" id="navbarDropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="nav-icon i-Library" style="font-size: 150%"></i>
+                    <span class="nav-text" style="font-size: 15px"> Projects</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                    <li *ngIf="projects.read">
+                        <a class="dropdown-item" routerLink="/projects">Projects List</a>
+                    </li>
+                    <li *ngIf="requestforProposal.read && requestforProposal.write">
+                        <a class="dropdown-item" routerLink="/project-proposal">Propose Project</a>
+                    </li>
+                    <!-- *ngIf="requestforProposal.read" -->
+                    <li *ngIf="requestforProposal.update">
+                        <a class="dropdown-item" routerLink="/project-request">
+                            Project Proposals 
+                            <sup> <span class="badge badge-primary badge-pill text-10">{{proposerProjectsLength}}</span></sup>
+                        </a>
+                    </li>
+                    
+                
+                </ul>
+            </li>
+            <li class="nav-item" *ngIf="members.read">
+
+                <a class="nav-item-hold dropdown nav-link" routerLink="/member">
+                    <i class="nav-icon i-Administrator" style="font-size: 150%"></i>
+                    <span class="nav-text" style="font-size: 15px"> Member</span>
+                </a>
+
+
+            </li>
+            <li class="nav-item dropdown" *ngIf="events.read">
+               
+                    <a class="nav-item-hold dropdown nav-link" routerLink="/events/events">
+                        <i class="nav-icon i-File-Clipboard-File--Text" style="font-size: 150%"></i>
+                        <span  class="nav-text" style="font-size: 15px"> Events List</span>
+                    </a>
+              
+            </li>
+            <li class="nav-item dropdown" *ngIf="magazines.read || news.read">
+              
+                    <a class="nav-item-hold dropdown nav-link">
+                        <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i>
+                        <span class="nav-text" style="font-size: 15px"> CMS</span>
+                    </a>
+               
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                    <li *ngIf="news.read">
+                        <a class="dropdown-item" routerLink="/news/newsList">News</a>
+                    </li>
+                    <li  *ngIf="magazines.read">
+                        <a class="dropdown-item" routerLink="/magazine/magazine-list">Magazine</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown" *ngIf="isAdmin">
+               
+                    <a class="nav-item-hold dropdown nav-link" routerLink="/dashboard/org-info">
+                        <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i>
+                        <span class="nav-text" style="font-size: 15px"> Org-Info</span>
+                    </a>
+               
+            </li>
+            <li class="nav-item" *ngIf="digitalConnect.read">
+                <a class="nav-item-hold dropdown nav-link" routerLink="/digitalConnect">
+                    <i class="nav-icon i-Monitor-2" style="font-size: 150%"></i>
+                    <span class="nav-text" style="font-size: 15px"> Digital Connect</span>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="reports.read">
+                <!-- <a class="nav-item-hold dropdown nav-link"  >
+                    <i class="fa fa-bookmark-o" aria-hidden="true" style="font-size: 150%"></i>
+               
+                    <span class="nav-text" style="font-size: 15px"> Reports</span>
+                </a> -->
+            </li>
+
+
+
+
+
+
+        </ul>
+    </div>
+    <!-- Treasurer screen -->
+    
+    <div class="main-header" *ngIf="userToken.activeUser ==='treasurer'">
+    
+        <div class="logo">
+            <a href="dashboard/home">
+                <img src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+            </a>
+        </div>
+        <div class="d-flex align-items-center">
+            
+            <nav class="navbar navbar-expand-md navbar-light" >
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown" href="http://example.com" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-item-hold" href="#">
+                                    <i class="nav-icon i-Suitcase" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px;"> Financial</span>
+                                </a>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <!-- <li>
+                                    <a class="dropdown-item" href="event.html">Event</a>
+                                </li> -->
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item" href="#">Projects</a>
+                                    <ul class="dropdown-menu side-dropdown">
+                                        <li>
+                                            <a class="dropdown-item" routerLink="/member/generate-certficate">Generate certificate</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Donations</a>
+                                    <ul class="dropdown-menu side-dropdown">
+                                        <li>
+                                            <a class="dropdown-item" routerLink="/memberDonations">Member Donations</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" routerLink="/organizationDonations">Organization
+                                                Donations</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Pledges</a>
+                                    <ul class="dropdown-menu side-dropdown">
+                                        <li>
+                                            <a class="dropdown-item" routerLink="/memberPledges">Member Pledges</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" routerLink="/organizationPledges">Organization
+                                                Pledges</a>
+                                        </li>
+                                    </ul>
+                                </li>
+    
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-md navbar-light">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown" href="http://example.com" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a routerLink="/projects">
+                                    <i class="nav-icon i-Library" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> </span>
+                                </a>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        
+            
+            <nav class="navbar navbar-expand-md navbar-light">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown" href="http://example.com" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-item-hold" routerLink="/events/events">
+                                    <i class="nav-icon i-File-Clipboard-File--Text" style="font-size: 150%"></i>
+                                    <span  class="nav-text" style="font-size: 15px"> Events List</span>
+                                </a>
+                            </a>
+                            <!-- <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" routerLink="/events/events">Add event</a>
+                                </li>
+                            </ul> -->
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-md navbar-light">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-item-hold" >
+                                    <i class="nav-icon text-20 i-Data-Power" style="font-size: 150%"></i>
+                                    <span class="nav-text" style="font-size: 15px"> CMS</span>
+                                </a>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" routerLink="/news/newsList">News</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" routerLink="/magazine/magazine-list">Magazine</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+        </div>
+        <div style="margin: auto"></div>
+        <div class="header-part-right">
+            <!-- Full screen toggle -->
+            <!-- Grid menu Dropdown -->
+            <!-- Notificaiton -->
+            <button type="button" class="btn btn-raised ripple btn-raised-primary m-1">Reports</button>
+    
+            <button type="button" class="btn btn-raised ripple btn-raised-primary m-1">Receipt request</button>
+            <div class="dropdown">
+                <div class="badge-top-container" id="dropdownNotification" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <span class="badge badge-primary">3</span>
+                    <i class="i-Bell text-muted header-icon"></i>
+                </div>
+                <!-- Notification dropdown -->
+                <div class="dropdown-menu rtl-ps-none dropdown-menu-right notification-dropdown"
+                    aria-labelledby="dropdownNotification" data-perfect-scrollbar data-suppress-scroll-x="true">
+                    <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Speach-Bubble-6 text-primary mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>New message</span>
+                                <span class="badge badge-pill badge-primary ml-1 mr-1">new</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">10 sec ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">James: Hey! are you busy?</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Receipt-3 text-success mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>New order received</span>
+                                <span class="badge badge-pill badge-success ml-1 mr-1">new</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">2 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">1 Headphone, 3 iPhone x</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Empty-Box text-danger mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>Product out of stock</span>
+                                <span class="badge badge-pill badge-danger ml-1 mr-1">3</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">10 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">Headphone E67, R98, XL90, Q77</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-item d-flex">
+                        <div class="notification-icon">
+                            <i class="i-Data-Power text-success mr-1"></i>
+                        </div>
+                        <div class="notification-details flex-grow-1">
+                            <p class="m-0 d-flex align-items-center">
+                                <span>Server Up!</span>
+                                <span class="badge badge-pill badge-success ml-1 mr-1">3</span>
+                                <span class="flex-grow-1"></span>
+                                <span class="text-small text-muted ml-auto">14 hours ago</span>
+                            </p>
+                            <p class="text-small text-muted m-0">Server rebooted successfully</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Notificaiton End -->
+            <!-- User avatar dropdown -->
+            <div class="dropdown">
+                <div class="user col align-self-end">
+                    <img src="../../../assets/images/faces/1.jpg" id="userDropdown" alt="" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <div class="dropdown-header">
+                            <i class="i-Lock-User mr-1"></i> {{userToken.activeUser | titlecase}}
+    
+                        </div>
+                        <a href="/profile/profile-info" class="dropdown-item">My Profile</a>
+                        <a class="dropdown-item">Billing history</a>
+                        <a class="dropdown-item" (click)="signout()">Sign out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
+            <!-- header top menu end -->
+            <!--=============== Left side End ================-->
+    
+            <ng-template #updatePassword let-modal>
+                <div class="modal-header border-0 pt-2 pb-2 pr-2">
+                   <div class="row align-items-center">
+                      <div class="ml-2">
+                          <a href="dashboard/home">
+                              <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                          </a>
+                      </div>
+                      <div class= "ml-2">
+                          <h4 class="modal-title" id="modal-basic-title ">Update Password</h4>
+                      </div>
+                  </div>
+                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                   <span aria-hidden="true">&times;</span>
+                   </button>
+                </div>
+                <div class="modal-body pt-0">
+                   <form [formGroup] = "passwordForm">
+                       <div class="row">
+                           <div class="col-sm-12">
+                            <label for="exampleInputEmail1">New Password<span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" placeholder="Enter the new Password"    formControlName="newPassword">
+                                <div class="error-block text-danger"
+                                *ngIf="passwordForm.get('newPassword').errors && (passwordForm.get('newPassword').touched || passwordForm.get('newPassword').dirty)">
+                                
+                                <span *ngIf="passwordForm.get('newPassword').errors && passwordForm.get('newPassword').errors.pattern">
+                                    Password should contain minimum eight characters, at least one uppercase & lowercase letter, one number and one special character
+                                </span>
+                            
+                            </div>
+                            <span  class="error-block text-danger" *ngIf="showError">New password and Confirm Password are required and should be same.
+                            </span>
+                           </div>
+                           <div class="col-sm-12">
+                            <label for="exampleInputEmail1">Confirm Password<span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" placeholder="Confirm the Password"  formControlName="cnfPassword" >
+                            <span  class="error-block text-danger" *ngIf="showError">New password and Confirm Password are required and should be same.
+                            </span>
+                          </div>
+                       </div>
+                     
+                   </form>
+                </div>
+                <div class="modal-footer p-2">
+                   <button type="button"  class="btn-sm btn btn-primary btn-rounded" (click)="updateUserPassword(resultModal)"  [disabled]="!passwordForm.valid" >Submit</button>
+               
+                  <!-- <button type="button" *ngIf="showClode" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+                </div>
+               </ng-template>
+               <ng-template #resultModal let-modal>
+                <div class="modal-header border-0 pt-2 pb-2 pr-2">
+                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                   <span aria-hidden="true">&times;</span>
+                   </button>
+                </div>
+               
+                <div class="modal-body pt-0" *ngIf="addSuccess">
+                  <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+                  </p>
+                </div>
+                <div class="modal-body pt-0" *ngIf="addDanger">
+                   <p class="text-error-message mb-0"><strong><span> Error! </span></strong>{{message}}
+                   </p>
+                 </div>
+                <div class="modal-footer p-2">
+            
+                  <button type="button"  class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Ok</button>
+                </div>
+               </ng-template>

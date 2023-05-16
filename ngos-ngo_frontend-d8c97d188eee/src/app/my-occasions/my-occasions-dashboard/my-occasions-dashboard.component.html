@@ -1,0 +1,162 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+   <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+   <div class="breadcrumb justify-content-end">
+      <ul>
+          <li><a> Occasions</a></li>
+         <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+      
+      </ul>
+   </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row ">
+       <div class="col-md-12">
+          <div class="card mb-4">
+             <div class="card-body">
+                <div class="card-title mb-3">My Occasions  <button class="btn btn-sm btn-primary" (click)="openModal(occasionsModal)" > +Add</button> </div>
+                <!-- <button class="btn btn-sm btn-primary" (click)="openModal()">+Add</button> -->
+                <div class="row">
+                   <div class="col-md-12">
+                      <div class="text-left">
+                         <div class="card-body">
+                            <div class="table-responsive">
+                               <table class="table">
+                                  <thead>
+                                     <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Occasion Name</th>
+                                        <th scope="col">Date</th>
+                                        
+                                        <th scope="col">Action</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody>
+                                   
+                                  
+                                     <tr *ngFor="let ocassion of ocassions">
+                                       <th scope="row">{{ocassion.index}}</th>
+                                       <td>{{ocassion.ocassionName}}</td>
+                                       <td>   {{ocassion.date | date:'MM-dd-yyy'}} </td>
+                                       
+                                       <td>
+                                          <!-- <a (click)="openEditModal()"class="text-success mr-2">
+                                          <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                          </a>-->
+                                          <a  class="text-danger mr-2" (click)="openEditModal(ocassion,editoccasionsModal)">
+                                          <i class="nav-icon i-Eye font-weight-bold"></i> 
+                                          </a>
+                                       </td>
+                                    </tr>
+                                  </tbody>
+                               </table>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+
+  <!-- Add Occasions modal -->
+  <ng-template #occasionsModal let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add Occasions</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+   <div class="modal-body">
+    
+       <form  [formGroup] = "addOcassion">
+         <div class="row">
+          <div class="col-md-4 form-group">
+             <label for=""> Occasion Name</label><br>
+             <input type="text" id = "occasionName" class= "form-control" formControlName = "ocassionName">
+          </div>
+          
+          <div class="col-md-4 form-group mb-3">
+            <label for="credit1">Date</label>
+            <div class="input-group">
+                <input class="form-control" [owlDateTime]="date" placeholder="Date Time" formControlName="date" [owlDateTimeTrigger]="date">
+                <div class="input-group-append datePicker">
+                   <button class="btn btn-secondary " [owlDateTimeTrigger]="date" type="button">
+                      <i class="icon-regular i-Calendar-4"></i>
+                   </button>
+                </div>
+                <owl-date-time #date [pickerType]="'calendar'"></owl-date-time>
+            </div>
+            <!-- <span class="error-block text-danger" *ngIf="dateError2">{{dateError2}}
+           </span> -->
+         </div>
+      </div>
+       </form>
+    
+   </div>
+   <div class="modal-footer p-2">
+      <button type="button"  class="btn btn-primary btn-rounded" (click)="onAddOcassionSubmit(resultModal)" [disabled]="!addOcassion.valid">Submit</button>
+     <button type="button" class="btn btn-outline-danger btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button>
+   </div>
+</ng-template>
+<ng-template #editoccasionsModal let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Edit Occasion</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+   <div class="modal-body">
+    
+       <form  [formGroup] = "editOcassion">
+         <div class="row">
+          <div class="col-md-4 form-group">
+             <label for=""> Occasion Name</label><br>
+             <input type="text" id = "occasionName" class= "form-control" formControlName = "ocassionName">
+          </div>
+          
+          <div class="col-md-4 form-group mb-3">
+            <label for="credit1">Date</label>
+            <div class="input-group">
+                <input class="form-control" [owlDateTime]="date" placeholder="Date Time" formControlName="date" [owlDateTimeTrigger]="date">
+                <div class="input-group-append datePicker">
+                   <button class="btn btn-secondary " [owlDateTimeTrigger]="date" type="button">
+                      <i class="icon-regular i-Calendar-4"></i>
+                   </button>
+                </div>
+                <owl-date-time #date [pickerType]="'calendar'"></owl-date-time>
+            </div>
+            <!-- <span class="error-block text-danger" *ngIf="dateError2">{{dateError2}}
+           </span> -->
+         </div>
+      </div>
+       </form>
+    
+   </div>
+   <div class="modal-footer p-2">
+      <button type="button"  class="btn btn-primary btn-rounded" (click)="submitEditOcassion(resultModal)" [disabled]="!editOcassion.valid">Submit</button>
+     <button type="button" class="btn btn-outline-danger btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button>
+   </div>
+</ng-template>
+<!-- result Modal -->
+<ng-template #resultModal let-modal>
+   <div class="modal-header border-0 pt-2 pb-2 pr-2">
+
+   </div>
+   <div class="modal-body pt-0" *ngIf="addSuccess">
+     <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+     </p>
+   </div>
+   <div class="modal-body pt-0" *ngIf="addDanger">
+       <p class="text-error-message mb-0"><strong><span> Error! </span></strong> {{message}}
+       </p>
+     </div>
+   <div class="modal-footer p-2">
+      <!-- <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewMembers()">Next</button> -->
+    <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Close</button>
+   </div>
+</ng-template>

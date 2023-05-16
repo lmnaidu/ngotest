@@ -1,0 +1,652 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+     <!-- Pre Loader Strat  -->
+     <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb">
+       <h1 class="mr-2">Admin</h1>
+       <ul>
+          <li><a>Dashboard</a></li>
+          <li>Edit User</li>
+       </ul>
+    </div>
+    <div class="separator-breadcrumb border-top"></div>
+    <form id="editMemberPersonalDetails" [formGroup] = "editMemberPersonalDetails" *ngIf="editForm">
+    <ng-wizard [config]="config" (stepChanged)="stepChanged($event)" class="step-wizard">
+        <ng-wizard-step [title]="'Personal Details'" [description]="'Edit Personal details'">
+           
+            <div class="row mt-5" style="margin: auto;">
+                <div class="col-md-2 form-group mb-3">
+                    <label for=""> Salutation<span class="text-danger"> *</span> </label>
+                    <select class="form-control" id="" formControlName="salutation">
+                        <option value="" disabled selected>Select Salutation</option>           
+                        <option *ngFor="let salutation of salutationList" value="{{salutation.id}}">{{salutation.name}}</option>
+                    </select>
+                    <span class="error-block text-danger"
+                        *ngIf="editMemberPersonalDetails.get('salutation').errors && (editMemberPersonalDetails.get('salutation').touched || editMemberPersonalDetails.get('salutation').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('salutation').errors.required">
+                            {{errorMessageSalutationReq}}
+                        </span>
+    
+    
+                    </span>
+    
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for="">First Name<span class="text-danger"> *</span> </label>
+                    <input type="text" class="form-control" id="" formControlName="firstName"
+                        placeholder="Enter the First Name">
+                    <span class="error-block text-danger"
+                        *ngIf="editMemberPersonalDetails.get('firstName').errors && (editMemberPersonalDetails.get('firstName').touched || editMemberPersonalDetails.get('firstName').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('firstName').errors.required">
+                            {{ errorMessageFirstNameReq }}
+                        </span>
+                        <span *ngIf="editMemberPersonalDetails.get('firstName').errors.pattern">
+                            {{ errorMessageFirstNameInvalid }}
+                        </span>
+    
+                        <span
+                            *ngIf="editMemberPersonalDetails.get('firstName').errors.minlength || editMemberPersonalDetails.get('firstName').errors.maxlength">
+                            {{ errorMessageFirstNameMinMax}}
+    
+                        </span>
+    
+    
+                    </span>
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for="">Last Name<span class="text-danger"> *</span> </label>
+                    <input type="text" class="form-control" id="" formControlName="lastName"
+                        placeholder="Enter the Last Name">
+                    <span class="error-block text-danger"
+                        *ngIf="editMemberPersonalDetails.get('lastName').errors && (editMemberPersonalDetails.get('lastName').touched || editMemberPersonalDetails.get('lastName').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('lastName').errors.required">
+                            {{ errorMessagelastNameReq }}
+                        </span>
+                        <span *ngIf="editMemberPersonalDetails.get('lastName').errors.pattern">
+                            {{ errorMessagelastNameInvalid }}
+                        </span>
+    
+                        <span
+                            *ngIf="editMemberPersonalDetails.get('lastName').errors.minlength || editMemberPersonalDetails.get('lastName').errors.maxlength">
+                            {{ errorMessagelastNameMinMax}}
+    
+                        </span>
+    
+    
+                    </span>
+                </div>
+                <div class="col-md-2 form-group mb-3 ">
+                    <label for="">Gender<span class="text-danger"> *</span></label>
+                    <select class="form-control" id="" formControlName="gender">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="trans">Transgender</option>
+    
+                    </select>
+    
+                </div>
+                <div class="col-md-1 form-group mb-3 mt-4">
+                    <label class="pointer">
+                        <input type="checkbox" name="" formControlName="isPrivateChecked" value="1">
+                        <span class="ml-2">Private</span>
+    
+                    </label>
+    
+                </div>
+    
+                <div class="col-md-2 form-group mb-3">
+                    <label for="date">Birthday</label>
+                    <!-- <input type = "date" class="form-control" id="m_birthDay" placeholder="Date Time" formControlName = "m_birthDay" > -->
+    
+                    <div class="input-group">
+                        <input class="form-control" [owlDateTime]="updateBirthDay" placeholder="mm-dd-yyyy"
+                            formControlName="updateBirthDay" [owlDateTimeTrigger]="updateBirthDay">
+                        <div class="input-group-append datePicker">
+                            <button class="btn btn-secondary " [owlDateTimeTrigger]="updateBirthDay" type="button">
+                                <i class="icon-regular i-Calendar-4"></i>
+                            </button>
+                        </div>
+                        <owl-date-time #updateBirthDay [pickerType]="'calendar'"></owl-date-time>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for="">Company Name</label>
+                    <!-- <select class="form-control" id="" formControlName="companyName">
+                        <option value="" disabled selected>Select Company</option>
+    
+                        <option *ngFor="let companies of componiesList" value="{{companies.id}}">{{companies.name}}</option>
+                    </select> -->
+                    <input type="text" class="form-control" id="" formControlName="companyName"
+                    placeholder="Enter the company Name">
+                    <!-- <span class="error-block text-danger"
+                        *ngIf="editMemberPersonalDetails.get('companyName').errors && (editMemberPersonalDetails.get('companyName').touched || editMemberPersonalDetails.get('companyName').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('companyName').errors.required">
+                            {{errorMessageCompanyNameReq}}
+                        </span>
+    
+                    </span> -->
+    
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for="">Referred By<span class="text-danger"> *</span></label>
+                    <select class="form-control" id="" formControlName="referedBy">
+                        <option value="" disabled selected>Select Refered By</option>
+                        <option *ngFor="let referred of referredBy" value="{{referred.id}}">{{referred.name}}</option>
+    
+                    </select>
+                    <span class="error-block text-danger"
+                        *ngIf="editMemberPersonalDetails.get('referedBy').errors && (editMemberPersonalDetails.get('referedBy').touched || editMemberPersonalDetails.get('referedBy').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('referedBy').errors.required">
+                            {{errorMessageReferedByReq}}
+                        </span>
+                    </span>
+                </div>
+    
+                <div class="col-md-2 form-group mb-3 mt-4">
+                    <label class="pointer">
+                        <input type="checkbox" name="" formControlName="isDeceasedChecked" value="0">
+                        <span class="ml-2">Interested in volunteership</span>
+    
+                    </label>
+    
+                </div>
+                <div class="col-md-2 form-group mb-3 mt-4">
+                    <label class="pointer">
+                        <input type="checkbox" name="" formControlName="isDoNotContactChecked"
+                            value="0">
+                        <span class=" ml-2">Do Not Contact</span>
+    
+                    </label>
+    
+                </div>
+                <!-- <div class="col-md-3 form-group mb-3">
+                    <label for="">Password</label>
+                    <input type="text" class="form-control" id="" formControlName="password"
+                        placeholder="Enter the password" type="password">
+                </div> -->
+            </div>
+            <div class="row  mt-5" style="margin: auto;">
+                <div class="col-md-2 form-group mb-3">
+                    <label>Status<span class="text-danger">*</span></label>
+                   <select class="form-control" formControlName="status" value={{userDetails.status}} >
+                       <option value="1">Active</option>
+                       <option value="0">DeActive</option>
+                    </select>
+                    <div class="error-block text-danger"
+                    *ngIf="editMemberPersonalDetails.get('status').errors && (editMemberPersonalDetails.get('status').touched || editMemberPersonalDetails.get('status').dirty)">
+                        <span *ngIf="editMemberPersonalDetails.get('status').errors.required">Status is required.
+                        </span>
+                    </div> 
+                </div> 
+                <div class="col-md-3 form-group mb-3">
+                    <label for="role">Role<span class="text-danger">*</span></label>
+                
+                    <ng-multiselect-dropdown   [placeholder]="'Select Role'" [settings]="roleSettings"  [data]="rolesData" formControlName="role"></ng-multiselect-dropdown>
+                    <div class="error-block text-danger"
+                       *ngIf="editMemberPersonalDetails.get('role').errors && (editMemberPersonalDetails.get('role').touched || editMemberPersonalDetails.get('role').dirty)">
+                       <span *ngIf="editMemberPersonalDetails.get('role').errors.required">Role is required.
+                       </span>
+                   </div>
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for=""> Location of Interests </label>
+                    <ng-multiselect-dropdown  class="form-control-rounded" name="intrestLocations" formControlName="intrestLocations" [placeholder]=" 'Select the Location' " [settings]="chapterSettings"  [data]="branches"></ng-multiselect-dropdown>
+                 
+                </div>
+             
+                        
+              
+            </div>
+           
+            
+            <div class="row mt-5" style="margin: auto;">
+                <div class="col-md-6 form-group mb-3">
+                    <label for="">Description</label>
+                    <textarea class="form-control" rows="3" id="" placeholder="Enter the description"
+                        formControlName="description"></textarea>
+
+                </div>
+               
+                <div class="col-md-3 form-group mb-3">
+                    <label>Image </label>
+                    <input type="file" class="form-control form-control-rounded" formControlName="profileImage" id="selectImage" (change)="fileChangeEvent($event)" accept="image/png, image/jpeg, image/jpg" class="form-control mb-10">
+
+                </div>
+                <div *ngIf="userDetails.profileImage">
+                    <img src="{{userDetails.profileImage}}" id="userDropdown" alt="" data-toggle="dropdown"
+				        aria-haspopup="true" aria-expanded="false">	
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <image-cropper [imageChangedEvent]="imageChangedEvent" id="imageCropper" [maintainAspectRatio]="true" [aspectRatio]="1/1" [resizeToWidth]="128" format="png" outputType="both" autoCrop="true" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+                </div>
+            </div>
+    
+           
+            <div class="modal-footer">
+                <!-- [disabled]="!editMemberPersonalDetails.valid" -->
+                <button type="submit" class="btn btn-primary" [disabled]="!editMemberPersonalDetails.valid"
+                    (click)="EditMemberPersonalDetail(resultModal)" >Submit</button>
+                <button type="button" class="btn btn-outline-danger" (click)="cancel()">Cancel</button>
+            </div>
+    
+    
+        </ng-wizard-step>
+        <ng-wizard-step [title]="'Contact Information'" [description]="'Edit Contact Information'">
+            <div>
+                <form id="editMemberContactDetails" [formGroup] = "editMemberContactDetails">
+                <div class="row mt-5">
+    
+                    <div class="col-md-2 form-group mb-3">
+                        <label for=""> Preferred Phone<span class="text-danger"> *</span></label>
+                        <select class="form-control" id="" formControlName="preferredPhone">
+                            <option value="" disabled selected>Select preferred Phone</option>
+                            <option *ngFor="let phoneTypes of preferredPhone" value="{{phoneTypes.id}}">{{phoneTypes.name}}
+                            </option>
+                        </select>
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('preferredPhone').errors && (editMemberContactDetails.get('preferredPhone').touched || editMemberContactDetails.get('preferredPhone').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('preferredPhone').errors.required">
+                                {{errorMessagePreferredPhNoReq}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-2 form-group mb-3">
+                        <label for="">Phone<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder="XXX-XXXXXXXXXX" pattern="^([+]?\d{1,3}[-])?\d{10}$">
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('phoneNumber').errors && (editMemberContactDetails.get('phoneNumber').touched || editMemberContactDetails.get('phoneNumber').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('phoneNumber').errors.required">
+                                {{errorMessagePhnoReq}}
+                            </span>
+                            <span *ngIf="editMemberContactDetails.get('phoneNumber').errors.pattern">
+                                {{errorMessagePhnoInvalid}}
+                            </span>
+                        
+                        </span>
+                    </div>
+    
+    
+                    <div class="col-md-2 form-group mb-3">
+                        <label for=""> Preferred Email<span class="text-danger"> *</span></label>
+                        <select class="form-control" id="preferredEmail" formControlName="preferredEmail">
+                            <option value="" disabled selected>Select preferred Email</option>
+                            <option *ngFor="let emailTypes of preferredEmail" value="{{emailTypes.id}}">{{emailTypes.name}}
+                            </option>
+                        </select>
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('preferredEmail').errors && (editMemberContactDetails.get('preferredEmail').touched || editMemberContactDetails.get('preferredEmail').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('preferredEmail').errors.required">
+                                {{errorMessagePreferredEmailReq}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Email<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="email" formControlName="email" pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})" placeholder="Enter Email">
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('email').errors && (editMemberContactDetails.get('email').touched || editMemberContactDetails.get('email').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('email').errors.required">
+                                {{errorMessageEmailReq}}
+                            </span>
+                            <span *ngIf="editMemberContactDetails.get('email').errors.pattern">
+                                {{errorMessageEmailInvalid}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <h4>
+                    Address Information
+                </h4>
+                <div class="row mt-4" formGroupName="addressGroup">
+    
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Address<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="" formControlName="address" placeholder="Enter Address">
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('address').errors && (editMemberContactDetails.get('addressGroup').get('address').touched || editMemberContactDetails.get('addressGroup').get('address').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('address').errors.required">
+                                {{errorMessageAddressReq}}
+                            </span>
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('address').errors.pattern">
+                                {{errorMessageAddressInvalid}}
+                            </span>
+                            <span
+                                *ngIf="editMemberContactDetails.get('addressGroup').get('address').errors.minlength || editMemberContactDetails.get ('addressGroup').get('address').errors.maxlength">
+                                {{ errorMessageAddressMinMax}}
+                        
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Street<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="" formControlName="street" placeholder="Enter Street">
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('street').errors && (editMemberContactDetails.get('addressGroup').get('street').touched || editMemberContactDetails.get('addressGroup').get('street').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('street').errors.required">
+                                {{errorMessageStreetReq}}
+                            </span>
+                        </span>
+                    </div>
+                   
+                  
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Country <span class="text-danger"> *</span></label>
+                        <!-- <input type="text" class="form-control" id="" formControlName="country" placeholder="Enter country"> -->
+                        <select class="form-control"  formControlName="country" (change)="getState($event)" >
+                            <option value="" disabled selected>Select Country</option>
+                            <option *ngFor="let country of allCuntriesData" value="{{country.id}}">{{country.name}}
+                            </option>
+                        </select>
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('country').errors && (editMemberContactDetails.get('addressGroup').get('country').touched || editMemberContactDetails.get('addressGroup').get('country').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('country').errors.required">
+                                {{errorMessageCountryReq}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">State<span class="text-danger"> *</span></label>
+                        <!-- <input type="text" class="form-control" id="" formControlName="state" placeholder="Enter State"> -->
+                        <select class="form-control"  formControlName="state" (change)="getCitys($event)" >
+                            <option value="" disabled selected>Select State</option>
+                            <option *ngFor="let state of states" value="{{state.id}}">{{state.name}}
+                            </option>
+                        </select>
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('state').errors && (editMemberContactDetails.get('addressGroup').get('state').touched || editMemberContactDetails.get('addressGroup').get('state').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('state').errors.required">
+                                {{errorMessageStateReq}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">City<span class="text-danger"> *</span></label>
+                        <!-- <input type="text" class="form-control" id="" formControlName="city" placeholder="Enter City"> -->
+                        <select class="form-control"  formControlName="city" (change)="changeZip()" >
+                            <option value="" disabled selected>Select City</option>
+                            <option *ngFor="let city of cityes" value="{{city.id}}">{{city.name}}
+                            </option>
+                        </select>
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('city').errors && (editMemberContactDetails.get('addressGroup').get('city').touched || editMemberContactDetails.get('addressGroup').get('city').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('city').errors.required">
+                                {{errorMessageCityReq}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-2 form-group mb-3">
+                        <label for="">Zip code<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="" formControlName="zipCode" placeholder="Enter Zip Code">
+                        <span class="error-block text-danger"
+                            *ngIf="editMemberContactDetails.get('addressGroup').get('zipCode').errors && (editMemberContactDetails.get('addressGroup').get('zipCode').touched || editMemberContactDetails.get('addressGroup').get('zipCode').dirty)">
+                            <span *ngIf="editMemberContactDetails.get('addressGroup').get('zipCode').errors.required">
+                                {{errorMessageZipCodeReq}}
+                            </span>
+                            <span
+                                *ngIf="editMemberContactDetails.get('addressGroup').get('zipCode').errors.minlength || editMemberContactDetails.get('addressGroup').get('zipCode').errors.maxlength || editMemberContactDetails.get('addressGroup').get('zipCode').errors.pattern">
+                                {{errorMessageZipCodeInvalid}}
+                            </span>
+                        
+                        </span>
+                    </div>
+                </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" [disabled]="!editMemberContactDetails.valid" (click)="editMemberAddress(resultModal)">Submit</button>
+                    <button type="button" class="btn btn-outline-danger"
+                    (click)="cancel()">Cancel</button>
+                </div>
+            </div>
+
+        </ng-wizard-step>
+        <ng-wizard-step [title]="'Account Details'" [description]="'Edit Account Details'">
+            <form id="editMemberAccountData" [formGroup] = "editMemberAccountData">
+                <div class="row m-2">
+                    <h3>India Account Details</h3>
+                </div>
+    
+                <div class="row mt-3" >
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Account Number</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Account Number"
+                            formControlName="accountNumber">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('accountNumber').errors && (editMemberAccountData.get('accountNumber').touched || editMemberAccountData.get('accountNumber').dirty)">
+                                <span *ngIf="editMemberAccountData.get('accountNumber').errors.required">
+                                    {{errorMessageAccountNumberReq}}
+                                </span>
+                                <span
+                                    *ngIf="editMemberAccountData.get('accountNumber').errors.minlength || editMemberAccountData.get('accountNumber').errors.maxlength || editMemberAccountData.get('accountNumber').errors.pattern">
+                                    {{errorMessageAccountNumberInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for=""> Account holder's Name</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Account Holder's Name"
+                            formControlName="accountHolderName">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('accountHolderName').errors && (editMemberAccountData.touched || editMemberAccountData.get('accountHolderName').dirty)">
+                                <span *ngIf="editMemberAccountData.get('accountHolderName').errors.required">
+                                    {{errorMessageAccountNameReq}}
+                                </span>
+                                <span *ngIf=" editMemberAccountData.get('accountHolderName').errors.pattern">
+                                    {{errorMessageAccountNameInvalid}}
+                                </span>
+                                <span
+                                    *ngIf="editMemberAccountData.get('accountHolderName').errors.minlength || editMemberAccountData.get('accountHolderName').errors.maxlength">
+                                    {{errorMessageAccountNameInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label>IFSC Code</label>
+                        <input type="text" class="form-control" id="" (change)="getBankDetails($event)" placeholder="Enter IFSC Code Here"
+                            formControlName="ifscCode">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('ifscCode').errors && (editMemberAccountData.get('ifscCode').touched || editMemberAccountData.get('ifscCode').dirty)">
+                                <span *ngIf="editMemberAccountData.get('ifscCode').errors.required">
+                                    {{errorMessageIFSCcodeReq}}
+                                </span>
+                                <span *ngIf="editMemberAccountData.get('ifscCode').errors.pattern">
+                                    {{errorMessageIFSCcodeInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Bank Name</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Bank Name"
+                            formControlName="bankName">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('bankName').errors && (editMemberAccountData.get('bankName').touched || editMemberAccountData.get('bankName').dirty)">
+                                <span *ngIf="editMemberAccountData.get('bankName').errors.required">
+                                    {{errorMessageBankNameReq}}
+                                </span>
+                                <!-- <span *ngIf="editMemberAccountData.get('accountDetails').get('bankName').errors.pattern">
+                                    Enter valied name
+                                </span> -->
+                                <span *ngIf=" editMemberAccountData.get('bankName').errors.pattern">
+                                    {{errorMessageBankNameKInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Branch Name</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Branch Name"
+                            formControlName="branchName">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('branchName').errors && (editMemberAccountData.get('branchName').touched || editMemberAccountData.get('branchName').dirty)">
+                                <span *ngIf="editMemberAccountData.get('branchName').errors.required">
+                                    {{errorMessageBranchNameReq}}
+                                </span>
+                                <span *ngIf="editMemberAccountData.get('branchName').errors.pattern">
+                                    {{errorMessageBranchNameInvalid}}
+                                </span>
+
+                            </span>
+                            
+                    </div>
+                   
+
+                </div>
+            </form>
+            <form id="editMemberUSAccountData" [formGroup] = "editMemberUSAccountData">
+                <div class="row m-2">
+                    <h3>USA Account Details</h3>
+                </div>
+    
+                <div class="row mt-3" >
+                   
+                    <div class="col-md-3 form-group mb-3">
+                        <label for=""> Account holder's Name</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Account Holder's Name"
+                            formControlName="accountHolderName">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberUSAccountData.get('accountHolderName').errors && (editMemberUSAccountData.touched || editMemberUSAccountData.get('accountHolderName').dirty)">
+                                <span *ngIf="editMemberUSAccountData.get('accountHolderName').errors.required">
+                                    {{errorMessageAccountNameReq}}
+                                </span>
+                                <span *ngIf=" editMemberUSAccountData.get('accountHolderName').errors.pattern">
+                                    {{errorMessageAccountNameInvalid}}
+                                </span>
+                                <span
+                                    *ngIf="editMemberUSAccountData.get('accountHolderName').errors.minlength || editMemberUSAccountData.get('accountHolderName').errors.maxlength">
+                                    {{errorMessageAccountNameInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Account Number</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Account Number"
+                            formControlName="accountNumber">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberUSAccountData.get('accountNumber').errors && (editMemberUSAccountData.get('accountNumber').touched || editMemberUSAccountData.get('accountNumber').dirty)">
+                                <span *ngIf="editMemberUSAccountData.get('accountNumber').errors.required">
+                                    {{errorMessageAccountNumberReq}}
+                                </span>
+                                <span
+                                    *ngIf="editMemberUSAccountData.get('accountNumber').errors.minlength || editMemberUSAccountData.get('accountNumber').errors.maxlength || editMemberUSAccountData.get('accountNumber').errors.pattern">
+                                    {{errorMessageUSAAccountNumberInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label> Routing Number</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Routing Number"
+                            formControlName="routingNumber">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberUSAccountData.get('routingNumber').errors && (editMemberUSAccountData.get('routingNumber').touched || editMemberUSAccountData.get('routingNumber').dirty)">
+                                <span *ngIf="editMemberUSAccountData.get('routingNumber').errors.required">
+                                    Routing Number is required
+                                </span>
+                                <span *ngIf="editMemberUSAccountData.get('routingNumber').errors.pattern">
+                                    {{errorMessageUSARoutingNumberInvalid}}
+                                </span>
+
+                            </span>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Address</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Address"
+                            formControlName="address">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberUSAccountData.get('address').errors && (editMemberUSAccountData.get('address').touched || editMemberUSAccountData.get('address').dirty)">
+                                <span *ngIf="editMemberUSAccountData.get('address').errors.required">
+                                   Address is required
+                                </span>
+                                <!-- <span *ngIf="editMemberAccountData.get('accountDetails').get('bankName').errors.pattern">
+                                    Enter valied name
+                                </span> -->
+                                <!-- <span *ngIf=" editMemberAccountData.get('bankName').errors.pattern">
+                                    {{errorMessageBankNameKInvalid}}
+                                </span> -->
+
+                            </span>
+                    </div>
+                    <!-- <div class="col-md-3 form-group mb-3">
+                        <label for="">Branch Name</label>
+                        <input type="text" class="form-control" id="" placeholder="Enter Branch Name"
+                            formControlName="branchName">
+                            <span class="error-block text-danger"
+                                *ngIf="editMemberAccountData.get('branchName').errors && (editMemberAccountData.get('branchName').touched || editMemberAccountData.get('branchName').dirty)">
+                                <span *ngIf="editMemberAccountData.get('branchName').errors.required">
+                                    {{errorMessageBranchNameReq}}
+                                </span>
+                                <span *ngIf="editMemberAccountData.get('branchName').errors.pattern">
+                                    {{errorMessageBranchNameInvalid}}
+                                </span>
+
+                            </span>
+                            
+                    </div> -->
+                   
+
+                </div>
+               
+            </form>
+                <div class="modal-footer mt-5">
+                    <button type="submit" class="btn btn-primary" [disabled]="!editMemberAccountData.valid || !editMemberUSAccountData.valid" (click)="editMemberAccount(accountResult)">Submit</button>
+                    <button type="button" class="btn btn-outline-danger"
+                    (click)="cancel()">Cancel</button>
+                </div>
+        </ng-wizard-step>
+       <!-- Pre Loader Strat  -->
+   <div class='loadscreen' *ngIf="loading">
+
+    <div class="loader spinner-bubble spinner-bubble-primary">
+    </div>
+</div>
+<!-- Pre Loader end  -->
+    </ng-wizard>
+
+</form>
+</div>
+
+ 
+  <!-- result modal -->
+  <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button> -->
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+       <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewMembers()">Next</button>
+      <!-- <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+    </div>
+ </ng-template>
+
+ <!-- account details result modal starts-->
+ <ng-template #accountResult let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button> -->
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+ 
+     <a type="button"  class="btn btn-primary btn-rounded text-white" (click)="viewMembersList()">View </a> 
+    </div>
+ </ng-template>
+
+ <!-- account details result modal ends-->

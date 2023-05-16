@@ -1,0 +1,208 @@
+
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Digital Connect</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="col-md-12  mt-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    
+                    <div class="row">
+                        <div class="col">
+                          <div ngbDropdown class="d-inline-block">
+                            Digital Connect <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle> + Add</button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                              <button ngbDropdownItem class = "pointer">Social </button>
+                              <button ngbDropdownItem class = "pointer">Digital Payments</button>
+                             
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <ul ngbNav #nav="ngbNav" class="nav-pills">
+                    <li ngbNavItem>
+                        <a ngbNavLink>Social Links</a>
+                        <ng-template ngbNavContent>
+
+                                <div class="ml-5">
+     
+                                    <!-- <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Facebook</th>
+                                                    <th scope="col">Twitter</th>
+                                                    <th scope="col">Instagram</th>
+                    
+                                                    
+                    
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Rakesh Malladi</td>
+                                                    <td>Child Education</td>
+                                                    <td> Abhiram Mantri</td>
+                                                    <td> 01-05-2020</td>
+                                                    
+                    
+                                                    <td>
+                                                        <a href="edit_member_list.html" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                        
+                    
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Somauya batla</td>
+                                                    <td> Constructing a building for old age people</td>
+                                                    <td> Manoj Varma</td>
+                                                    <td> 25-05-2020</td>
+                                                   
+                    
+                                                    <td>
+                                                        <a href="#" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                        
+                    
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Kiran dhuvi</td>
+                                                    <td>Adopt a school in Khammam</td>
+                                                    <td> Akshay Rathod</td>
+                                                    <td> 15-02-2019</td>
+                                                    
+                    
+                    
+                                                    <td>
+                                                        <a href="#" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                       
+                    
+                                                    </td>
+                                                </tr>
+                    
+                                            </tbody>
+                                        </table>
+                                    </div> -->
+                    
+                                    <div class="table-responsive" style = "width: 50%;">
+                                        <table class="table border-1">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Id</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Email</td>
+                                                    <td>shyam@gmail.com</td>
+                                                   
+                                                
+                                                    <td>
+                                                        <a href="edit_member_list.html" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                        
+                    
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Facebook</td>
+                                                    
+                                                    <td> https://www.facebook.com/shyam@helpinghands</td>
+                                                    
+                                                   
+                    
+                                                    <td>
+                                                        <a href="#" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                        
+                    
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td> Instagram</td>
+                                                    
+                                                    <td> https://www.instagram.com/shyam@helpinghands121</td>
+                                                    
+                                                    
+                    
+                    
+                                                    <td>
+                                                        <a href="#" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                       
+                    
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">4</th>
+                                                    <td> Whatsapp</td>
+                                                   
+                                                    <td> 9988774455</td>
+                                                    
+                    
+                    
+                                                    <td>
+                                                        <a href="#" class="text-success mr-2">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        </a>
+                                                       
+                    
+                                                    </td>
+                                                </tr>
+                    
+                                            </tbody>
+                                        </table>
+                                    </div>
+                    
+                                </div>
+                           
+                        </ng-template>
+                    </li>
+                    <li ngbNavItem>
+                        <a ngbNavLink>Digital Payment Details</a>
+                        <ng-template ngbNavContent>
+                            <div class="div ml-5">
+                                
+                                No Payment Methods added.
+                                
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+            </div>
+            <div [ngbNavOutlet]="nav"></div>
+        </div>
+
+        
+    </div>
+</div>
+
+

@@ -1,0 +1,285 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+     <!-- Pre Loader Strat  -->
+     <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Generate Certificates</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>
+
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="card o-hidden mb-4">
+    
+                <!-- <div class="card-body"> -->
+
+                    <div class="row card-header">
+                        <div class="col-md-6">
+                        <div class="card-title mb-3">Certificates <button class="btn btn-primary"
+                                (click)="openCertificateModal(addCertificate)"> + Generate a new Certificate</button> </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            
+                            <input type="text" placeholder="Search User Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                        </div>
+
+                    </div>        
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">User Name</th>
+                                    <th scope="col">Event Name</th>
+                                    <th scope="col">Generated Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="availableRecords; else noData">
+                                <tr *ngFor="let certificate of certificateData.Certificates  | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                                    <th scope="row">{{certificate.index}}</th>
+                                    <td>{{certificate.name}}</td>
+                                    <td>{{certificate.eventId.note}}</td>
+                                    <td>{{certificate.generatedDate | date:'MM-dd-yyyy'}} </td>
+                                    <td>
+                                        <!-- <a  class="text-success mr-2">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a> -->
+                                        <a class="text-danger mr-2 pointer" (click)="openPreview(previewCertificate,certificate._id)" title="Preview">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </ng-container>
+                                <ng-template #noData> 
+                                    <tr>
+                                        <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                          No Records Found 
+                                        </td>
+                                    </tr>
+                                  </ng-template> 
+                            </tbody>
+                            <tfoot>
+                                <tr *ngIf="certificateData.Certificates.length > pageSize">
+                                    <td colspan="12">
+                                      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="certificateData.Certificates.length" [boundaryLinks]="true">
+                                      </ngb-pagination>
+                                    </td>
+                                </tr>
+                            
+                            </tfoot>
+                        </table>
+                    </div>
+    
+            </div>
+        </div>
+    
+    </div>
+    </div>
+    <ng-template #addCertificate let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Generate Certificate</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form  [formGroup] = "generateForm"  id="generateForm">
+                <div class="row">           
+                    <div class="col-md-4 form-group mb-3"> 
+                        <label for="exampleInputEmail1">User<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="userId" >
+                            <option value="" disabled selected>Select User</option>
+                            <option *ngFor="let user of allUsers.users" value="{{user._id}}">{{user.firstName}} {{user.lastName}}</option>
+                         </select>
+                     </div>
+                         
+                    <div class="col-md-4 form-group mb-5"> 
+                        <label for="exampleInputEmail1">Event<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="eventId">
+                            <option value="" disabled selected>Select Event</option>
+                            <option *ngFor="let event of allEvents" value="{{event._id}}">{{event.note}}</option>
+                         </select>
+                     </div>
+                    <div class="col-md-4 form-group mb-3"> 
+                        <label for="exampleInputEmail1">Generate Date<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" [owlDateTime]="startDate" placeholder="Start Date"  [owlDateTimeTrigger]="startDate" formControlName="generatedDate" [max]="todayDate">
+                            <div class="input-group-append datePicker">
+                                <button class="btn btn-secondary" [owlDateTimeTrigger]="startDate" type="button">
+                                    <i class="icon-regular i-Calendar-4"></i>
+                                </button>
+                            </div>
+                            <owl-date-time #startDate [pickerType]="'calendar'"></owl-date-time>
+                        
+                        </div>
+
+                    </div>
+                    <!-- <div class="col-md-3 form-group mb-3"> 
+                        <label for="exampleInputEmail1">Amount<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter the amount" >
+                     </div> -->
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" [disabled] = "!generateForm.valid" (click)="addgen(resultModal,resultErrorModal)" >Submit</button>
+          <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Close</button>
+        </div>
+             <!-- Pre Loader Strat  -->
+     <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+      </ng-template>
+      <ng-template #genCertificate let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Generated Certificate</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <div class="row">
+               <div class="col-sm-12">
+                   <img src="../../../assets/images/donation-cert.jpg">
+               </div>
+           </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success">Send</button>
+          <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+         
+        </div>
+      </ng-template>
+
+      <ng-template #previewCertificate let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Preview 
+               <!-- <input class="btn btn-primary" id="saveResume" type="button" value="Download" (click)="captureScreen()" /> -->
+            </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body overflow-y-scroll"> 
+            <div style="text-align:center; border: 10px solid #178509"  id="contentToConvert">
+                <div style=" text-align:center; border: 5px solid #ff9831">
+                    <div style="margin: 5%;">
+                        <img src="../../../assets/images/logo.png" width="100px">
+                        <h3 style="font-size:45px; font-weight:bold">Certificate of Participation</h3>
+                        <div>
+                            <span style="font-size:25px"></span>
+                        </div>
+                        <div>
+                            <span style="font-size:35px;">
+                                This is to certify that <b style=" font-family: Lucida Calligraphy;">
+                                    {{singleCertificateData.userId.firstName}} {{singleCertificateData.userId.lastName}}</b>, has actively participated in the  <strong>{{singleCertificateData.eventId.note}}</strong> event at<strong> {{singleCertificateData.eventId.location}}</strong> on <strong>{{singleCertificateData.eventId.date | date:'MM-dd-yyyy'}}</strong>.
+                            </span>
+                        </div>
+                        <!-- <div>
+                            <span style="font-size:25px">has actively participated in the
+                                <strong>{{singleCertificateData.eventId.note}}</strong> event at<strong> {{singleCertificateData.eventId.location}}</strong> on <strong>{{singleCertificateData.eventId.date | date:'MM-dd-yyyy'}}</strong>.</span>
+                        </div>       -->
+                        <div>
+                            <span style="font-size:25px">Generated Date - {{singleCertificateData.generatedDate | date:'MM-dd-yyyy'}}  </span>
+                        </div>
+                            <br/><br/><br/>
+                        <div class="pull-right">
+                            <h2>DNF Team</h2>
+                        </div> 
+                     
+                    </div>
+                 
+                     
+                </div>
+               
+            </div>
+        </div>
+        <!-- <div class="modal-body">
+            <div style="text-align:center; border: 10px solid #178509"  id="contentToConvert">
+                <div style="width:750px; height:550px; padding:20px; text-align:center; border: 5px solid #ff9831">
+                 <img src="../../../assets/images/logo.png" width="100px">
+                    <h3 style="font-size:45px; font-weight:bold">Certificate of Participation</h3>
+                    <div>
+                        <span style="font-size:25px"> </span>
+                    </div>
+                    <div>
+                        <span style="font-size:35px; ">
+                            This is to certify that<b style="font-family: Lucida Calligraphy;">
+                                {{singleCertificateData.userId.firstName}} {{singleCertificateData.userId.lastName}}</b>, has actively participated in the
+                            <strong>{{singleCertificateData.eventId.note}}</strong> event at<strong> {{singleCertificateData.eventId.location}}</strong> on <strong>{{singleCertificateData.eventId.date | date:'MM-dd-yyyy'}}</strong>. </span>
+                    </div>
+                    <div>
+                        <span style="font-size:25px"></span>
+                    </div>
+                    <div>
+                        <span style="font-size:25px">Generated Date - {{singleCertificateData.generatedDate | date:'MM-dd-yyyy'}}  </span>
+                    </div>
+                        <br/><br/><br/>
+                    <div class="pull-right">
+                        <h2>DNF Team</h2>
+                    </div> 
+                     
+                     
+                </div>
+               
+            </div>
+        </div> -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="sendMail(singleCertificateData,resultModal)">Send Email</button>
+          <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+         
+        </div>
+      </ng-template>
+
+
+       <!-- result modal -->
+   <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+     
+      <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+ </ng-template>
+ <!-- result modal end -->
+
+     <!-- result error modal -->
+<ng-template #resultErrorModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+       
+        <p  class="text-error-message mb-0"><strong><span> Error! </span></strong> {{error}}
+        </p>
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+    <!-- result error  modal end -->

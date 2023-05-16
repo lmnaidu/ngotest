@@ -1,0 +1,385 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0" > 
+     <!-- Pre Loader Strat  -->
+     <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Project Proposals</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div> 
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-12">
+           <div class="card o-hidden mb-4">
+            <div class="row card-header">
+                <div class="col-md-6">
+                <div class="card-title mb-3">Project Proposals </div>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    
+                    <input type="text" placeholder="Search Project " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                </div>
+
+            </div> 
+                 <!-- <div class="card-title mb-3">Project Proposals</div> -->
+
+                 <div class="row">
+                    <div class="col-md-12">
+                       <div class="text-left">
+                          <div class="card-body">
+                             <div class="table-responsive">
+                                <table class="table">
+                                   <thead>
+                                      <tr>
+                                         <th scope="col">S.No</th>
+                                         <th scope="col">Project Name</th>
+                                         <th scope="col">Project Type</th>
+                                         <th scope="col">Proposer Name</th>
+                                         <th scope="col">Goal</th>
+                                         <th scope="col">Location</th>
+                                         <th scope="col">Action</th>
+                                      </tr>
+                                   </thead>
+                                   <tbody>
+                                    <ng-container *ngIf="availableRecords; else noData">
+                                      <tr *ngFor="let projects of allProposedProjects | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                         <th scope="row">{{projects.index}}</th>
+                                         <td>{{projects.projectName}}</td>
+                                            <td><span class="badge badge-success" *ngIf="projects.projectType=='1'">Educational</span>
+                                                <span class="badge badge-success" *ngIf="projects.projectType=='2'">Health</span>
+                                                <span class="badge badge-success" *ngIf="projects.projectType=='3'">Social</span>
+                                            </td>
+                                         <td>
+                                            {{projects.proposedUserName}}
+                                          </td>
+                                         <td>
+                                            &#8377;{{projects.projectGoal}}
+                                         </td>
+                                         <td>{{projects.projectLocation}}</td>
+                                         <td>
+                                            <a  class="text-danger mr-2" title="View Project Proposal" (click)="openViewModal(viewModal,projects.projectName,projects.projectType,projects.proposedUserName,projects.projectGoal,projects.projectLocation,projects.dateAdded,projects.projectDescription,projects.projectStage,projects._id)">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                            </a>
+                                         </td>
+                                      </tr>
+                                      </ng-container>
+                                      <ng-template #noData> 
+                                        <tr>
+                                            <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                              No Records Found 
+                                            </td>
+                                        </tr>
+                                      </ng-template>
+                                   </tbody>
+                                </table>
+                                <div *ngIf="allProposedProjectsLength > pageSize ">
+                                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="allProposedProjectsLength" [boundaryLinks]="true">
+                                    </ngb-pagination>
+                                 </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+           </div>
+        </div>
+     </div>
+
+</div>
+<!-- <div class="container min-height">
+    <div class="breadcrumb">
+        <h1 class="mr-2">Member</h1>
+        <ul>
+            <li><a>Dashboard</a></li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="separator-breadcrumb border-top"></div>
+    <div class="row">
+        <div class="col-md-12">
+           <div class="card mb-4">
+              <div class="card-body">
+                 <div class="card-title mb-3">Requests for a Project Approval<button  class="btn btn-sm btn-primary ml-2" (click)="openModal(addRequestProjectProposalForm)">+ Add</button></div>
+                 <div class="row">
+                    <div class="col-md-12">
+                       <div class="text-left">
+                          <div class="card-body">
+                             <div class="table-responsive">
+                                <table class="table">
+                                   <thead>
+                                      <tr>
+                                         <th scope="col">S.No</th>
+                                         <th scope="col">Project name</th>
+                                         <th scope="col">Project Type</th>
+                                         <th scope="col">Goal</th>
+                                         <th scope="col">Location</th>
+                                         <th scope="col">Action</th>
+                                      </tr>
+                                   </thead>
+                                   <tbody>
+                                      <tr *ngFor="let projects of requestProposalsList ; let i=index">
+                                         <th scope="row">{{i+1}}</th>
+                                         <td>{{projects.projectName}}</td>
+                                         <td>
+                                           {{projects.projectType}}
+                                         </td>
+                                         <td>
+                                            ${{projects.goal}}
+                                         </td>
+                                         <td>{{projects.location}}</td>
+
+                                       
+                                         <td>
+                                            <a class="text-success mr-2" title="Edit Project Proposal">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                            </a>
+                                            <a  class="text-danger mr-2" title="View Project Proposal">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                            </a>
+                                           
+                                         </td>
+                                      </tr>
+                                   </tbody>
+                                </table>
+                            
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+
+</div> -->
+
+<ng-template #addRequestProjectProposalForm let-modal>
+    <div class="modal-content overflow-y-scroll">
+        <div class="modal-header">
+            <div class="row align-items-center">
+                <div class=" ml-2">
+                    <a href="dashboard/home">
+                        <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                    </a>
+                </div>
+                <div class="ml-2">
+                    <h4 class="modal-title" id="modal-basic-title ">Add Request for Project Approval</h4>
+                </div>
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body ">
+            <div class="row">
+                <div class="col-md-12">
+            
+                    <form [formGroup]="addProjectRequest">
+                        <div class="row" style="margin: auto;">
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="exampleInputEmail1">Project Name<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" placeholder="Enter project name"
+                                    formControlName="projectName">
+                                    <div class="error-block text-danger"
+                                        *ngIf="addProjectRequest.get('projectName').errors && (addProjectRequest.get('projectName').touched || addProjectRequest.get('projectName').dirty)">
+                                        <span *ngIf="addProjectRequest.get('projectName').errors.required">
+                                            {{errorMessageProjectNameReq}}
+                                        </span>
+                                        <span *ngIf="addProjectRequest.get('projectName').errors && addProjectRequest.get('projectName').errors.pattern">
+                                            {{errorMessageProjectNameInvalid}}
+                                        </span>
+                                        <span
+                                            *ngIf="addProjectRequest.get('projectName').errors && (addProjectRequest.get('projectName').errors.maxlength || addProjectRequest.get('projectName').errors.minlength)">
+                                            {{errorMessageProjectNameMinMax}}
+                                        </span>
+                                    </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="picker1">Project Type<span class="text-danger"> *</span></label>
+                                <select class="form-control" formControlName="projectType">
+                                    <option value="" disabled selected>Select Project Type</option>
+                                    <option *ngFor="let projectType of projectTypes" value="{{projectType.id}}">{{projectType.name}}
+                                    </option>
+                                </select>
+                                <div class="error-block text-danger"
+                                    *ngIf="addProjectRequest.get('projectType').errors && (addProjectRequest.get('projectType').touched || addProjectRequest.get('projectType').dirty)">
+                                    <span *ngIf="addProjectRequest.get('projectType').errors && addProjectRequest.get('projectType').errors.required">
+                                        {{errorMessageProjectTypeReq}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="goal">Goal( &#8377;)<span class="text-danger"> *</span></label>
+                                <input class="form-control" type = "number" id="goal" placeholder="Enter project Goal" formControlName="goal">
+                                <div class="error-block text-danger"
+                                    *ngIf="addProjectRequest.get('goal').errors && (addProjectRequest.get('goal').touched || addProjectRequest.get('goal').dirty)">
+                                    <span *ngIf="addProjectRequest.get('goal').errors && addProjectRequest.get('goal').errors.required">
+                                        {{errorMessageGoalReq}}
+                                    </span>
+                                </div>
+            
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="location">Location<span class="text-danger"> *</span></label>
+                                <input class="form-control" placeholder="Enter Location" formControlName="location">
+                                <div class="error-block text-danger"
+                                    *ngIf="addProjectRequest.get('location').errors && (addProjectRequest.get('location').touched || addProjectRequest.get('location').dirty)">
+                                    <span *ngIf="addProjectRequest.get('location').errors && addProjectRequest.get('location').errors.required">
+                                        {{errorMessageLocationReq}}
+                                    </span>
+                                </div>
+            
+                            </div>
+            
+            
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="credit1">Description<span class="text-danger"> *</span></label>
+                                <textarea class="form-control" placeholder="Enter description"
+                                    formControlName="description"></textarea>
+                                    <div class="error-block text-danger"
+                                        *ngIf="addProjectRequest.get('description').errors && (addProjectRequest.get('description').touched || addProjectRequest.get('description').dirty)">
+                                        <span *ngIf="addProjectRequest.get('description').errors && addProjectRequest.get('description').errors.required">
+                                            {{errorMessageDescriptionReq}}
+                                        </span>
+                                    </div>
+                            </div>
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="credit1">Details</label>
+                                <textarea class="form-control" placeholder="Enter Details" formControlName="details"></textarea>
+                            </div>
+            
+            
+                           
+                        </div>
+            
+                     
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type = "submit" [disabled] = "!addProjectRequest.valid"  (click)="submitProjectProposal(resultModal)">Submit</button>
+            <button type="button" class="btn btn-outline-danger"
+                (click)="modal.dismiss('Cross click')">Cancel</button>
+        </div>
+
+
+        <div class="container">
+            <div class="flex-grow-1"></div>
+            <div class="app-footer">
+
+                <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
+
+                    <span class="flex-grow-1"></span>
+                    <div class="d-flex align-items-center">
+                        <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                        <div>
+                            <p class="m-0">&copy; 2020 DNF</p>
+                            <p class="m-0">All rights reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</ng-template>
+
+<ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button> -->
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+      </p>
+    </div>
+    <div class="modal-footer p-2">
+       <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewProposals()">View Requests</button>
+      <!-- <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+    </div>
+ </ng-template>
+ <ng-template #viewModal let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">{{projectDetails.projectName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body"> 
+        <div class="row">
+           <div class="col-md-6">
+             <strong>Proposed by :</strong><span> {{projectDetails.proposedUserName}}</span>
+           </div>
+           <div class="col-md-6">
+             <strong>Proposed On : </strong><span>{{projectDetails.dateAdded |  date:'MM-dd-yyy'}}</span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Project Type : </strong>
+                <span class="badge badge-success" *ngIf="projectDetails.projectType=='1'">Educational</span>
+              <span class="badge badge-success" *ngIf="projectDetails.projectType=='2'">Health</span>
+              <span class="badge badge-success" *ngIf="projectDetails.projectType=='3'">Social</span>
+            </div>
+            <div class="col-md-6">
+              <strong>Goal :</strong><span> &#8377;{{projectDetails.projectGoal}}</span>
+            </div>
+         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <strong>Description : </strong>
+            <span>{{projectDetails.projectDescription}}</span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+              <strong>Action: </strong>
+              <select class="form-control" name="projectAction" id="projectAction" [(ngModel)]="projectData.projectAction" #projectAction="ngModel" *ngIf="projectData.projectAction!='2'">
+                <option value="" disabled selected>Select the Action</option>
+                <option *ngFor="let actionType of actionTypes" value="{{actionType.id}}">{{actionType.name}}</option>
+             </select>
+             <span  *ngIf="projectData.projectAction=='2'">Accepted</span>
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col-md-12 text-center"  *ngIf="projectData.projectAction!='2'">
+           <button class="btn btn-primary"
+           (click)="updateStage(resultModal)" >Submit</button>
+        </div>
+     </div>
+ </ng-template>
+ <ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+ 
+    <div class="modal-body pt-0" *ngIf="addSuccess">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong>{{message}}
+      </p>
+    </div>
+    <div class="modal-body pt-0" *ngIf="addDanger">
+       <p class="text-error-message mb-0"><strong><span> Error! </span></strong>{{message}}
+       </p>
+     </div>
+    <div class="modal-footer p-2">
+       <button type="button" ngbAutofocus class="btn-sm btn btn-primary btn-rounded" (click)="viewProposedProjects()" >View Project Proposals</button>
+      <!-- <button type="button" *ngIf="showClode" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Cancel</button> -->
+    </div>
+ </ng-template>

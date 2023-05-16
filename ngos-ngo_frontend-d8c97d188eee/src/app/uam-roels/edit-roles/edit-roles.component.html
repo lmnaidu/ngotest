@@ -1,0 +1,152 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' *ngIf="loading">
+
+      <div class="loader spinner-bubble spinner-bubble-primary">
+      </div>
+  </div>
+  <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li>  <a>Edit User Role</a>  </li>
+            <li><a routerLink = "/uam-roles/rolesList" class = "underlineOnHover" title = "Go To Dashboard">Users Roles</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div> 
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+
+    <form [formGroup] = "userEditRoleForm"  id="userEditRoleForm">
+        <div class="row">           
+            <div class="col-md-6 form-group mb-3">
+                <div  class="col-md-4">
+                    <label>Role Name<span class="text-danger">*</span></label>
+                </div> 
+                <div class="col-md-8">
+                      <input type="text" value="{{singleRoleData.role}}" class=" form-control" placeholder="Enter role name"  formControlName="roleName">
+                      <div class="error-block text-danger"  *ngIf="userEditRoleForm.get('roleName').errors && (userEditRoleForm.get('roleName').touched || userEditRoleForm.get('roleName').dirty)">
+                        <span *ngIf="userEditRoleForm.get('roleName').errors.pattern">
+                            Only numbers are accepted
+                         </span>
+                      </div>
+                      
+                </div>      
+             </div>
+             <div class="col-md-6 form-group mb-3">
+                <div  class="col-md-4">
+                    <label>Description <span class="text-danger">*</span></label>
+                </div> 
+                <div class="col-md-8">
+                      <textarea type="text" rows="4" value="{{singleRoleData.description}}" class=" form-control" placeholder="Enter role description" formControlName="description"></textarea>
+                      <div class="error-block text-danger"
+                            *ngIf="userEditRoleForm.get('description').errors && (userEditRoleForm.get('description').touched || userEditRoleForm.get('description').dirty)">
+                            <span *ngIf="userEditRoleForm.get('description').errors.required">Description is required.
+                            </span>
+                        </div> 
+                </div>      
+             </div>            
+        </div>
+        <div class="row card roleCard">
+            <h4 class="card-header">Role Permissions</h4>
+            <div class="card-body">
+                <div class="row card rolesubCard" *ngFor="let singleRoleData of permissiosData ; let y=index">
+                    <h4 class="card-header">{{singleRoleData.permissionDetails.permissionsName}}</h4>
+                    <div style="height: 80px;">
+                        <div class=" row card-body">
+                            <div class="col-md-3 form-group" >
+                                 <label class="checkbox checkbox-primary">
+                                    <input type="checkbox" value="0" [checked]="singleRoleData.permissionStatus.none" (click)="CheckboxReadOnly($event)"
+                                    (change)="checkPermission($event,y,singleRoleData.permissionDetails._id)" name="none"> <span>No Permission</span>
+                                    <span class="checkmark"></span>
+                                 </label>
+                            </div>
+                            <div class="col-md-3 form-group" >
+                                <label class="checkbox checkbox-primary">
+                                    <input type="checkbox" value="1" [checked]="singleRoleData.permissionStatus.read" (click)="CheckboxReadOnly($event)" (change)="checkPermission($event,y,singleRoleData.permissionDetails._id)"  name="read"> <span>Read</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col-md-3 form-group" >
+                                <label class="checkbox checkbox-primary">
+                                    <input type="checkbox" value="3" [checked]="singleRoleData.permissionStatus.write" (click)="CheckboxReadOnly($event)" (change)="checkPermission($event,y,singleRoleData.permissionDetails._id)"  name="write"> <span>Write</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col-md-3 form-group" >
+                                <label class="checkbox checkbox-primary">
+                                    <input type="checkbox" value="7" [checked]="singleRoleData.permissionStatus.update" (click)="CheckboxReadOnly($event)" (change)="checkPermission($event,y,singleRoleData.permissionDetails._id)"  name="update"> <span>All</span>
+
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div> 
+                        </div>
+                    </div>              
+                </div>             
+            </div>
+        </div>
+        <!-- <div class="row card roleCard">
+            <h4 class="card-header">Role Permissions</h4>
+            <div class="card-body">
+                <div class="row card rolesubCard" *ngFor="let singleRoleData of singleRoleData.finalResult">
+                    <h4 class="card-header">{{singleRoleData.permissionDetails.permissionsName}}</h4>
+                    <div  formArrayName="permissions" *ngFor="let item of userEditRoleForm.get('permissions')['controls']; let i = index;" style="height: 80px;">
+                        <div class=" row card-body" [formGroupName]="i">
+                            <div class="col-md-3 form-group"  *ngFor="let status of permissionstatus">
+
+                                <span *ngIf="status.statusValue === singleRoleData.permissionValue">{{status.statusValue}} {{singleRoleData.permissionValue}}</span>
+                                 <input type="radio" id="{{singleRoleData.permissionDetails._id}}_{{status.status}}" value="{{singleRoleData.permissionDetails._id}}_{{status.statusValue}}" [checked]="status.statusValue === singleRoleData.permissionValue"
+                                 (change)="checkPermission(singleRoleData.permissionDetails._id,status.statusValue)"  formControlName="permissionsValue" />
+                                 <p class="text-muted mb-0 text-12"  >{{status.status}}</p>
+                               
+                            </div> 
+                        </div>
+                    </div>
+                  
+                </div>             
+            </div>
+        </div>  -->
+  <!-- [checked]="[status.statusValue === singleRoleData.permissionValue]" -->
+        <div class=" row p-2"  style="position: fixed;bottom: 0px;width: 100%;background-color: #f2f4f8;">     
+            <button type="button" class="btn btn-light m-2"  (click)="cancel()">Cancel</button> 
+            
+            <button type="button" class="btn btn-success m-2"   (click)="updateUserroles(resultModal,resultErrorModal)" >Update</button>
+            <!-- [disabled]="!userEditRoleForm.valid" -->
+        </div>     
+    </form>
+</div>
+   <!-- result error modal -->
+   <ng-template #resultErrorModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+       
+        <p  class="text-error-message mb-0"><strong><span> Error! </span></strong> {{error}}
+        </p>
+    </div>
+    <div class="modal-footer p-2">
+        
+        <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+    </div>
+    </ng-template>
+
+<!-- result Model -->
+    <ng-template #resultModal let-modal>
+        <div class="modal-header border-0 pt-2 pb-2 pr-2">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body pt-0">
+            <p  class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+            </p>
+        
+        </div>
+        <div class="modal-footer p-2">
+            
+            <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('Cross click')">close</button> 
+        </div>
+        </ng-template>
+        <!-- result modal end -->

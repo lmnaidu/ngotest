@@ -1,0 +1,57 @@
+  
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+  }
+  
+  .cardData:hover .overlay {
+    opacity: 1;
+  }
+  
+  .text {
+    color: rgba(218, 24, 24, 0.562);
+    font-size: 20px;
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+
+  :host ::ng-deep .ui-button {
+    margin: .5em .5em .5em 0;
+    width: 140px;
+}
+@media screen and (max-width: 40em) {
+    :host ::ng-deep .ui-dialog {
+        width: 75vw !important;
+    }
+}
+
+.textSpace {
+  text-indent: 4%;
+}
+
+.previewtext {
+  font-size: 11px;
+}
+
+.ParticipationHeight {
+  height: 210px;
+}
+.DonationHeight {
+  height: 380px;
+}
+
+
+

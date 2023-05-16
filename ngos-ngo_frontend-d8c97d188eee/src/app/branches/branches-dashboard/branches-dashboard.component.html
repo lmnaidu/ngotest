@@ -1,0 +1,608 @@
+<div class="main-content-wrap sidenav-open d-flex flex-column pt-0">
+         <!-- Pre Loader Strat  -->
+         <div class='loadscreen' *ngIf="loading">
+
+          <div class="loader spinner-bubble spinner-bubble-primary">
+          </div>
+      </div>
+      <!-- Pre Loader end  -->
+    <div class="breadcrumb justify-content-end">
+        <ul>
+            <li><a> Chapters</a></li>
+           <li><a routerLink = "/dashboard/home" class = "underlineOnHover" title = "Go To Dashboard">Dashboard</a></li>
+        
+        </ul>
+     </div>
+    <!-- <div class="separator-breadcrumb border-top"></div> -->
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="card o-hidden mb-4">
+                <!-- <div class="card-body"> -->
+                    <div class="row card-header">
+                        <div class="col-md-6">
+                        <div class="card-title mb-3">Chapters List <button  *ngIf="userPermissions.write" class="btn btn-primary"
+                                (click)="openAddChapterModal(addChapters)"> + Add</button> </div>
+                        </div>        
+
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="Search Chapter Name " name="search" (keyup)="search($event.target.value)" class="search-filter form-control" >
+                            <!-- <input type="text" placeholder="Search CandidateName / JobName" name="search" (keyup)="search($event.target.value,'canName')" class="search-filter form-control" id="searchName"> -->
+                            </div>
+                    </div>
+                    <!-- <button
+                                class="btn btn-primary plusBtn" title="Add Member" (click)="openAddMemberModal(addMember)"> + </button> -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Chapter Name</th>
+                                    <th scope="col">Admin-USA</th>
+                                    <th scope="col">Admin-India</th>
+                                    <th scope="col">Added By</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="availableRecords; else noData">
+                                <tr *ngFor = "let list of chaptersList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;">
+                                    <th scope="row"> {{list.index}}</th>
+                                    <td>{{list.chapterName}}</td>
+                                    <td> {{list.adminUSA.firstName}} {{list.adminUSA.lastName}} </td>
+                                    <td>{{list.adminInda.firstName}} {{list.adminInda.lastName}} </td>
+                                    <td>{{list.addedBy.firstName}} {{list.addedBy.lastName}}</td>
+                                    <td>
+                                        <a (click) = "openEditChapterModal(list,list.id,editChapter)" class="text-success mr-2"  *ngIf="userPermissions.update">
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+                                        <a (click) = "openViewModal(list,viewModal)" class="text-danger mr-2" *ngIf="userPermissions.read">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
+                                        </a>
+    
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noData> 
+                                <tr>
+                                    <td colspan="12" class="text-error-message mb-0" style="text-align: center;">
+                                      No Records Found 
+                                    </td>
+                                </tr>
+                              </ng-template>    
+                            </tbody>
+                        </table>
+                        <div *ngIf = "chaptersLength > pageSize ">
+                            <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="chaptersLength" [boundaryLinks]="true">
+                            </ngb-pagination>
+                        </div>
+                    </div>
+    
+            </div>
+    
+        </div>
+    
+    </div>
+    </div>
+
+<!-- add Chapter modal -->
+<!-- <ng-template #addBranches let-modal>
+   
+        <div class="modal-header">
+            <div class="row align-items-center">
+                <div class="ml-2">
+                    <a href="dashboard/home">
+                        <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                    </a>
+                </div>
+                <div class= "ml-2">
+                    <h4 class="modal-title" id="modal-basic-title ">Add Chapters</h4>
+                </div>
+              
+               
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+        </div>
+    
+        <div class="moda-body mt-3 overflow-y-scroll">
+            <form>
+                <div class="row" style="margin: auto;">
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Chapter Name</label>
+                        <input type="text" class="form-control" id="abr_branchName" placeholder="Enter the Branch Name">
+                    </div>
+
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Goals</label>
+                        <input type="text" class="form-control" id="abr_goals" placeholder="Enter the Branch Goals">
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Admin</label>
+                        <input type="text" class="form-control" id="abr_admin" placeholder="Enter the Admin">
+                    </div>
+    
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Team</label>
+                        <input type="text" class="form-control" id="abr_team" placeholder="Enter the Team">
+                    </div>
+                </div>
+
+                <div class="row" style="margin: auto;">
+                   
+                    <div class="col-md-3 form-group mb-3">
+                        <label for=""> Partners </label>
+                        <select class="form-control" id="abr_partners">
+                            <option> Select Partners</option>
+                            <option>Chetana Foundation</option>
+                            <option>Rotary Club of Stambhadri</option>
+                            <option>Lines Club</option>
+                            <option>Rotary Club</option>
+                            <option>Local Donar</option>
+                            <option>School Contribution</option>
+                            <option>NRI Youth Club</option>
+                            <option>Others</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Locations</label>
+                        <input type="text" class="form-control" id="abr_locations" placeholder="Enter the Locations">
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="">Board Members</label>
+                        <input type="text" class="form-control" id="abr_boardMembers" placeholder="Enter the Board Members">
+                    </div>
+                    
+    
+                </div>
+
+
+                <div class="row" style="margin: auto;">
+                    <div class="col-md-8 form-group mb-3">
+                        <label for="">Brief Discription</label>
+                        <textarea type="text" class="form-control" id="abr_admin" placeholder="Enter the Brief Discription"></textarea>
+                    </div>
+                    <div class="col-md-8 form-group mb-3">
+                        <label for="">Details</label>
+                        <textarea type="text" class="form-control" id="abr_admin" placeholder="Enter the Details"></textarea>
+                    </div>
+                    
+
+                </div>
+                <div  class="modal-footer mt-3 justify-content-end d-flex" >
+                    <button type="button" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-outline-danger m-2" (click)="modal.dismiss('Cross click')">Cancel</button>
+                </div>
+            </form>
+           
+        </div>
+        <div class="">
+            <div class="flex-grow-1"></div>
+            <div class="app-footer">
+      
+                <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+      
+                    <span class="flex-grow-1"></span>
+                    <div class="d-flex align-items-center">
+                        <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                        <div>
+                            <p class="m-0">&copy; 2020 DNF</p>
+                            <p class="m-0">All rights reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     
+
+    
+    
+</ng-template> -->
+
+
+<!-- add Chapter New modal -->
+
+ <ng-template #addChapters let-modal>
+   
+        <div class="modal-header">
+            <div class="row align-items-center">
+                <div class="ml-2">
+                    <a href="dashboard/home">
+                        <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                    </a>
+                </div>
+                <div class= "ml-2">
+                    <h4 class="modal-title" id="modal-basic-title ">Add Chapter</h4>
+                </div>
+              
+               
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+        </div>
+    
+        <div class="moda-body mt-3 overflow-y-scroll">
+            <form [formGroup] = "addChapter"> 
+                <div class="row" style="margin: auto;">
+                    <div class="col-md-4 form-group mb-3">
+                        <label for="">Chapter Name<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="chapterName"  formControlName = "chapterName" placeholder="Enter the Chapter Name">
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('chapterName').errors && (addChapter.get('chapterName').touched || addChapter.get('chapterName').dirty)">
+                            <span *ngIf="addChapter.get('chapterName').errors.required">
+                                {{errorMessageChapterNameReq}}
+                            </span>
+                            <span *ngIf="addChapter.get('chapterName').errors.pattern">
+                                {{errorMessageChapterNameInvalid}}
+                            </span>
+                            <span *ngIf="addChapter.get('chapterName').errors.minlength || addChapter.get('chapterName').errors.maxlength">
+                                {{errorMessageChapterMinMax}}
+                            
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 form-group mb-3">
+                        <label for=""> Chapter Admin USA<span class="text-danger"> *</span></label>
+                        <select class="form-control" id="adminUSA" formControlName = "adminUSA">
+                           
+                            <option value="" disabled selected>Select Admin - USA</option>
+                            <option *ngFor="let x of chapterAdmins.chapterAdmins" value="{{x._id}}">{{x.firstName}} {{x.lastName}}</option>
+                        </select>
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('adminUSA').errors && (addChapter.get('adminUSA').touched || addChapter.get('adminUSA').dirty)">
+                            <span *ngIf="addChapter.get('adminUSA').errors.required">
+                                {{errorMessageChapterAdminUSA}}
+                            </span>
+
+                        </div>
+                    </div>
+    
+                    <div class="col-md-4 form-group mb-3">
+                        <label for=""> Chapter Admin India<span class="text-danger"> *</span> </label>
+                        <select class="form-control" id="adminInda" formControlName = "adminInda">
+                            <!-- <option value="" disabled selected> Select Admin - India</option>
+                            <option>Nageswara Rao</option>
+                            <option>Anita</option>
+                            <option>Raj Kumar</option> -->
+                            <option value="" disabled selected>Select Admin - India</option>
+                            <option *ngFor="let x of chapterAdmins.chapterAdmins" value="{{x._id}}">{{x.firstName}} {{x.lastName}}</option>
+
+                        </select>
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('adminInda').errors && (addChapter.get('adminInda').touched || addChapter.get('adminInda').dirty)">
+                            <span *ngIf="addChapter.get('adminInda').errors.required">
+                                {{errorMessageChapterAdminIndia}}
+                            </span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- <div class="row" style="margin: auto;">
+                    <div class="col-md-4 form-group mb-3">
+                        <label for="">Country<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="country" placeholder="Enter Country" formControlName = "country">
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('country').errors && (addChapter.get('country').touched || addChapter.get('country').dirty)">
+                            <span *ngIf="addChapter.get('country').errors.required">
+                                {{errorMessageCountryReq}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group mb-3">
+                        <label for="">State<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="state" placeholder="Enter State" formControlName = "state">
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('state').errors && (addChapter.get('state').touched || addChapter.get('state').dirty)">
+                            <span *ngIf="addChapter.get('state').errors.required">
+                                {{errorMessageStateReq}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group mb-3">
+                        <label for="">City<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="city" placeholder="Enter City" formControlName = "city">
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('city').errors && (addChapter.get('city').touched || addChapter.get('city').dirty)">
+                            <span *ngIf="addChapter.get('city').errors.required">
+                                {{errorMessageCityReq}}
+                            </span>
+
+                        </div>
+                    </div>
+                   
+                </div> -->
+
+                <div class="row" style="margin: auto;">
+                    <div class="col-md-12 form-group mb-3">
+                        <label for=""> Description<span class="text-danger"> *</span> </label>
+                        <textarea name="" id="" rows="4" class="form-control" formControlName="description"     minlength="3"></textarea>
+                        <div class="error-block text-danger"
+                            *ngIf="addChapter.get('description').errors && (addChapter.get('description').touched || addChapter.get('description').dirty)">
+                            <span *ngIf="addChapter.get('description').errors.required">
+                                {{errorMessageDescriptionReq}}
+                            </span>
+                            <span *ngIf="addChapter.get('description').errors.pattern">
+                                {{errorMessageDescriptionInvalid}}
+                
+                            </span>
+                            <span
+                                *ngIf="addChapter.get('description').errors.minlength">
+                                {{errorMessageDescriptionMinMax}}
+                
+                            </span>
+                
+                        </div>
+                
+                    </div>
+                </div>
+       <!-- Pre Loader Strat  -->
+       <div class='loadscreen' *ngIf="loading">
+
+        <div class="loader spinner-bubble spinner-bubble-primary">
+        </div>
+    </div>
+    <!-- Pre Loader end  -->
+                <div  class="modal-footer mt-3 justify-content-end d-flex" >
+                    <button type="button" class="btn btn-primary" [disabled] = "!addChapter.valid" (click) = "onAddChapterSubmit(resultModal)">Submit</button>
+                    <button type="button" class="btn btn-outline-danger m-2" (click)="modal.dismiss('Cross click')">Cancel</button>
+                </div>
+            </form>
+           
+        </div>
+        <div class="">
+            <div class="flex-grow-1"></div>
+            <div class="app-footer">
+      
+                <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+      
+                    <span class="flex-grow-1"></span>
+                    <div class="d-flex align-items-center">
+                        <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                        <div>
+                            <p class="m-0">&copy; 2020 DNF</p>
+                            <p class="m-0">All rights reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     
+
+    
+    
+</ng-template> 
+
+
+<!-- Edit Chapter New modal -->
+
+<ng-template #editChapter let-modal>
+   
+    <div class="modal-header">
+        <div class="row align-items-center">
+            <div class="ml-2">
+                <a href="dashboard/home">
+                    <img src="{{orgdataRes.orgInfo[0].logo}}" alt="" class= "modal-logo">
+                </a>
+            </div>
+            <div class= "ml-2">
+                <h4 class="modal-title" id="modal-basic-title ">Edit Chapter</h4>
+            </div>
+          
+           
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        
+    </div>
+
+    <div class="moda-body mt-3 overflow-y-scroll">
+        <form [formGroup] = "updateChapter"> 
+            <div class="row" style="margin: auto;">
+                <div class="col-md-4 form-group mb-3">
+                    <label for="">Chapter Name<span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control" id="chapterName"  formControlName = "chapterName" placeholder="Enter the Chapter Name">
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('chapterName').errors && (updateChapter.get('chapterName').touched || updateChapter.get('chapterName').dirty)">
+                        <span *ngIf="updateChapter.get('chapterName').errors.required">
+                            {{errorMessageChapterNameReq}}
+                        </span>
+                        <span *ngIf="updateChapter.get('chapterName').errors.pattern">
+                            {{errorMessageChapterNameInvalid}}
+                        </span>
+                        <span *ngIf="updateChapter.get('chapterName').errors.minlength || updateChapter.get('chapterName').errors.maxlength">
+                            {{errorMessageChapterMinMax}}
+                        
+                        </span>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group mb-3">
+                    <label for=""> Chapter Admin USA<span class="text-danger"> *</span></label>
+                    <select class="form-control" id="adminUSA" formControlName = "adminUSA">
+                        <!-- <option value="" disabled selected> Select Admin - USA</option>
+                        <option value="1">Babu</option>
+                        <option value="2">Raghav</option>
+                        <option value="3">Sunita</option> -->
+                        <option value="" disabled selected>Select Admin - India</option>
+                        <option *ngFor="let x of chapterAdmins.chapterAdmins" value="{{x._id}}">{{x.firstName}} {{x.lastName}}</option>
+                    </select>
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('adminUSA').errors && (updateChapter.get('adminUSA').touched || updateChapter.get('adminUSA').dirty)">
+                        <span *ngIf="updateChapter.get('adminUSA').errors.required">
+                            {{errorMessageChapterAdminUSA}}
+                        </span>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group mb-3">
+                    <label for=""> Chapter Admin India<span class="text-danger"> *</span> </label>
+                    <select class="form-control" id="adminInda" formControlName = "adminInda">
+                        <!-- <option value="" disabled selected> Select Admin - India</option>
+                        <option value="1">Nageswara Rao</option>
+                        <option value="2">Anita</option>
+                        <option value="3">Raj Kumar</option> -->
+                        <option value="" disabled selected>Select Admin - India</option>
+                        <option *ngFor="let x of chapterAdmins.chapterAdmins" value="{{x._id}}">{{x.firstName}} {{x.lastName}}</option>
+
+                    </select>
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('adminInda').errors && (updateChapter.get('adminInda').touched || updateChapter.get('adminInda').dirty)">
+                        <span *ngIf="updateChapter.get('adminInda').errors.required">
+                            {{errorMessageChapterAdminIndia}}
+                        </span>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- <div class="row" style="margin: auto;">
+                <div class="col-md-4 form-group mb-3">
+                    <label for="">Country<span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control" id="country" placeholder="Enter Country" formControlName = "country">
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('country').errors && (updateChapter.get('country').touched || updateChapter.get('country').dirty)">
+                        <span *ngIf="updateChapter.get('country').errors.required">
+                            {{errorMessageCountryReq}}
+                        </span>
+
+                    </div>
+                </div>
+                <div class="col-md-4 form-group mb-3">
+                    <label for="">State<span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter State" formControlName = "state">
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('state').errors && (updateChapter.get('state').touched || updateChapter.get('state').dirty)">
+                        <span *ngIf="updateChapter.get('state').errors.required">
+                            {{errorMessageStateReq}}
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group mb-3">
+                    <label for="">City<span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter City" formControlName = "city">
+                    <div class="error-block text-danger"
+                        *ngIf="updateChapter.get('city').errors && (updateChapter.get('city').touched || updateChapter.get('city').dirty)">
+                        <span *ngIf="updateChapter.get('city').errors.required">
+                            {{errorMessageCityReq}}
+                        </span>
+
+                    </div>
+                </div>
+
+               
+            </div> -->
+        <div class="row" style="margin: auto;">
+            <div class="col-md-12 form-group mb-3">
+                <label for=""> Description<span class="text-danger"> *</span> </label>
+                <textarea name="" id="" rows="4" class="form-control" formControlName="description"  minlength="3"></textarea>
+                <div class="error-block text-danger"
+                    *ngIf="updateChapter.get('description').errors && (updateChapter.get('description').touched || updateChapter.get('description').dirty)">
+                    <span *ngIf="updateChapter.get('description').errors.required">
+                        {{errorMessageDescriptionReq}}
+                    </span>
+                    <span *ngIf="updateChapter.get('description').errors.pattern">
+                        {{errorMessageDescriptionInvalid}}
+        
+                    </span>
+                    <span
+                        *ngIf="updateChapter.get('description').errors.minlength ">
+                        {{errorMessageDescriptionMinMax}}
+        
+                    </span>
+        
+                </div>
+        
+            </div>
+        </div>
+            <div  class="modal-footer mt-3 justify-content-end d-flex" >
+                <button type="button" class="btn btn-primary" [disabled] = "!updateChapter.valid" (click) = "onUpdateChapterSubmit(resultModal)">Submit</button>
+                <button type="button" class="btn btn-outline-danger m-2" (click)="modal.dismiss('Cross click')">Cancel</button>
+            </div>
+            <!-- Pre Loader Strat  -->
+<div class='loadscreen' *ngIf="loading">
+
+  <div class="loader spinner-bubble spinner-bubble-primary">
+  </div>
+ </div>
+ <!-- Pre Loader end  -->
+        </form>
+       
+    </div>
+    <div class="">
+        <div class="flex-grow-1"></div>
+        <div class="app-footer">
+  
+            <div class="footer-bottom d-flex flex-column flex-sm-row align-items-center">
+  
+                <span class="flex-grow-1"></span>
+                <div class="d-flex align-items-center">
+                    <img class="logo" src="{{orgdataRes.orgInfo[0].logo}}" alt="">
+                    <div>
+                        <p class="m-0">&copy; 2020 DNF</p>
+                        <p class="m-0">All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template> 
+<ng-template #resultModal let-modal>
+    <div class="modal-header border-0 pt-2 pb-2 pr-2">
+      
+    </div>
+    <div class="modal-body pt-0" *ngIf="addSuccess">
+      <p class="text-success-message mb-0"><strong><span> Success! </span></strong> {{message}}
+      </p>
+    </div>
+    <div class="modal-body pt-0" *ngIf="addDanger">
+        <p class="text-error-message mb-0"><strong><span> Error! </span></strong> {{message}}
+        </p>
+      </div>
+    <div class="modal-footer p-2">
+       <!-- <button type="button" ngbAutofocus class="btn btn-primary btn-rounded" (click)="viewMembers()">Next</button> -->
+     <button type="button" class="btn btn-outline-secondary btn-rounded" (click)="modal.dismiss('cancel')">Close</button> 
+    </div>
+ </ng-template>
+ <ng-template #viewModal let-modal>
+    <div class="modal-header">
+       <h4 class="modal-title" id="modal-basic-title">{{viewChapter.chapterName}}</h4>
+       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+        <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+    <div class="modal-body"> 
+        <div class="row">
+           <div class="col-md-6">
+             <strong>Chapter Admin(USA) :</strong><span> {{viewChapter.adminUSA.firstName}} {{viewChapter.adminUSA.lastName}}</span>
+           </div>
+           <div class="col-md-6">
+             <strong>Chapter Admin(India) : </strong><span>{{viewChapter.adminInda.firstName}} {{viewChapter.adminInda.lastName}}</span>
+          </div>
+        <!-- </div>
+        <div class="row"> -->
+            <div class="col-md-6">
+                <strong>Added by : </strong><span>{{viewChapter.addedBy.firstName}} {{viewChapter.addedBy.lastName}}</span>
+            </div>
+            <div class="col-md-6">
+              <strong>Description :</strong><span style="word-break: break-word;">{{viewChapter.description}}</span>
+            </div>
+         </div>
+    </div>
+ </ng-template>
